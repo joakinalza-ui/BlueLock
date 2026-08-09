@@ -43,10 +43,10 @@ body{
 #brand-badge{
 
     position:absolute;
-    top:-65px;
-    left:-38px;
+    top:-55px;
+    left:-32px;
 
-    width:280px;
+    width:238px;
     height:auto;
 
     z-index:10;
@@ -75,7 +75,7 @@ body{
     color:#fff;
     font-family:sans-serif;
     font-weight:700;
-    font-size:1.5rem;
+    font-size:1.3rem;
     line-height:1;
     padding:0;
 
@@ -430,7 +430,7 @@ body{
 
     position:absolute;
     right:16px;
-    bottom:130px;
+    bottom:95px;
 
     width:52px;
     height:52px;
