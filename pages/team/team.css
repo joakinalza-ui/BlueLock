@@ -1,0 +1,731 @@
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+}
+
+body{
+    min-height:100vh;
+    background:#070b14;
+    color:#fff;
+    font-family:sans-serif;
+    padding-bottom:96px;
+}
+
+#team-screen{
+    max-width:480px;
+    margin:0 auto;
+}
+
+.team-content{
+    padding:20px 20px 24px;
+}
+
+/* Header: solo volver + título, centrado. Vive dentro de .team-hero,
+   superpuesto sobre la foto del vestuario. El spacer de la derecha
+   tiene el mismo ancho que el botón "atrás" para que el título quede
+   centrado de verdad respecto al ancho completo, no solo respecto al
+   hueco que sobra tras el botón. */
+
+.team-header{
+    display:flex;
+    align-items:center;
+    gap:14px;
+    padding:16px 0 0;
+}
+
+.team-back{
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    width:36px;
+    height:36px;
+    border-radius:50%;
+    background:#0f1626;
+    border:1px solid #2c3a5c;
+    color:#fff;
+    text-decoration:none;
+    font-size:18px;
+    flex-shrink:0;
+}
+
+.team-header h1{
+    flex:1;
+    text-align:center;
+    font-size:20px;
+    font-weight:700;
+    text-transform:uppercase;
+    letter-spacing:0.03em;
+    text-shadow:0 1px 4px rgba(0,0,0,0.7);
+}
+
+.team-header-spacer{
+    width:36px;
+    flex-shrink:0;
+}
+
+/* Hero: foto del vestuario (equipo-vestuario.png) a pantalla completa,
+   edge-to-edge (sin bordes redondeados ni márgenes laterales), con el
+   header y el título "Jugadores Principales" superpuestos encima.
+   Mientras no exista el archivo, background-image simplemente no pinta
+   nada (a diferencia de un <img>, no rompe) y se ve el color de fondo
+   de relleno. El degradado (::after) va de más transparente arriba a
+   más oscuro abajo para que ambos textos se lean sobre cualquier zona
+   de la foto. */
+
+.team-hero{
+    position:relative;
+    height:260px;
+    display:flex;
+    flex-direction:column;
+    justify-content:space-between;
+    background-color:#101a30;
+    background-image:url("../../assets/backgrounds/equipo-vestuario.png");
+    background-size:cover;
+    background-position:center;
+    background-repeat:no-repeat;
+    padding:0 20px;
+}
+
+.team-hero::after{
+    content:"";
+    position:absolute;
+    inset:0;
+    background:linear-gradient(to bottom, rgba(5,8,15,0.25) 0%, rgba(5,8,15,0.15) 30%, rgba(5,8,15,0.55) 70%, rgba(5,8,15,0.92) 100%);
+    pointer-events:none;
+}
+
+.team-hero > *{
+    position:relative;
+    z-index:1;
+}
+
+.team-hero-title{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:12px;
+    padding-bottom:16px;
+}
+
+.quinteto-edit-btn{
+    flex-shrink:0;
+    background:rgba(15,22,38,0.75);
+    border:1px solid rgba(127,168,255,0.5);
+    border-radius:999px;
+    color:#fff;
+    font-size:11px;
+    font-weight:700;
+    padding:7px 12px;
+    cursor:pointer;
+    text-shadow:0 1px 3px rgba(0,0,0,0.6);
+}
+
+.team-hero-title h2{
+    display:flex;
+    align-items:center;
+    gap:6px;
+    font-size:16px;
+    font-weight:700;
+    text-transform:uppercase;
+    letter-spacing:0.04em;
+    color:#fff;
+    text-shadow:0 1px 4px rgba(0,0,0,0.7);
+}
+
+.team-hero-title .info-icon{
+    color:#c3cbe0;
+    text-shadow:0 1px 4px rgba(0,0,0,0.7);
+}
+
+.team-section{
+    margin-bottom:24px;
+}
+
+.team-section-header{
+    display:flex;
+    align-items:baseline;
+    justify-content:space-between;
+    margin-bottom:12px;
+}
+
+.team-section-header h2{
+    display:flex;
+    align-items:center;
+    gap:6px;
+    font-size:15px;
+    text-transform:uppercase;
+    letter-spacing:0.04em;
+    color:#7fa8ff;
+}
+
+.team-counter{
+    font-size:13px;
+    color:#9aa6c3;
+    font-weight:700;
+}
+
+.info-icon{
+    position:relative;
+    display:inline-flex;
+    font-size:12px;
+    color:#5b6685;
+    cursor:help;
+}
+
+.info-tooltip{
+    display:none;
+    position:absolute;
+    top:130%;
+    left:0;
+    width:220px;
+    background:#0d1424;
+    border:1px solid #2c3a5c;
+    border-radius:8px;
+    padding:8px 10px;
+    font-size:11px;
+    font-weight:400;
+    text-transform:none;
+    letter-spacing:normal;
+    color:#c3cbe0;
+    line-height:1.4;
+    z-index:20;
+}
+
+.info-icon:hover .info-tooltip,
+.info-icon:focus .info-tooltip{
+    display:block;
+}
+
+.quinteto-base-level-row{
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    gap:8px;
+    margin-top:14px;
+    font-size:12px;
+    color:#9aa6c3;
+    text-transform:uppercase;
+    letter-spacing:0.03em;
+}
+
+.quinteto-base-level-value{
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    min-width:28px;
+    padding:2px 8px;
+    background:#0f1626;
+    border:1px solid #3b82f6;
+    border-radius:999px;
+    color:#7fa8ff;
+    font-size:13px;
+    font-weight:700;
+}
+
+.quinteto-edit-actions{
+    display:flex;
+    gap:10px;
+    margin-top:14px;
+}
+
+.quinteto-edit-actions[hidden]{
+    display:none;
+}
+
+.quinteto-edit-cancel,
+.quinteto-edit-confirm{
+    flex:1;
+    padding:12px;
+    border-radius:10px;
+    font-weight:700;
+    font-size:13px;
+    cursor:pointer;
+    border:1px solid transparent;
+}
+
+.quinteto-edit-cancel{
+    background:#131c30;
+    border-color:#2c3a5c;
+    color:#fff;
+}
+
+.quinteto-edit-confirm{
+    background:#3b82f6;
+    color:#fff;
+}
+
+/* Quinteto Principal */
+
+.quinteto-grid{
+    display:grid;
+    grid-template-columns:repeat(5, 1fr);
+    gap:8px;
+}
+
+.quinteto-slot{
+    position:relative;
+    aspect-ratio:3/4;
+    border-radius:10px;
+    background:#0a0f1c;
+    border:2px dashed #2c3a5c;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+}
+
+.quinteto-slot-placeholder{
+    font-size:10px;
+    color:#5b6685;
+    text-align:center;
+    padding:4px;
+}
+
+/* Modo edición: las 5 cartas/huecos del Quinteto se marcan como
+   seleccionables (borde resaltado + lápiz) y quedan clicables para
+   abrir el selector de reemplazo. Un cambio aún no confirmado se
+   marca con la insignia "Nuevo" y borde ámbar. */
+
+.player-card.is-editable,
+.quinteto-slot.is-editable{
+    border-color:#7fa8ff;
+    cursor:pointer;
+}
+
+.player-card.is-pending{
+    border-color:#f59e0b;
+}
+
+.edit-pencil{
+    position:absolute;
+    bottom:4px;
+    right:4px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    width:18px;
+    height:18px;
+    border-radius:50%;
+    background:rgba(59,130,246,0.9);
+    color:#fff;
+    font-size:10px;
+}
+
+.pending-badge{
+    position:absolute;
+    bottom:18px;
+    left:4px;
+    background:#f59e0b;
+    color:#1a1200;
+    font-size:8px;
+    font-weight:700;
+    padding:2px 5px;
+    border-radius:5px;
+    letter-spacing:0.02em;
+}
+
+/* Cartas de personaje: se usan tanto en el Quinteto (llenas) como en la
+   Colección. */
+
+.player-card{
+    position:relative;
+    display:flex;
+    flex-direction:column;
+    background:#0a0f1c;
+    border:2px solid #2c3a5c;
+    border-radius:10px;
+    overflow:hidden;
+    cursor:pointer;
+    color:#fff;
+    font-family:sans-serif;
+    text-align:left;
+    padding:0;
+}
+
+.quinteto-grid .player-card{
+    aspect-ratio:3/4;
+    cursor:pointer;
+}
+
+.player-card-thumb{
+    position:relative;
+    width:100%;
+    aspect-ratio:1/1;
+    background:#111a2e;
+    overflow:hidden;
+    display:block;
+}
+
+.player-card-thumb img{
+    width:100%;
+    height:100%;
+    object-fit:cover;
+    display:block;
+}
+
+.player-card-position{
+    position:absolute;
+    top:4px;
+    left:4px;
+    background:rgba(59,130,246,0.9);
+    color:#fff;
+    font-size:9px;
+    font-weight:700;
+    padding:2px 5px;
+    border-radius:5px;
+    letter-spacing:0.02em;
+}
+
+.player-card-position[data-position="DEL"]{ background:rgba(239,68,68,0.9); }
+.player-card-position[data-position="MED"]{ background:rgba(59,130,246,0.9); }
+.player-card-position[data-position="DEF"]{ background:rgba(34,197,94,0.9); }
+.player-card-position[data-position="POR"]{ background:rgba(245,158,11,0.9); }
+
+/* Aviso de mejora disponible (Subir de Nivel o Despertar): punto
+   dorado en la esquina superior derecha, opuesta al badge de puesto. */
+.player-card-upgrade-badge{
+    position:absolute;
+    top:5px;
+    right:5px;
+    width:9px;
+    height:9px;
+    border-radius:50%;
+    background:#facc15;
+    box-shadow:0 0 0 2px rgba(10,15,28,0.9), 0 0 6px rgba(250,204,21,0.8);
+}
+
+/* Despertar (AWAKENING_BADGE_COLORS en main.js decide bg/color, uno por
+   nivel) — mismo sitio en todas las cartas de la app. */
+.player-card-awakening{
+    position:absolute;
+    bottom:4px;
+    left:4px;
+    font-size:10px;
+    font-weight:700;
+    padding:1px 6px;
+    border-radius:5px;
+    letter-spacing:0.02em;
+}
+
+.player-card-stars{
+    font-size:8px;
+    color:#facc15;
+    padding:4px 5px 0;
+    letter-spacing:1px;
+    white-space:nowrap;
+    overflow:hidden;
+}
+
+.player-card-name{
+    font-size:10px;
+    font-weight:700;
+    padding:2px 5px;
+    white-space:nowrap;
+    overflow:hidden;
+    text-overflow:ellipsis;
+}
+
+.player-card-level{
+    font-size:9px;
+    color:#9aa6c3;
+    padding:0 5px 5px;
+}
+
+/* Equipamiento: 4 objetos globales de solo lectura (sin asignación por
+   personaje), su bonus se aplica automáticamente a todo el roster
+   desbloqueado. */
+
+.equipment-grid{
+    display:grid;
+    grid-template-columns:repeat(2, 1fr);
+    gap:8px;
+}
+
+.equipment-card{
+    display:flex;
+    align-items:center;
+    gap:10px;
+    background:#0a0f1c;
+    border:2px solid #2c3a5c;
+    border-radius:10px;
+    padding:10px;
+}
+
+.equipment-card.has-level{
+    border-color:#7fa8ff;
+}
+
+.equipment-icon{
+    font-size:22px;
+    flex-shrink:0;
+}
+
+.equipment-info{
+    min-width:0;
+}
+
+.equipment-name{
+    font-size:12px;
+    font-weight:700;
+    white-space:nowrap;
+    overflow:hidden;
+    text-overflow:ellipsis;
+}
+
+.equipment-level{
+    font-size:10px;
+    color:#9aa6c3;
+}
+
+.equipment-card.has-level .equipment-level{
+    color:#7fa8ff;
+    font-weight:700;
+}
+
+/* Búsqueda y filtros de la Colección */
+
+.team-filters{
+    display:flex;
+    flex-wrap:wrap;
+    gap:8px;
+    margin-bottom:16px;
+}
+
+.team-search-wrap{
+    position:relative;
+    flex:1 1 100%;
+    min-width:0;
+}
+
+.team-search-icon{
+    position:absolute;
+    top:50%;
+    left:10px;
+    transform:translateY(-50%);
+    width:14px;
+    height:14px;
+    color:#5b6685;
+    pointer-events:none;
+}
+
+.team-search{
+    width:100%;
+    background:#0a0f1c;
+    border:1px solid #2c3a5c;
+    border-radius:10px;
+    padding:10px 12px 10px 30px;
+    color:#fff;
+    font-size:13px;
+}
+
+.team-search::placeholder{
+    color:#5b6685;
+}
+
+.team-select{
+    flex:1;
+    min-width:0;
+    background:#0a0f1c;
+    border:1px solid #2c3a5c;
+    border-radius:10px;
+    padding:10px 8px;
+    color:#fff;
+    font-size:12px;
+}
+
+/* Colección */
+
+.collection-grid{
+    display:grid;
+    grid-template-columns:repeat(4, 1fr);
+    gap:8px;
+}
+
+.collection-empty{
+    grid-column:1/-1;
+    text-align:center;
+    font-size:13px;
+    color:#5b6685;
+    padding:24px 0;
+}
+
+/* Modal de intercambio del Quinteto */
+
+.swap-modal-overlay{
+    position:fixed;
+    inset:0;
+    background:rgba(3,5,10,0.72);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    padding:24px;
+    z-index:50;
+}
+
+.swap-modal-overlay[hidden]{
+    display:none;
+}
+
+.swap-modal{
+    width:100%;
+    max-width:340px;
+    background:#0d1424;
+    border:1px solid #2c3a5c;
+    border-radius:16px;
+    padding:20px;
+}
+
+.swap-modal-title{
+    font-size:14px;
+    color:#e5e9f5;
+    margin-bottom:16px;
+    text-align:center;
+}
+
+.swap-modal-slots{
+    display:flex;
+    flex-direction:column;
+    gap:8px;
+    margin-bottom:16px;
+}
+
+.swap-modal-slot{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:10px;
+    background:#0a0f1c;
+    border:1px solid #2c3a5c;
+    border-radius:10px;
+    padding:10px 12px;
+    color:#fff;
+    font-size:13px;
+    cursor:pointer;
+    width:100%;
+    text-align:left;
+}
+
+.swap-modal-slot-empty{
+    color:#5b6685;
+}
+
+.swap-modal-slot-thumb{
+    width:40px;
+    height:40px;
+    min-width:40px;
+    border-radius:8px;
+    background:#131c30;
+    overflow:hidden;
+    display:block;
+}
+
+.swap-modal-slot-thumb img{
+    width:100%;
+    height:100%;
+    object-fit:cover;
+    object-position:center top;
+    display:block;
+}
+
+.swap-modal-slot-name{
+    flex:1;
+    min-width:0;
+    overflow:hidden;
+    text-overflow:ellipsis;
+    white-space:nowrap;
+}
+
+.swap-modal-slot-level{
+    font-size:11px;
+    color:#9aa6c3;
+}
+
+.slot-picker-pagination{
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    gap:16px;
+    margin-bottom:16px;
+}
+
+.slot-picker-page-arrow{
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    width:32px;
+    height:32px;
+    border-radius:50%;
+    background:#0a0f1c;
+    border:1px solid #2c3a5c;
+    color:#fff;
+    font-size:13px;
+    cursor:pointer;
+}
+
+.slot-picker-page-arrow:disabled{
+    opacity:0.35;
+    cursor:not-allowed;
+}
+
+.slot-picker-page-indicator{
+    min-width:110px;
+    text-align:center;
+    font-size:11px;
+    color:#9aa6c3;
+}
+
+.swap-modal-cancel{
+    width:100%;
+    padding:12px;
+    border-radius:10px;
+    border:1px solid #2c3a5c;
+    background:#131c30;
+    color:#fff;
+    font-weight:700;
+    font-size:13px;
+    cursor:pointer;
+}
+
+/* Barra inferior de 4 pestañas (Home/Jugadores/5v5/11v11). Distinta de
+   la barra de imagen de la Home: esta es texto/simple, propia de las
+   pantallas de gestión de equipo. */
+
+.team-tabbar{
+    position:fixed;
+    bottom:0;
+    left:0;
+    right:0;
+    display:flex;
+    background:#0a0f1c;
+    border-top:1px solid #1e2b4a;
+    max-width:480px;
+    margin:0 auto;
+}
+
+.team-tab{
+    flex:1;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    gap:3px;
+    text-align:center;
+    padding:10px 4px;
+    font-size:10px;
+    font-weight:700;
+    color:#9aa6c3;
+    text-decoration:none;
+}
+
+.team-tab svg{
+    width:20px;
+    height:20px;
+}
+
+.team-tab.is-active{
+    color:#7fa8ff;
+    box-shadow:inset 0 2px 0 #3b82f6;
+}
+
+.team-tab.is-disabled{
+    color:#3a4260;
+}

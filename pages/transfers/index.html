@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="manifest" href="../../manifest.json">
+    <link rel="apple-touch-icon" href="../../assets/ui/apple-touch-icon.png">
+    <meta name="theme-color" content="#070b14">
+    <script>if ("serviceWorker" in navigator) navigator.serviceWorker.register("../../sw.js");</script>
+    <title>Blue Lock Coach — Mapa de Fichajes</title>
+    <link rel="stylesheet" href="transfers.css">
+</head>
+<body>
+
+    <script>window.BL_ASSET_BASE = "../../";</script>
+    <script src="../../js/main.js"></script>
+    <script src="../../js/characters-data.js"></script>
+
+    <div id="transfers-screen">
+        <header class="transfers-header">
+            <a class="transfers-back" href="../play/index.html" aria-label="Volver"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 12H5M12 19l-7-7 7-7"/></svg></a>
+            <h1>Mapa de Fichajes</h1>
+            <span class="info-icon" tabindex="0">ⓘ
+                <span class="info-tooltip">Cada fichaje tiene 11 partidos (alternando 11 VS 11 y 5 VS 5). La 1ª victoria lo desbloquea en tu roster; de la 2ª a la 11ª ganas Esencias suyas para su Despertar. Completa el nodo entero para desbloquear el siguiente fichaje.</span>
+            </span>
+        </header>
+
+        <div class="transfers-content">
+            <div class="transfer-nodes" id="transfer-nodes"></div>
+        </div>
+    </div>
+
+    <script src="transfers.js"></script>
+
+</body>
+</html>

@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="manifest" href="../../manifest.json">
+    <link rel="apple-touch-icon" href="../../assets/ui/apple-touch-icon.png">
+    <meta name="theme-color" content="#070b14">
+    <script>if ("serviceWorker" in navigator) navigator.serviceWorker.register("../../sw.js");</script>
+    <title>Blue Lock Coach — Gacha</title>
+    <link rel="stylesheet" href="gacha.css?v=28">
+</head>
+<body>
+
+    <script>window.BL_ASSET_BASE = "../../";</script>
+    <script src="../../js/main.js"></script>
+    <script src="../../js/characters-data.js"></script>
+
+    <div id="gacha-screen">
+        <!-- assets/backgrounds/gacha-fondo.png ENTERA, sin recortar, como
+             único fondo: aspect-ratio fija el alto exacto de la imagen
+             para cada ancho, así background-size:100% 100% nunca la
+             deforma ni la recorta. El header y el contenido interactivo
+             se superponen encima, con coordenadas en % medidas sobre el
+             propio PNG (853×1844), igual que en "Jugar". -->
+        <div id="gacha-bg-frame">
+            <header class="gacha-header">
+                <a class="gacha-back" href="../../index.html" aria-label="Volver"><span class="gacha-back-arrow"></span></a>
+                <h1>Gacha</h1>
+                <span class="info-icon" tabindex="0">ⓘ
+                    <span class="info-tooltip">Invoca jugadores nuevos con diamantes. Cada tirada sin sacar un ★3 acerca el pity: al llegar al máximo, la siguiente tirada garantiza un ★3. Si sale un personaje que ya tienes, se convierte en Esencias suyas.</span>
+                </span>
+                <span class="ticket-counter" id="ticket-counter">
+                    <span class="ticket-icon">🎫</span>
+                    <span id="ticket-count">0</span>
+                </span>
+                <span class="diamond-counter">
+                    <span class="diamond-icon"><img src="../../assets/ui/diamond-icon.png" alt=""></span>
+                    <span id="diamond-count">0</span>
+                </span>
+            </header>
+
+            <!-- Zona blanca/suelo, debajo de la puerta — todo lo
+                 interactivo del Gacha va aquí. -->
+            <div class="gacha-content">
+                <div class="gacha-banner">
+                    <div class="gacha-banner-glow"></div>
+                    <span class="gacha-banner-name" id="banner-name"></span>
+                    <button class="gacha-details-btn" id="banner-details-btn" type="button">Ver detalles</button>
+                </div>
+
+                <div class="welcome-pull-card" id="welcome-pull-card">
+                    <div class="welcome-pull-card-info">
+                        <span class="welcome-pull-card-title">🎁 Sobre de Bienvenida</span>
+                        <span class="welcome-pull-card-desc">1× <span class="welcome-pull-star">★3</span> + 2× <span class="welcome-pull-star">★2</span> garantizados</span>
+                    </div>
+                    <button class="welcome-pull-card-btn" id="welcome-pull-btn" type="button">Reclamar gratis</button>
+                </div>
+
+                <div class="pity-row">
+                    <div class="pity-label-row">
+                        <span class="pity-label">Pity hasta ★3 garantizado</span>
+                        <span class="pity-fraction" id="pity-fraction"></span>
+                    </div>
+                    <div class="pity-track">
+                        <div class="pity-fill" id="pity-fill"></div>
+                    </div>
+                </div>
+
+                <div class="pull-buttons">
+                    <button class="pull-btn pull-btn-x1" id="pull-x1-btn" type="button">
+                        <span class="pull-btn-title">INVOCAR x1</span>
+                        <span class="pull-btn-cost" id="pull-x1-cost"><span class="diamond-icon"><img src="../../assets/ui/diamond-icon.png" alt=""></span> 300</span>
+                    </button>
+                    <button class="pull-btn pull-btn-x10" id="pull-x10-btn" type="button">
+                        <span class="pull-btn-title">INVOCAR x10</span>
+                        <span class="pull-btn-cost" id="pull-x10-cost"><span class="diamond-icon"><img src="../../assets/ui/diamond-icon.png" alt=""></span> 2.700</span>
+                        <span class="pull-btn-guarantee-ribbon" id="pull-x10-guarantee" hidden>★3 GARANTIZADO</span>
+                    </button>
+                </div>
+
+                <button class="points-shop-btn" id="points-shop-btn" type="button">
+                    <span class="points-shop-btn-title">🎫 Tienda de Puntos de Reclutamiento</span>
+                    <span class="points-shop-btn-count" id="points-shop-btn-count">0</span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <div id="pull-result-overlay" class="gacha-modal-overlay" hidden>
+        <div class="gacha-modal pull-result-modal">
+            <button class="gacha-modal-close" id="pull-result-close" type="button" aria-label="Cerrar">×</button>
+            <p class="gacha-modal-title">Resultado de la invocación</p>
+            <div class="pull-result-grid" id="pull-result-grid"></div>
+            <button class="gacha-modal-primary" id="pull-result-ok" type="button">Continuar</button>
+        </div>
+    </div>
+
+    <div id="banner-details-overlay" class="gacha-modal-overlay" hidden>
+        <div class="gacha-modal banner-details-modal">
+            <button class="gacha-modal-close" id="banner-details-close" type="button" aria-label="Cerrar">×</button>
+            <p class="gacha-modal-title">Personajes de esta convocatoria</p>
+            <div class="banner-details-list" id="banner-details-list"></div>
+        </div>
+    </div>
+
+    <div id="points-shop-overlay" class="gacha-modal-overlay" hidden>
+        <div class="gacha-modal points-shop-modal">
+            <button class="gacha-modal-close" id="points-shop-close" type="button" aria-label="Cerrar">×</button>
+            <p class="gacha-modal-title">Tienda de Puntos de Reclutamiento</p>
+            <div class="points-shop-balance">
+                <span class="points-shop-balance-icon">🎫</span>
+                <span id="points-shop-balance-value">0</span>
+                <span class="points-shop-balance-label">puntos</span>
+            </div>
+            <div class="points-shop-list" id="points-shop-list"></div>
+        </div>
+    </div>
+
+    <div id="insufficient-funds-toast" class="gacha-toast" hidden>Diamantes insuficientes</div>
+    <div id="points-shop-toast" class="points-shop-toast" hidden></div>
+
+    <script src="gacha.js"></script>
+
+</body>
+</html>

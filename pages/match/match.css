@@ -1,0 +1,764 @@
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+}
+
+html, body{
+    height:100%;
+}
+
+body{
+    min-height:100vh;
+    background:#111;
+    color:#fff;
+    font-family:monospace;
+}
+
+/* Mientras se ve el panel previo, la pantalla entera se ajusta a la
+   altura del viewport sin scroll (mismo enfoque que F5/F11): el campo
+   con las filas de jugadores calcula su propio tamaño de carta (ver
+   fitPrematchPitchCardSize en match.js) para caber siempre entero. En
+   cuanto arranca el partido en vivo, initLiveMatchPanel() quita esta
+   clase del body y la pantalla vuelve a poder deslizarse con normalidad
+   (el panel de partido en vivo no tiene ese ajuste de tamaño). */
+body.prematch-active{
+    height:100vh;
+    overflow:hidden;
+}
+
+body.prematch-active #match-screen{
+    height:100vh;
+    min-height:0;
+    overflow:hidden;
+    padding:14px 20px 16px;
+}
+
+#match-screen{
+    max-width:480px;
+    margin:0 auto;
+    min-height:100vh;
+    padding:24px 20px;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    gap:8px;
+}
+
+.match-line{
+    font-size:14px;
+    text-align:center;
+}
+
+#prematch-panel,
+#live-match-panel{
+    width:100%;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    gap:8px;
+}
+
+#live-match-panel[hidden],
+#prematch-panel[hidden]{
+    display:none;
+}
+
+/* El panel previo usa el mismo lenguaje visual que el resto de la app
+   (tarjetas redondeadas #0d1424/#2c3a5c sobre fondo oscuro, acentos
+   #7fa8ff, sans-serif) en vez del monospace/bordes planos del panel de
+   partido en vivo — ese sigue igual, solo cambia esta pantalla previa. */
+#prematch-panel{
+    font-family:sans-serif;
+    gap:10px;
+    flex:1;
+    min-height:0;
+}
+
+.prematch-header{
+    width:100%;
+    max-width:340px;
+    display:flex;
+    align-items:center;
+    margin-bottom:2px;
+    flex-shrink:0;
+}
+
+.prematch-back{
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    width:36px;
+    height:36px;
+    border-radius:50%;
+    background:#0f1626;
+    border:1px solid #2c3a5c;
+    color:#fff;
+    text-decoration:none;
+    font-size:18px;
+    flex-shrink:0;
+}
+
+.prematch-header-spacer{
+    width:36px;
+    flex-shrink:0;
+}
+
+/* Tarjeta del enfrentamiento (nombre + modo), y debajo una fila de
+   controles con "Tu equipo/Rival" y (si aplica) la Formación como dos
+   cajas independientes lado a lado — mismo patrón que la fila "Poder
+   del equipo / Formación" de F5, en vez de amontonarlo todo con
+   líneas divisorias dentro de una sola tarjeta grande. */
+.prematch-matchup-card{
+    width:100%;
+    max-width:340px;
+    background:#0d1424;
+    border:1px solid #2c3a5c;
+    border-radius:14px;
+    padding:14px 16px;
+    text-align:center;
+    flex-shrink:0;
+}
+
+.prematch-matchup-title{
+    font-size:16px;
+    font-weight:700;
+    color:#fff;
+}
+
+.prematch-mode-badge{
+    margin-top:4px;
+    font-size:12px;
+    color:#7fa8ff;
+    font-weight:700;
+    text-transform:uppercase;
+    letter-spacing:0.03em;
+}
+
+.prematch-narrative{
+    width:100%;
+    max-width:340px;
+    padding:10px 14px;
+    background:#0d1424;
+    border:1px solid #2c3a5c;
+    border-radius:12px;
+    font-style:italic;
+    font-size:12px;
+    color:#c3cbe0;
+    line-height:1.4;
+    flex-shrink:0;
+}
+
+/* Fondo fijo de campo (mismo campo-5v5.png y degradado que F5/F11) —
+   vive dentro de #prematch-panel para que desaparezca junto con él en
+   cuanto arranca el partido de verdad (#live-match-panel mantiene su
+   propio fondo liso, sin campo). */
+.prematch-field-bg{
+    position:fixed;
+    top:0;
+    bottom:0;
+    left:50%;
+    width:100%;
+    max-width:480px;
+    transform:translateX(-50%);
+    z-index:-1;
+    background-color:#0b2e18;
+    background-image:
+        linear-gradient(180deg, rgba(5,8,15,0.55) 0%, rgba(5,8,15,0.15) 20%, rgba(5,8,15,0.2) 70%, rgba(5,8,15,0.6) 100%),
+        url("../../assets/backgrounds/campo-5v5.png");
+    background-size:cover, cover;
+    background-position:center, center;
+    background-repeat:no-repeat, no-repeat;
+}
+
+.prematch-power-label{
+    font-size:11px;
+    color:#7fa8ff;
+    font-weight:700;
+    text-transform:uppercase;
+    letter-spacing:0.03em;
+}
+
+.prematch-power-value{
+    font-size:22px;
+    font-weight:700;
+    color:#fff;
+}
+
+.prematch-control-row{
+    display:flex;
+    align-items:stretch;
+    gap:10px;
+    width:100%;
+    max-width:340px;
+    flex-shrink:0;
+}
+
+/* Alterna entre "Tu equipo" y "Rival" con flechas a los lados,
+   mostrando el poder total del equipo que se está viendo. Cuando no
+   hay Formación que mostrar al lado (Fichajes/Historia, o viendo al
+   Rival) esta caja es la única de la fila y ocupa todo el ancho. */
+.prematch-team-toggle{
+    flex:1;
+    min-width:0;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    gap:10px;
+    background:#0d1424;
+    border:1px solid #1e2b4a;
+    border-radius:14px;
+    padding:9px 10px;
+}
+
+.prematch-power-inline{
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    gap:2px;
+    min-width:0;
+}
+
+.prematch-squad-arrow{
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    width:32px;
+    height:32px;
+    border-radius:50%;
+    background:#0f1626;
+    border:1px solid #2c3a5c;
+    color:#7fa8ff;
+    font-family:sans-serif;
+    font-size:16px;
+    cursor:pointer;
+    flex-shrink:0;
+}
+
+/* Formación — caja independiente junto al selector de equipo, mismo
+   patrón que "Formación" en F5. Solo aparece viendo "Tu equipo" en
+   Desafíos (único flujo con formación propia por mapa; Fichajes/
+   Historia editan el Quinteto/Once sin ese concepto). Mismas 3
+   formaciones que F5. */
+.prematch-formation-box{
+    flex:1;
+    min-width:0;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:8px;
+    background:#0d1424;
+    border:1px solid #1e2b4a;
+    border-radius:14px;
+    padding:9px 12px;
+}
+
+.prematch-formation-box[hidden]{
+    display:none;
+}
+
+.prematch-formation-select{
+    min-width:0;
+    background:#0a0f1c;
+    border:1px solid #2c3a5c;
+    border-radius:10px;
+    padding:6px 8px;
+    color:#fff;
+    font-size:12px;
+    font-family:sans-serif;
+}
+
+.prematch-lineup-warning{
+    width:100%;
+    max-width:340px;
+    text-align:center;
+    font-size:12px;
+    line-height:1.4;
+    color:#fde68a;
+    background:rgba(245,158,11,0.12);
+    border:1px solid #f59e0b;
+    border-radius:10px;
+    padding:8px 12px;
+    flex-shrink:0;
+}
+
+.prematch-lineup-warning[hidden]{
+    display:none;
+}
+
+/* Campo con las filas por puesto (DEL arriba, luego MED, DEF, POR),
+   mismo patrón visual que F5/F11 — cada fila tiene un número fijo de
+   huecos según la formación elegida. El rival es siempre de solo
+   lectura; "Tu equipo" sí es editable (ver .is-editable más abajo),
+   con huecos "+" directamente en la fila que les toque cuando falte
+   alguien. flex:1 + min-height:0 es lo que le deja ocupar exactamente
+   el espacio que sobra tras el resto del panel, para que
+   fitPrematchPitchCardSize() (en match.js) pueda medirlo y calcular el
+   mayor --prematch-card-width que quepa sin que la pantalla tenga que
+   deslizarse. */
+.prematch-pitch-field{
+    width:100%;
+    max-width:340px;
+    flex:1;
+    min-height:0;
+    display:flex;
+    flex-direction:column;
+    justify-content:space-around;
+    gap:10px;
+    padding:4px;
+    overflow:hidden;
+}
+
+.prematch-pitch-row{
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    flex-wrap:wrap;
+    gap:14px;
+}
+
+.prematch-pitch-row .player-card{
+    width:var(--prematch-card-width, 104px);
+    min-width:0;
+    box-shadow:0 3px 10px rgba(0,0,0,0.55);
+}
+
+.prematch-pitch-row .player-card.is-captain{
+    border-color:#facc15;
+}
+
+/* "Tu equipo" es editable: cursor + borde azul + lápiz para que se
+   note que se puede tocar, igual que en Jugadores/F5/F11. Los huecos
+   vacíos usan una tarjeta propia con la misma proporción para encajar
+   en la fila. */
+.prematch-pitch-row .player-card.is-editable{
+    cursor:pointer;
+    border-color:#7fa8ff;
+}
+
+.edit-pencil{
+    position:absolute;
+    bottom:4px;
+    right:4px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    width:16px;
+    height:16px;
+    border-radius:50%;
+    background:rgba(59,130,246,0.9);
+    color:#fff;
+    font-size:9px;
+}
+
+.prematch-pitch-empty{
+    width:var(--prematch-card-width, 104px);
+    min-width:0;
+    aspect-ratio:3/4;
+    border-radius:10px;
+    background:#0a0f1cc0;
+    border:2px dashed rgba(91,102,133,0.6);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    cursor:pointer;
+}
+
+.prematch-pitch-empty-label{
+    font-size:20px;
+    color:#8891ac;
+}
+
+/* Selector de sustitución de "Tu equipo" — mismo modal (paginado de 6
+   en 6, filtro por posición, tarjetas .player-card) que ya usan F5/F11. */
+.swap-modal-overlay{
+    position:fixed;
+    inset:0;
+    background:rgba(3,5,10,0.72);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    padding:24px;
+    z-index:50;
+}
+
+.swap-modal-overlay[hidden]{
+    display:none;
+}
+
+.swap-modal{
+    width:100%;
+    max-width:340px;
+    max-height:80vh;
+    display:flex;
+    flex-direction:column;
+    background:#0d1424;
+    border:1px solid #2c3a5c;
+    border-radius:16px;
+    padding:20px;
+    font-family:sans-serif;
+}
+
+.swap-modal-title{
+    font-size:14px;
+    color:#e5e9f5;
+    margin-bottom:12px;
+    text-align:center;
+}
+
+.slot-picker-filter-row{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:8px;
+    margin-bottom:12px;
+}
+
+.slot-picker-filter-label{
+    font-size:12px;
+    color:#9aa6c3;
+}
+
+.slot-picker-position-select{
+    background:#0a0f1c;
+    border:1px solid #2c3a5c;
+    border-radius:10px;
+    padding:8px 10px;
+    color:#fff;
+    font-size:13px;
+    font-family:sans-serif;
+}
+
+.swap-modal-slots{
+    display:grid;
+    grid-template-columns:repeat(3, 1fr);
+    gap:8px;
+    margin-bottom:16px;
+    overflow-y:auto;
+}
+
+.swap-modal-slots .player-card{
+    min-width:0;
+}
+
+.picker-slot-empty{
+    width:100%;
+    min-width:0;
+    aspect-ratio:3/4;
+    border-radius:10px;
+    background:#0a0f1cc0;
+    border:2px dashed rgba(91,102,133,0.6);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    cursor:pointer;
+    padding:4px;
+}
+
+.picker-slot-empty-label{
+    font-size:11px;
+    color:#8891ac;
+    text-align:center;
+    overflow-wrap:break-word;
+}
+
+.picker-empty-message{
+    grid-column:1/-1;
+    text-align:center;
+    font-size:12px;
+    color:#9aa6c3;
+    padding:12px 0;
+}
+
+.slot-picker-pagination{
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    gap:16px;
+    margin-bottom:16px;
+}
+
+.slot-picker-page-arrow{
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    width:32px;
+    height:32px;
+    border-radius:50%;
+    background:#0a0f1c;
+    border:1px solid #2c3a5c;
+    color:#fff;
+    font-size:13px;
+    cursor:pointer;
+}
+
+.slot-picker-page-arrow:disabled{
+    opacity:0.35;
+    cursor:not-allowed;
+}
+
+.slot-picker-page-indicator{
+    min-width:110px;
+    text-align:center;
+    font-size:11px;
+    color:#9aa6c3;
+}
+
+.swap-modal-cancel{
+    width:100%;
+    padding:12px;
+    border-radius:10px;
+    border:1px solid #2c3a5c;
+    background:#131c30;
+    color:#fff;
+    font-weight:700;
+    font-size:13px;
+    cursor:pointer;
+    flex-shrink:0;
+}
+
+#prematch-start-btn{
+    width:100%;
+    max-width:340px;
+    flex-shrink:0;
+    padding:14px;
+    border-radius:12px;
+    border:1px solid #4ade80;
+    background:rgba(74,222,128,0.12);
+    color:#4ade80;
+    font-family:sans-serif;
+    font-weight:700;
+    font-size:14px;
+    cursor:pointer;
+}
+
+#prematch-start-btn:disabled{
+    border-color:#3a4260;
+    background:rgba(58,66,96,0.2);
+    color:#5b6685;
+    cursor:not-allowed;
+}
+
+.match-score{
+    font-size:26px;
+    font-weight:700;
+    margin:4px 0;
+}
+
+.match-auto-toggle{
+    margin-top:4px;
+    padding:6px 18px;
+    border:1px solid #666;
+    border-radius:999px;
+    background:#222;
+    color:#aaa;
+    font-family:monospace;
+    font-size:12px;
+    font-weight:700;
+    letter-spacing:0.05em;
+    cursor:pointer;
+}
+
+.match-auto-toggle.is-active{
+    border-color:#4ade80;
+    color:#4ade80;
+    background:rgba(74,222,128,0.12);
+}
+
+.match-log{
+    width:100%;
+    max-width:340px;
+    margin-top:12px;
+    height:180px;
+    overflow-y:auto;
+    border:1px solid #444;
+    padding:8px;
+    font-size:12px;
+    display:flex;
+    flex-direction:column;
+    gap:4px;
+}
+
+.match-log-line{
+    color:#ccc;
+}
+
+.match-actions{
+    width:100%;
+    max-width:340px;
+    margin-top:16px;
+    display:flex;
+    flex-direction:column;
+    gap:8px;
+    align-items:center;
+}
+
+.match-pe{
+    font-size:13px;
+    color:#aaa;
+}
+
+/* Barra de zonas de campo (1 = mi portería, 5 = la rival). El segmento
+   con el balón se resalta; el resto queda apagado. */
+.match-zone-bar{
+    display:flex;
+    gap:4px;
+    width:100%;
+    max-width:340px;
+    margin-top:4px;
+}
+
+.match-zone-segment{
+    flex:1;
+    height:6px;
+    border-radius:3px;
+    background:#333;
+    border:1px solid #444;
+}
+
+.match-zone-segment.is-ball{
+    background:#4ade80;
+    border-color:#4ade80;
+}
+
+.match-zone-text{
+    font-size:12px;
+    color:#7fa8ff;
+    font-weight:700;
+}
+
+.match-waiting{
+    font-size:13px;
+    color:#aaa;
+    font-style:italic;
+}
+
+.match-choice-btn{
+    width:100%;
+    padding:12px;
+    border:1px solid #666;
+    background:#222;
+    color:#fff;
+    font-family:monospace;
+    font-size:13px;
+    cursor:pointer;
+}
+
+.match-choice-btn:disabled{
+    opacity:0.4;
+    cursor:not-allowed;
+}
+
+.match-choice-btn.is-penalized{
+    border-color:#f87171;
+    color:#f87171;
+    opacity:0.75;
+}
+
+.match-active-player{
+    font-size:12px;
+    color:#7fa8ff;
+}
+
+.match-final-title{
+    font-size:18px;
+    font-weight:700;
+    text-align:center;
+    margin-bottom:8px;
+}
+
+.match-reward-row{
+    font-size:13px;
+    text-align:center;
+    padding:6px;
+    border:1px solid #444;
+    margin-bottom:6px;
+}
+
+/* Tarjeta de personaje compartida con Jugadores/F5/F11 (foto grande,
+   badge de puesto, estrellas de rareza, nombre, nivel) — se usa aquí
+   para las dos alineaciones (mía y rival) del panel previo. */
+.player-card{
+    position:relative;
+    display:flex;
+    flex-direction:column;
+    background:#0a0f1c;
+    border:2px solid #2c3a5c;
+    border-radius:10px;
+    overflow:hidden;
+    color:#fff;
+    font-family:sans-serif;
+    text-align:left;
+    padding:0;
+}
+
+.player-card-thumb{
+    position:relative;
+    width:100%;
+    aspect-ratio:1/1;
+    background:#111a2e;
+    overflow:hidden;
+    display:block;
+}
+
+.player-card-thumb img{
+    width:100%;
+    height:100%;
+    object-fit:cover;
+    display:block;
+}
+
+.player-card-position{
+    position:absolute;
+    top:4px;
+    left:4px;
+    background:rgba(59,130,246,0.9);
+    color:#fff;
+    font-size:9px;
+    font-weight:700;
+    padding:2px 5px;
+    border-radius:5px;
+    letter-spacing:0.02em;
+}
+
+.player-card-position[data-position="DEL"]{ background:rgba(239,68,68,0.9); }
+.player-card-position[data-position="MED"]{ background:rgba(59,130,246,0.9); }
+.player-card-position[data-position="DEF"]{ background:rgba(34,197,94,0.9); }
+.player-card-position[data-position="POR"]{ background:rgba(245,158,11,0.9); }
+
+/* Despertar (AWAKENING_BADGE_COLORS en main.js decide bg/color, uno por
+   nivel) — mismo sitio en todas las cartas de la app. */
+.player-card-awakening{
+    position:absolute;
+    bottom:4px;
+    left:4px;
+    font-size:10px;
+    font-weight:700;
+    padding:1px 6px;
+    border-radius:5px;
+    letter-spacing:0.02em;
+}
+
+.player-card-stars{
+    font-size:8px;
+    color:#facc15;
+    padding:4px 5px 0;
+    letter-spacing:1px;
+    white-space:nowrap;
+    overflow:hidden;
+}
+
+.player-card-name{
+    font-size:10px;
+    font-weight:700;
+    padding:2px 5px;
+    white-space:nowrap;
+    overflow:hidden;
+    text-overflow:ellipsis;
+}
+
+.player-card-level{
+    font-size:9px;
+    color:#9aa6c3;
+    padding:0 5px 5px;
+}

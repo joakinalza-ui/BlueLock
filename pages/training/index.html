@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="manifest" href="../../manifest.json">
+    <link rel="apple-touch-icon" href="../../assets/ui/apple-touch-icon.png">
+    <meta name="theme-color" content="#070b14">
+    <script>if ("serviceWorker" in navigator) navigator.serviceWorker.register("../../sw.js");</script>
+    <title>Blue Lock Coach — Sala de Entrenamiento</title>
+    <link rel="stylesheet" href="training.css">
+</head>
+<body>
+
+    <script>window.BL_ASSET_BASE = "../../";</script>
+    <script src="../../js/main.js"></script>
+    <script src="../../js/characters-data.js"></script>
+
+    <div id="training-screen">
+        <header class="training-header">
+            <a class="training-back" href="../../index.html" aria-label="Volver"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 12H5M12 19l-7-7 7-7"/></svg></a>
+            <h1>Sala de Entrenamiento</h1>
+        </header>
+
+        <div class="training-content">
+            <section class="training-panel">
+                <div class="training-card">
+                    <span class="training-icon">⛽</span>
+                    <p class="training-status" id="training-status">Inactiva</p>
+                    <p class="training-since" id="training-since" hidden></p>
+                </div>
+
+                <div class="training-accrued-card">
+                    <p class="training-accrued-label">Combustible de Ego acumulado</p>
+                    <p class="training-accrued-value"><span id="training-accrued">0</span> / <span id="training-cap">1200</span></p>
+                    <div class="training-progress-track">
+                        <div class="training-progress-fill" id="training-progress-fill"></div>
+                    </div>
+                    <p class="training-hint" id="training-hint">Inicia la generación para empezar a acumular Combustible de Ego.</p>
+                </div>
+
+                <button class="training-action-btn" id="training-start-btn" type="button">Iniciar</button>
+                <button class="training-action-btn" id="training-collect-btn" type="button" hidden>Recoger</button>
+
+                <div class="training-balance-row">
+                    <span>Combustible de Ego actual</span>
+                    <span id="training-balance">0</span>
+                </div>
+            </section>
+        </div>
+    </div>
+
+    <div id="training-toast" class="training-toast" hidden></div>
+
+    <script src="training.js"></script>
+
+</body>
+</html>

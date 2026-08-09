@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="manifest" href="../../manifest.json">
+    <link rel="apple-touch-icon" href="../../assets/ui/apple-touch-icon.png">
+    <meta name="theme-color" content="#070b14">
+    <script>if ("serviceWorker" in navigator) navigator.serviceWorker.register("../../sw.js");</script>
+    <title>Blue Lock Coach — Desafíos</title>
+    <link rel="stylesheet" href="challenges.css">
+</head>
+<body>
+
+    <script>window.BL_ASSET_BASE = "../../";</script>
+    <script src="../../js/main.js"></script>
+    <script src="../../js/characters-data.js"></script>
+
+    <div id="challenges-screen">
+        <header class="challenges-header">
+            <a class="challenges-back" href="index.html" aria-label="Volver"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 12H5M12 19l-7-7 7-7"/></svg></a>
+            <h1 id="map-title">Desafío</h1>
+            <span class="challenges-header-spacer" aria-hidden="true"></span>
+        </header>
+
+        <p class="challenge-warning" id="challenge-warning" hidden></p>
+
+        <div class="challenge-matches" id="challenge-matches"></div>
+    </div>
+
+    <script src="map.js"></script>
+
+</body>
+</html>

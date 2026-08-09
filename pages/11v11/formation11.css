@@ -1,0 +1,534 @@
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+}
+
+html, body{
+    height:100%;
+    overflow:hidden;
+}
+
+body{
+    min-height:100vh;
+    background:#070b14;
+    color:#fff;
+    font-family:sans-serif;
+    padding-bottom:60px;
+}
+
+/* height (no min-height) + overflow:hidden es lo que de verdad impide
+   que la pantalla se pueda deslizar: con solo min-height, si el
+   contenido no cabía el contenedor simplemente crecía para
+   acomodarlo y empujaba toda la página hacia abajo, apareciendo
+   scroll pese al overflow:hidden del body (el hueco escapaba por
+   aquí). Con una altura fija de verdad, .pitch-field (flex:1,
+   min-height:0 más abajo) se ve obligado a encajar en el espacio
+   real, y fitPitchCardSize() en formation11.js mide ese espacio para
+   calcular el tamaño de carta más grande que cabe sin desbordar. */
+
+#formation-screen{
+    position:relative;
+    display:flex;
+    flex-direction:column;
+    height:calc(100vh - 60px);
+    overflow:hidden;
+    max-width:480px;
+    margin:0 auto;
+}
+
+/* Fondo fijo de toda la pantalla, mismo patrón que F5. Reutiliza
+   campo-5v5.png por ahora (avísame si quieres una imagen propia para
+   11 VS 11, ej. campo-11v11.png, y solo hay que cambiar esta ruta). */
+
+.formation-bg{
+    position:fixed;
+    top:0;
+    bottom:0;
+    left:50%;
+    width:100%;
+    max-width:480px;
+    transform:translateX(-50%);
+    z-index:-1;
+    background-color:#0b2e18;
+    background-image:
+        linear-gradient(180deg, rgba(5,8,15,0.55) 0%, rgba(5,8,15,0.15) 20%, rgba(5,8,15,0.2) 70%, rgba(5,8,15,0.6) 100%),
+        url("../../assets/backgrounds/campo-5v5.png");
+    background-size:cover, cover;
+    background-position:center, center;
+    background-repeat:no-repeat, no-repeat;
+}
+
+/* Header: volver + título + info, superpuesto sobre el campo. */
+
+.team-header{
+    display:flex;
+    align-items:center;
+    gap:14px;
+    padding:10px 20px;
+    background:linear-gradient(to bottom, rgba(5,8,15,0.55), rgba(5,8,15,0.1));
+}
+
+.team-back{
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    width:36px;
+    height:36px;
+    border-radius:50%;
+    background:#0f1626;
+    border:1px solid #2c3a5c;
+    color:#fff;
+    text-decoration:none;
+    font-size:18px;
+    flex-shrink:0;
+}
+
+.team-header h1{
+    flex:1;
+    text-align:center;
+    font-size:20px;
+    font-weight:700;
+    text-transform:uppercase;
+    letter-spacing:0.03em;
+    text-shadow:0 1px 4px rgba(0,0,0,0.7);
+}
+
+.info-icon{
+    position:relative;
+    display:inline-flex;
+    flex-shrink:0;
+    font-size:16px;
+    color:#c3cbe0;
+    cursor:help;
+    text-shadow:0 1px 4px rgba(0,0,0,0.7);
+}
+
+.info-tooltip{
+    display:none;
+    position:absolute;
+    top:130%;
+    right:0;
+    width:230px;
+    background:#0d1424;
+    border:1px solid #2c3a5c;
+    border-radius:8px;
+    padding:8px 10px;
+    font-size:11px;
+    font-weight:400;
+    text-transform:none;
+    letter-spacing:normal;
+    color:#c3cbe0;
+    line-height:1.4;
+    z-index:20;
+}
+
+.info-icon:hover .info-tooltip,
+.info-icon:focus .info-tooltip{
+    display:block;
+}
+
+.formation-content{
+    padding:12px 20px 0;
+    background:linear-gradient(to bottom, rgba(5,8,15,0.35) 0%, rgba(5,8,15,0.05) 100%);
+}
+
+/* Fila compartida: Poder del equipo (mitad izquierda) + Formación
+   (mitad derecha), a la misma altura. */
+
+.power-formation-row{
+    display:flex;
+    justify-content:space-between;
+    align-items:stretch;
+    gap:12px;
+}
+
+.power-card{
+    flex:1;
+    min-width:0;
+    display:flex;
+    flex-direction:column;
+    justify-content:center;
+    gap:2px;
+    background:#0d1424;
+    border:1px solid #1e2b4a;
+    border-radius:14px;
+    padding:9px 14px;
+}
+
+.power-card-label{
+    font-size:11px;
+    text-transform:uppercase;
+    letter-spacing:0.04em;
+    color:#7fa8ff;
+    font-weight:700;
+    white-space:nowrap;
+}
+
+.power-card-value{
+    font-size:22px;
+    font-weight:700;
+    color:#fff;
+}
+
+.formation-select-row{
+    flex:1;
+    min-width:0;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:8px;
+    background:#0d1424;
+    border:1px solid #1e2b4a;
+    border-radius:14px;
+    padding:9px 14px;
+}
+
+.formation-select-label{
+    font-size:11px;
+    text-transform:uppercase;
+    letter-spacing:0.04em;
+    color:#7fa8ff;
+    font-weight:700;
+}
+
+.formation-select{
+    min-width:0;
+    background:#0a0f1c;
+    border:1px solid #2c3a5c;
+    border-radius:10px;
+    padding:8px 10px;
+    color:#fff;
+    font-size:13px;
+}
+
+/* Zona de las 4 filas (DEL/MED/DEF/POR). Hasta 5 puestos en una misma
+   fila según la formación (ej. 3-5-2 → 5 centrocampistas), así que
+   las cartas son más compactas que en F5 y la fila puede envolver a
+   una segunda línea en pantallas muy estrechas en vez de recortarse. */
+
+.pitch-field{
+    position:relative;
+    flex:1;
+    display:flex;
+    flex-direction:column;
+    justify-content:space-between;
+    gap:12px;
+    min-height:0;
+    padding:12px 4px;
+}
+
+.pitch-row{
+    display:flex;
+    flex-wrap:wrap;
+    justify-content:center;
+    gap:8px;
+}
+
+/* Cartas de jugador sobre el campo (mismo componente visual que en
+   Jugadores/F5, a menor tamaño). Las filas de hasta 4 puestos (que es
+   el caso más común: DEF siempre, y DEL/MED en 4-3-3 y 4-4-2) usan
+   este tamaño más grande. La fila de 5 (MED en 3-5-2) lleva la clase
+   .is-compact añadida desde JS y usa un tamaño algo menor para que
+   nunca se salga del ancho de pantalla. */
+
+.player-card{
+    position:relative;
+    display:flex;
+    flex-direction:column;
+    width:var(--card-width, 82px);
+    background:#0a0f1cf0;
+    border:2px solid #2c3a5c;
+    border-radius:10px;
+    overflow:hidden;
+    color:#fff;
+    font-family:sans-serif;
+    text-align:left;
+    box-shadow:0 3px 8px rgba(0,0,0,0.55);
+    cursor:pointer;
+    padding:0;
+}
+
+.pitch-row.is-compact .player-card,
+.pitch-row.is-compact .pitch-slot-empty{
+    width:var(--card-width-compact, 64px);
+}
+
+.player-card-thumb{
+    position:relative;
+    width:100%;
+    aspect-ratio:1/1;
+    background:#111a2e;
+    overflow:hidden;
+    display:block;
+}
+
+.player-card-thumb img{
+    width:100%;
+    height:100%;
+    object-fit:cover;
+    display:block;
+}
+
+.player-card-position{
+    position:absolute;
+    top:5px;
+    left:5px;
+    background:rgba(59,130,246,0.9);
+    color:#fff;
+    font-size:10px;
+    font-weight:700;
+    padding:2px 6px;
+    border-radius:5px;
+    letter-spacing:0.01em;
+}
+
+.player-card-position[data-position="DEL"]{ background:rgba(239,68,68,0.9); }
+.player-card-position[data-position="MED"]{ background:rgba(59,130,246,0.9); }
+.player-card-position[data-position="DEF"]{ background:rgba(34,197,94,0.9); }
+.player-card-position[data-position="POR"]{ background:rgba(245,158,11,0.9); }
+
+/* Despertar (AWAKENING_BADGE_COLORS en main.js decide bg/color, uno por
+   nivel) — mismo sitio en todas las cartas de la app. */
+.player-card-awakening{
+    position:absolute;
+    bottom:4px;
+    left:4px;
+    font-size:10px;
+    font-weight:700;
+    padding:1px 6px;
+    border-radius:5px;
+    letter-spacing:0.02em;
+}
+
+.player-card-stars{
+    font-size:9px;
+    color:#facc15;
+    padding:6px 7px 0;
+    letter-spacing:1px;
+    white-space:nowrap;
+    overflow:hidden;
+}
+
+.player-card-name{
+    font-size:10px;
+    font-weight:700;
+    padding:3px 7px;
+    white-space:nowrap;
+    overflow:hidden;
+    text-overflow:ellipsis;
+}
+
+.player-card-level{
+    font-size:9px;
+    color:#9aa6c3;
+    padding:0 7px 7px;
+}
+
+.pitch-slot-empty{
+    width:var(--card-width, 82px);
+    aspect-ratio:3/4;
+    border-radius:10px;
+    background:#0a0f1cc0;
+    border:2px dashed rgba(91,102,133,0.6);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    box-shadow:0 3px 8px rgba(0,0,0,0.4);
+    cursor:pointer;
+    padding:0;
+}
+
+.pitch-slot-empty-label{
+    font-size:16px;
+    color:#5b6685;
+    font-weight:700;
+}
+
+/* Modal selector de jugador (click en cualquier puesto del campo,
+   vacío u ocupado). Mismo lenguaje visual que el modal de "Editar
+   Quinteto" en Jugadores. */
+
+.swap-modal-overlay{
+    position:fixed;
+    inset:0;
+    background:rgba(3,5,10,0.72);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    padding:24px;
+    z-index:50;
+}
+
+.swap-modal-overlay[hidden]{
+    display:none;
+}
+
+.swap-modal{
+    width:100%;
+    max-width:340px;
+    max-height:80vh;
+    display:flex;
+    flex-direction:column;
+    background:#0d1424;
+    border:1px solid #2c3a5c;
+    border-radius:16px;
+    padding:20px;
+}
+
+.swap-modal-title{
+    font-size:14px;
+    color:#e5e9f5;
+    margin-bottom:12px;
+    text-align:center;
+}
+
+.slot-picker-filter-row{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:8px;
+    margin-bottom:12px;
+}
+
+.slot-picker-filter-label{
+    font-size:12px;
+    color:#9aa6c3;
+}
+
+/* La lista de resultados usa el mismo componente .player-card que el
+   campo y la Colección (foto grande, badge de puesto, estrellas,
+   nombre, nivel) en vez de filas finas — el selector de override de
+   ancho de abajo es lo único que lo diferencia de la carta del campo
+   (aquí ocupa toda la celda del grid en vez del ancho fijo
+   var(--card-width) que usan las cartas del campo). */
+.swap-modal-slots{
+    display:grid;
+    grid-template-columns:repeat(3, 1fr);
+    gap:8px;
+    margin-bottom:16px;
+    overflow-y:auto;
+}
+
+.swap-modal-slots .player-card{
+    width:100%;
+    min-width:0;
+}
+
+.picker-slot-empty{
+    width:100%;
+    min-width:0;
+    aspect-ratio:3/4;
+    border-radius:10px;
+    background:#0a0f1cc0;
+    border:2px dashed rgba(91,102,133,0.6);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    cursor:pointer;
+    padding:4px;
+}
+
+.picker-slot-empty-label{
+    font-size:11px;
+    color:#8891ac;
+    text-align:center;
+    overflow-wrap:break-word;
+}
+
+.picker-empty-message{
+    grid-column:1/-1;
+    text-align:center;
+    font-size:12px;
+    color:#9aa6c3;
+    padding:12px 0;
+}
+
+.slot-picker-pagination{
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    gap:16px;
+    margin-bottom:16px;
+}
+
+.slot-picker-page-arrow{
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    width:32px;
+    height:32px;
+    border-radius:50%;
+    background:#0a0f1c;
+    border:1px solid #2c3a5c;
+    color:#fff;
+    font-size:13px;
+    cursor:pointer;
+}
+
+.slot-picker-page-arrow:disabled{
+    opacity:0.35;
+    cursor:not-allowed;
+}
+
+.slot-picker-page-indicator{
+    min-width:110px;
+    text-align:center;
+    font-size:11px;
+    color:#9aa6c3;
+}
+
+.swap-modal-cancel{
+    width:100%;
+    padding:12px;
+    border-radius:10px;
+    border:1px solid #2c3a5c;
+    background:#131c30;
+    color:#fff;
+    font-weight:700;
+    font-size:13px;
+    cursor:pointer;
+    flex-shrink:0;
+}
+
+/* Barra inferior de 4 pestañas (misma que en Jugadores/F5) */
+
+.team-tabbar{
+    position:fixed;
+    bottom:0;
+    left:0;
+    right:0;
+    display:flex;
+    background:#0a0f1c;
+    border-top:1px solid #1e2b4a;
+    max-width:480px;
+    margin:0 auto;
+}
+
+.team-tab{
+    flex:1;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    gap:3px;
+    text-align:center;
+    padding:10px 4px;
+    font-size:10px;
+    font-weight:700;
+    color:#9aa6c3;
+    text-decoration:none;
+}
+
+.team-tab svg{
+    width:20px;
+    height:20px;
+}
+
+.team-tab.is-active{
+    color:#7fa8ff;
+    box-shadow:inset 0 2px 0 #3b82f6;
+}
+
+.team-tab.is-disabled{
+    color:#3a4260;
+}

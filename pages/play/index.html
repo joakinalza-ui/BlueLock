@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="manifest" href="../../manifest.json">
+    <link rel="apple-touch-icon" href="../../assets/ui/apple-touch-icon.png">
+    <meta name="theme-color" content="#070b14">
+    <script>if ("serviceWorker" in navigator) navigator.serviceWorker.register("../../sw.js");</script>
+    <title>Blue Lock Coach — Jugar</title>
+    <link rel="stylesheet" href="play.css">
+</head>
+<body>
+
+    <script>window.BL_ASSET_BASE = "../../";</script>
+    <script src="../../js/main.js"></script>
+    <script src="../../js/characters-data.js"></script>
+
+    <div id="play-screen">
+        <!-- assets/backgrounds/jugar-fondo.png completa, sin recortar, como
+             único fondo (aspect-ratio fija el alto exacto de la imagen para
+             cada ancho, así background-size:100% 100% nunca la deforma ni
+             la recorta). Las 4 "cajas" de color ya vienen dibujadas en la
+             imagen — el contenido de abajo solo se superpone encima, con
+             coordenadas en % medidas directamente sobre el PNG (853×1844). -->
+        <div id="play-bg-frame">
+            <header class="play-header">
+                <a class="play-back" href="../../index.html" aria-label="Volver"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 12H5M12 19l-7-7 7-7"/></svg></a>
+                <h1>Jugar</h1>
+                <span class="play-info-icon" title="Información" aria-label="Información">ⓘ</span>
+                <div class="play-currencies">
+                    <span class="play-currency"><span class="diamond-icon"><img src="../../assets/ui/diamond-icon.png" alt=""></span><span id="diamond-count">0</span></span>
+                    <span class="play-currency"><span class="points-icon">🎫</span><span id="points-count">0</span></span>
+                </div>
+            </header>
+
+            <a class="play-hotspot play-hotspot--historia" id="mode-historia" href="../story/index.html">
+                <div class="play-hotspot-head">
+                    <span class="play-mode-icon">📖</span>
+                    <span class="play-mode-name">Historia</span>
+                </div>
+                <p class="play-mode-desc">Sigue la historia de Blue Lock.</p>
+                <div class="play-mode-stat">
+                    <span class="play-mode-stat-label"><strong>Progreso</strong></span>
+                    <span class="play-mode-stat-value" id="historia-progress-value">0/21</span>
+                </div>
+            </a>
+
+            <a class="play-hotspot play-hotspot--fichajes" id="mode-fichajes" href="../transfers/index.html">
+                <div class="play-hotspot-head">
+                    <span class="play-mode-icon">🗺️</span>
+                    <span class="play-mode-name">Mapa de Fichajes</span>
+                </div>
+                <p class="play-mode-desc">Juega partidos y desbloquea jugadores y sus mejoras.</p>
+                <div class="play-mode-stat">
+                    <span class="play-mode-stat-label"><strong>Progreso</strong></span>
+                    <span class="play-mode-stat-value" id="fichajes-progress-value">0%</span>
+                </div>
+            </a>
+
+            <button class="play-hotspot play-hotspot--eventos" id="mode-eventos" type="button">
+                <div class="play-hotspot-head">
+                    <span class="play-mode-icon">🎉</span>
+                    <span class="play-mode-name">Eventos</span>
+                </div>
+                <p class="play-mode-desc">Participa en <span class="hl-purple">eventos</span> temporales y <span class="hl-purple">consigue</span> recompensas exclusivas.</p>
+                <div class="play-mode-stat">
+                    <span class="play-mode-stat-label"><strong>Evento actual</strong><small>Neo Egoist League</small></span>
+                    <span class="play-mode-stat-value">⏱ 13d 12h</span>
+                </div>
+                <span class="play-mode-tag">Próximamente</span>
+            </button>
+
+            <a class="play-hotspot play-hotspot--desafios" id="mode-desafios" href="../challenges/index.html">
+                <div class="play-hotspot-head">
+                    <span class="play-mode-icon">🏆</span>
+                    <span class="play-mode-name">Desafíos</span>
+                </div>
+                <p class="play-mode-desc">Juega los 5 mapas de <span class="hl-orange">Desafíos</span>, uno por cada equipo original.</p>
+                <div class="play-mode-stat">
+                    <span class="play-mode-stat-label"><strong>Partidos ganados</strong></span>
+                    <span class="play-mode-stat-value" id="desafios-progress-value">0/100</span>
+                </div>
+            </a>
+        </div>
+    </div>
+
+    <div id="soon-toast" class="play-toast" hidden>Próximamente</div>
+
+    <script src="play.js"></script>
+
+</body>
+</html>

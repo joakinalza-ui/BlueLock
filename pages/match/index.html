@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="manifest" href="../../manifest.json">
+    <link rel="apple-touch-icon" href="../../assets/ui/apple-touch-icon.png">
+    <meta name="theme-color" content="#070b14">
+    <script>if ("serviceWorker" in navigator) navigator.serviceWorker.register("../../sw.js");</script>
+    <title>Blue Lock Coach — Partido</title>
+    <link rel="stylesheet" href="match.css">
+</head>
+<body class="prematch-active">
+
+    <script>window.BL_ASSET_BASE = "../../";</script>
+    <script src="../../js/main.js"></script>
+    <script src="../../js/characters-data.js"></script>
+    <script src="match-engine.js"></script>
+
+    <div id="match-screen">
+        <div id="prematch-panel">
+            <div class="prematch-field-bg"></div>
+
+            <header class="prematch-header">
+                <a class="prematch-back" id="prematch-back" href="../transfers/index.html" aria-label="Volver"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 12H5M12 19l-7-7 7-7"/></svg></a>
+                <span class="prematch-header-spacer" aria-hidden="true"></span>
+            </header>
+
+            <div class="prematch-matchup-card">
+                <p class="prematch-matchup-title" id="prematch-matchup"></p>
+                <p class="prematch-mode-badge" id="prematch-mode"></p>
+            </div>
+
+            <div class="prematch-control-row">
+                <div class="prematch-team-toggle">
+                    <button class="prematch-squad-arrow" id="prematch-squad-prev" type="button" aria-label="Ver equipo anterior">‹</button>
+                    <div class="prematch-power-inline">
+                        <span class="prematch-power-label" id="prematch-squad-viewer-label">Tu equipo</span>
+                        <span class="prematch-power-value" id="prematch-squad-viewer-power">0</span>
+                    </div>
+                    <button class="prematch-squad-arrow" id="prematch-squad-next" type="button" aria-label="Ver siguiente equipo">›</button>
+                </div>
+
+                <div class="prematch-formation-box" id="prematch-formation-row" hidden>
+                    <span class="prematch-power-label">Formación</span>
+                    <select id="prematch-formation-select" class="prematch-formation-select"></select>
+                </div>
+            </div>
+
+            <p class="prematch-narrative" id="prematch-narrative" hidden></p>
+
+            <div class="prematch-pitch-field">
+                <div id="prematch-row-DEL" class="prematch-pitch-row"></div>
+                <div id="prematch-row-MED" class="prematch-pitch-row"></div>
+                <div id="prematch-row-DEF" class="prematch-pitch-row"></div>
+                <div id="prematch-row-POR" class="prematch-pitch-row"></div>
+            </div>
+
+            <p class="prematch-lineup-warning" id="prematch-lineup-warning" hidden></p>
+            <button class="prematch-start-btn" id="prematch-start-btn" type="button">Comenzar partido</button>
+        </div>
+
+        <div id="slot-picker-overlay" class="swap-modal-overlay" hidden>
+            <div class="swap-modal">
+                <p class="swap-modal-title">Elige quién ocupa este puesto</p>
+                <div class="slot-picker-filter-row">
+                    <label for="slot-picker-position-filter" class="slot-picker-filter-label">Posición</label>
+                    <select id="slot-picker-position-filter" class="slot-picker-position-select">
+                        <option value="all">Todos</option>
+                        <option value="POR">POR</option>
+                        <option value="DEF">DEF</option>
+                        <option value="MED">MED</option>
+                        <option value="DEL">DEL</option>
+                    </select>
+                </div>
+                <div id="slot-picker-list" class="swap-modal-slots"></div>
+                <div class="slot-picker-pagination">
+                    <button id="slot-picker-page-prev" class="slot-picker-page-arrow" type="button" aria-label="Página anterior">◀</button>
+                    <span id="slot-picker-page-indicator" class="slot-picker-page-indicator"></span>
+                    <button id="slot-picker-page-next" class="slot-picker-page-arrow" type="button" aria-label="Página siguiente">▶</button>
+                </div>
+                <button id="slot-picker-cancel" class="swap-modal-cancel" type="button">Cancelar</button>
+            </div>
+        </div>
+
+        <div id="live-match-panel" hidden>
+            <p class="match-line" id="matchup-line"></p>
+            <p class="match-line" id="mode-line"></p>
+            <p class="match-line" id="active-player-line"></p>
+            <p class="match-line match-score" id="score-line">0 - 0</p>
+            <p class="match-line" id="possession-line"></p>
+
+            <div class="match-zone-bar" id="match-zone-bar"></div>
+            <p class="match-line match-zone-text" id="zone-line"></p>
+
+            <button class="match-auto-toggle" id="match-auto-toggle" type="button">AUTO</button>
+
+            <div class="match-log" id="match-log"></div>
+
+            <div class="match-actions" id="match-actions"></div>
+        </div>
+    </div>
+
+    <script src="match.js"></script>
+
+</body>
+</html>

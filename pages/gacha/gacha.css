@@ -1,0 +1,858 @@
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+}
+
+html, body{
+    height:100%;
+}
+
+body{
+    background:#070b14;
+    color:#fff;
+    font-family:sans-serif;
+}
+
+/* Pantalla sin scroll: centra el frame de la imagen dentro del alto
+   real del dispositivo (100dvh con respaldo 100vh). */
+#gacha-screen{
+    max-width:480px;
+    margin:0 auto;
+    height:100vh;
+    height:100dvh;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    background:#070b14;
+    overflow:hidden;
+}
+
+/* assets/backgrounds/gacha-fondo.png ENTERA como fondo del frame:
+   aspect-ratio mantiene siempre la misma proporción que el PNG
+   (853×1844); width/height:auto + max-width/max-height:100% hacen que
+   el frame se encoja por lo que haga falta sin recortar ni deformar la
+   imagen — mismo patrón que "Jugar". Header y contenido se posicionan
+   dentro en % medidos sobre el propio PNG. */
+#gacha-bg-frame{
+    position:relative;
+    width:min(100%, calc(100dvh * 853 / 1844));
+    aspect-ratio:853/1844;
+    background-image:url("../../assets/backgrounds/gacha-fondo.png");
+    background-size:100% 100%;
+    background-repeat:no-repeat;
+    overflow:hidden;
+}
+
+/* La imagen de fondo trae su propio "GACHA" + flecha + icono ⓘ
+   dibujados en la franja superior, que quedaban duplicados con el
+   header real. En vez de intentar alinear el header real encima del
+   dibujado (imposible pixel a pixel, distintos anchos/fuentes), se
+   tapa esa franja con un degradado del mismo tono claro del fondo
+   (sólido hasta el punto donde termina el dibujo, con un fundido
+   suave hacia abajo para no dejar un corte visible) y el header real
+   se dibuja encima, limpio. */
+#gacha-bg-frame::before{
+    content:"";
+    position:absolute;
+    top:0; left:0; right:0;
+    height:11%;
+    background:linear-gradient(180deg,
+        rgba(204,213,239,1) 0%,
+        rgba(204,213,239,1) 71%,
+        rgba(204,213,239,0) 100%);
+    pointer-events:none;
+    z-index:1;
+}
+
+.gacha-header{
+    position:relative;
+    z-index:2;
+    display:flex;
+    align-items:center;
+    gap:12px;
+    padding:16px 20px;
+}
+
+.gacha-back{
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    width:42px;
+    height:38px;
+    /* padding-left = ancho de la punta del hexágono (28% del ancho
+       total) — así el hueco de contenido centrado por flexbox coincide
+       exactamente con el cuerpo plano visible del hexágono, en vez de
+       con la caja completa (que incluye la punta vacía). */
+    padding-left:12px;
+    clip-path:polygon(28% 0%, 100% 0%, 100% 100%, 28% 100%, 0% 50%);
+    background:#1d3f8f;
+    box-shadow:0 3px 8px rgba(29,63,143,0.4);
+    text-decoration:none;
+    flex-shrink:0;
+}
+
+.gacha-back-arrow{
+    width:10px;
+    height:10px;
+    border-style:solid;
+    border-color:#fff;
+    border-width:0 3px 3px 0;
+    transform:rotate(135deg);
+}
+
+.gacha-header h1{
+    font-size:20px;
+    font-weight:800;
+    font-style:italic;
+    text-transform:uppercase;
+    letter-spacing:0.02em;
+    color:#1d3f8f;
+}
+
+.info-icon{
+    position:relative;
+    display:inline-flex;
+    font-size:14px;
+    color:#1d3f8f;
+    cursor:help;
+    margin-left:-2px;
+}
+
+.info-tooltip{
+    display:none;
+    position:absolute;
+    top:130%;
+    left:0;
+    width:230px;
+    background:#0d1424;
+    border:1px solid #2c3a5c;
+    border-radius:8px;
+    padding:8px 10px;
+    font-size:11px;
+    font-weight:400;
+    text-transform:none;
+    letter-spacing:normal;
+    color:#c3cbe0;
+    line-height:1.4;
+    z-index:20;
+}
+
+.info-icon:hover .info-tooltip,
+.info-icon:focus .info-tooltip{
+    display:block;
+}
+
+.diamond-counter{
+    margin-left:auto;
+    display:flex;
+    align-items:center;
+    gap:6px;
+    background:#fff;
+    border:1.5px solid #1d3f8f;
+    border-radius:999px;
+    padding:6px 12px;
+    font-size:13px;
+    font-weight:700;
+    color:#1d3f8f;
+    font-variant-numeric:tabular-nums;
+}
+
+/* Tickets de Gacha: ganados en Desafíos, cubren una tirada x1 gratis
+   (ver pull-x1-cost). Mismo estilo de píldora que diamond-counter, en
+   ámbar para diferenciarlo de un vistazo. margin-left:auto propio para
+   que, junto con el de diamond-counter justo después, ambos queden
+   agrupados a la derecha del header. */
+.ticket-counter{
+    margin-left:auto;
+    display:flex;
+    align-items:center;
+    gap:6px;
+    background:#fff;
+    border:1.5px solid #b45309;
+    border-radius:999px;
+    padding:6px 10px;
+    font-size:13px;
+    font-weight:700;
+    color:#b45309;
+    font-variant-numeric:tabular-nums;
+}
+
+.ticket-icon{
+    font-size:12px;
+}
+
+.diamond-icon{
+    display:inline-flex;
+    width:22px;
+    height:22px;
+    flex-shrink:0;
+}
+
+.diamond-icon img{
+    display:block;
+    width:100%;
+    height:100%;
+    object-fit:contain;
+}
+
+/* Se superpone en la zona blanca/suelo de la imagen, debajo de la
+   puerta — top:66% medido contra el punto donde termina realmente el
+   marco/neón de la puerta en el PNG (fila ~1190 de 1844 ≈ 64.5%), con
+   margen extra para que la puerta quede completa y despejada.
+   overflow:hidden como red de seguridad. */
+.gacha-content{
+    position:absolute;
+    top:66%;
+    left:0;
+    right:0;
+    bottom:0;
+    z-index:2;
+    overflow:hidden;
+    padding:4px 20px 4px;
+    display:flex;
+    flex-direction:column;
+    gap:3px;
+}
+
+/* Banner único de reclutamiento */
+
+.gacha-banner{
+    position:relative;
+    overflow:hidden;
+    border-radius:16px;
+    border:1px solid #2c3a5c;
+    background:
+        linear-gradient(180deg, rgba(5,8,15,0.15) 0%, rgba(5,8,15,0.75) 100%),
+        linear-gradient(135deg, #16224a 0%, #0b142c 60%, #070b14 100%);
+    padding:8px 16px;
+    display:flex;
+    flex-direction:column;
+    gap:3px;
+    flex-shrink:0;
+    justify-content:center;
+}
+
+.gacha-banner-glow{
+    position:absolute;
+    top:-40%;
+    left:50%;
+    width:220px;
+    height:220px;
+    transform:translateX(-50%);
+    background:radial-gradient(circle, rgba(127,168,255,0.35), transparent 70%);
+    pointer-events:none;
+}
+
+.gacha-banner-name{
+    position:relative;
+    font-size:14px;
+    font-weight:700;
+    text-shadow:0 2px 8px rgba(0,0,0,0.6);
+    white-space:nowrap;
+    overflow:hidden;
+    text-overflow:ellipsis;
+}
+
+.gacha-details-btn{
+    position:relative;
+    align-self:flex-start;
+    background:rgba(15,22,38,0.75);
+    border:1px solid rgba(127,168,255,0.5);
+    border-radius:999px;
+    color:#fff;
+    font-size:10.5px;
+    font-weight:700;
+    padding:4px 12px;
+    cursor:pointer;
+}
+
+/* Sobre de Bienvenida: tirada gratuita de un solo uso. Se oculta sola
+   (welcome-pull-card[hidden]) en cuanto se reclama. */
+
+.welcome-pull-card{
+    flex-shrink:0;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:10px;
+    padding:4px 12px;
+    border-radius:12px;
+    border:1px solid #f59e0b;
+    background:linear-gradient(135deg, rgba(245,158,11,0.16) 0%, #0d1424 65%);
+}
+
+.welcome-pull-card[hidden]{
+    display:none;
+}
+
+.welcome-pull-card-info{
+    display:flex;
+    flex-direction:column;
+    gap:2px;
+}
+
+.welcome-pull-card-title{
+    font-size:12.5px;
+    font-weight:700;
+}
+
+.welcome-pull-card-desc{
+    font-size:10.5px;
+    color:#c9b38a;
+}
+
+.welcome-pull-star{
+    color:#facc15;
+    font-weight:700;
+}
+
+.welcome-pull-card-btn{
+    flex-shrink:0;
+    padding:7px 12px;
+    border-radius:9px;
+    border:none;
+    background:#f59e0b;
+    color:#1a1200;
+    font-weight:700;
+    font-size:13px;
+    white-space:nowrap;
+    cursor:pointer;
+}
+
+/* Pity */
+
+.pity-row{
+    flex-shrink:0;
+    background:#0d1424;
+    border:1px solid #1e2b4a;
+    border-radius:12px;
+    padding:4px 14px;
+}
+
+.pity-label-row{
+    display:flex;
+    justify-content:space-between;
+    align-items:baseline;
+    margin-bottom:4px;
+}
+
+.pity-label{
+    font-size:11px;
+    text-transform:uppercase;
+    letter-spacing:0.03em;
+    color:#9aa6c3;
+    font-weight:700;
+}
+
+.pity-fraction{
+    font-size:13px;
+    font-weight:700;
+    color:#7fa8ff;
+    font-variant-numeric:tabular-nums;
+}
+
+.pity-track{
+    height:8px;
+    border-radius:5px;
+    background:#0a0f1c;
+    border:1px solid #1e2b4a;
+    overflow:hidden;
+}
+
+.pity-fill{
+    height:100%;
+    border-radius:5px;
+    background:linear-gradient(90deg, #3b6fd6, #7fa8ff);
+    width:0%;
+    transition:width 0.3s ease;
+}
+
+/* Botones de invocar — estilo claro/cristal a juego con el fondo
+   luminoso (borde de color + fondo blanco/celeste translúcido, texto
+   azul marino), título arriba y coste abajo; el x10 añade una
+   cinta/ribbon con el aviso de pity dentro de su propio hueco
+   reservado (padding-bottom), para que nunca se solape con el botón
+   de la Tienda de Puntos justo debajo. */
+
+.pull-buttons{
+    flex-shrink:0;
+    display:flex;
+    gap:12px;
+}
+
+.pull-btn{
+    flex:1;
+    position:relative;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:center;
+    gap:3px;
+    padding:5px 10px;
+    border-radius:14px;
+    background:linear-gradient(160deg, rgba(255,255,255,0.97) 0%, rgba(219,234,254,0.92) 100%);
+    box-shadow:0 4px 14px rgba(3,8,20,0.35);
+    color:#1d3f8f;
+    cursor:pointer;
+}
+
+.pull-btn:disabled{
+    opacity:0.45;
+    cursor:not-allowed;
+}
+
+.pull-btn-x1{
+    border:2px solid #3b82f6;
+}
+
+.pull-btn-x10{
+    border:2px solid #eab308;
+    padding-bottom:17px;
+    background:linear-gradient(160deg, rgba(255,255,255,0.97) 0%, rgba(254,249,195,0.92) 100%);
+}
+
+.pull-btn-title{
+    font-size:15px;
+    font-weight:800;
+    letter-spacing:0.02em;
+    color:#1d3f8f;
+}
+
+.pull-btn-cost{
+    display:flex;
+    align-items:center;
+    gap:5px;
+    font-size:13px;
+    color:#3a4a6b;
+    font-variant-numeric:tabular-nums;
+}
+
+.pull-btn-guarantee-ribbon{
+    position:absolute;
+    left:50%;
+    bottom:6px;
+    transform:translateX(-50%);
+    background:#eab308;
+    color:#1a1200;
+    font-size:9.5px;
+    font-weight:800;
+    letter-spacing:0.02em;
+    padding:5px 16px;
+    white-space:nowrap;
+    clip-path:polygon(6px 0, calc(100% - 6px) 0, 100% 50%, calc(100% - 6px) 100%, 6px 100%, 0 50%);
+}
+
+.pull-btn-guarantee-ribbon[hidden]{
+    display:none;
+}
+
+.pull-btn-cost .diamond-icon{
+    width:17px;
+    height:17px;
+}
+
+/* Botón de acceso a la Tienda de Puntos, debajo de los botones de
+   invocar */
+
+.points-shop-btn{
+    flex-shrink:0;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:10px;
+    padding:6px 16px;
+    border-radius:12px;
+    border:1px solid #2c3a5c;
+    background:#0d1424;
+    color:#fff;
+    font-size:13px;
+    font-weight:700;
+    cursor:pointer;
+}
+
+.points-shop-btn-count{
+    color:#f5c542;
+    font-variant-numeric:tabular-nums;
+}
+
+/* Modal de la Tienda de Puntos */
+
+.points-shop-balance{
+    display:flex;
+    align-items:baseline;
+    justify-content:center;
+    gap:6px;
+    margin:-6px 0 16px;
+    font-weight:700;
+}
+
+.points-shop-balance-icon{
+    font-size:14px;
+}
+
+#points-shop-balance-value{
+    font-size:20px;
+    color:#f5c542;
+    font-variant-numeric:tabular-nums;
+}
+
+.points-shop-balance-label{
+    font-size:12px;
+    color:#9aa6c3;
+    font-weight:400;
+}
+
+.points-shop-list{
+    display:flex;
+    flex-direction:column;
+    gap:10px;
+}
+
+.points-shop-row{
+    display:flex;
+    align-items:center;
+    gap:10px;
+    background:#0a0f1c;
+    border:1px solid #2c3a5c;
+    border-radius:12px;
+    padding:8px 10px;
+}
+
+.points-shop-row-thumb{
+    width:44px;
+    height:44px;
+    flex-shrink:0;
+    border-radius:8px;
+    overflow:hidden;
+    background:#111a2e;
+    display:block;
+}
+
+.points-shop-row-thumb img{
+    width:100%;
+    height:100%;
+    object-fit:cover;
+    display:block;
+}
+
+.points-shop-row-info{
+    display:flex;
+    flex-direction:column;
+    gap:2px;
+    min-width:0;
+    flex:1;
+}
+
+.points-shop-row-name{
+    font-size:13px;
+    font-weight:700;
+    white-space:nowrap;
+    overflow:hidden;
+    text-overflow:ellipsis;
+}
+
+.points-shop-row-owned{
+    color:#7fa8ff;
+    font-weight:400;
+    font-size:11px;
+}
+
+.points-shop-row-position{
+    font-size:11px;
+    color:#facc15;
+    letter-spacing:0.02em;
+}
+
+.points-shop-redeem-btn{
+    flex-shrink:0;
+    padding:9px 12px;
+    border-radius:8px;
+    border:none;
+    background:#7fa8ff;
+    color:#0a0f1c;
+    font-weight:700;
+    font-size:11.5px;
+    white-space:nowrap;
+    cursor:pointer;
+}
+
+.points-shop-redeem-btn:disabled{
+    background:#1c2438;
+    color:#5b6580;
+    cursor:not-allowed;
+}
+
+/* Toast de éxito al canjear (mismo patrón que .gacha-toast pero en
+   verde, para no confundirlo con el aviso de saldo insuficiente) */
+
+.points-shop-toast{
+    position:fixed;
+    left:50%;
+    bottom:32px;
+    transform:translateX(-50%);
+    background:#08160c;
+    border:1px solid #22c55e;
+    color:#86efac;
+    font-size:13px;
+    font-weight:700;
+    padding:10px 18px;
+    border-radius:999px;
+    z-index:90;
+    max-width:85vw;
+    text-align:center;
+}
+
+.points-shop-toast[hidden]{
+    display:none;
+}
+
+/* Modales compartidos (resultado de tirada / detalles del banner) */
+
+.gacha-modal-overlay{
+    position:fixed;
+    inset:0;
+    background:rgba(3,5,10,0.75);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    padding:24px;
+    z-index:60;
+}
+
+.gacha-modal-overlay[hidden]{
+    display:none;
+}
+
+.gacha-modal{
+    position:relative;
+    width:100%;
+    max-width:420px;
+    max-height:86vh;
+    overflow-y:auto;
+    background:#0d1424;
+    border:1px solid #2c3a5c;
+    border-radius:18px;
+    padding:22px 20px 20px;
+}
+
+.gacha-modal-close{
+    position:absolute;
+    top:14px;
+    right:14px;
+    width:26px;
+    height:26px;
+    border-radius:50%;
+    background:rgba(5,8,15,0.6);
+    border:1px solid #2c3a5c;
+    color:#fff;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-size:14px;
+    line-height:1;
+    cursor:pointer;
+}
+
+.gacha-modal-title{
+    font-size:15px;
+    font-weight:700;
+    text-align:center;
+    margin-bottom:18px;
+}
+
+.gacha-modal-primary{
+    width:100%;
+    margin-top:16px;
+    padding:13px;
+    border-radius:10px;
+    border:none;
+    background:#7fa8ff;
+    color:#0a0f1c;
+    font-weight:700;
+    font-size:14px;
+    cursor:pointer;
+}
+
+/* Resultado de la tirada: grid de cartas (1 o 10) */
+
+.pull-result-grid{
+    display:grid;
+    grid-template-columns:repeat(5, 1fr);
+    gap:8px;
+}
+
+.pull-result-grid.is-single{
+    grid-template-columns:1fr;
+    max-width:180px;
+    margin:0 auto;
+}
+
+.result-card{
+    position:relative;
+    display:flex;
+    flex-direction:column;
+    background:#0a0f1c;
+    border:2px solid #2c3a5c;
+    border-radius:10px;
+    overflow:hidden;
+    color:#fff;
+    text-align:left;
+}
+
+.result-card.is-new{
+    border-color:#facc15;
+    box-shadow:0 0 0 1px rgba(250,204,21,0.4), 0 4px 14px rgba(250,204,21,0.2);
+}
+
+.result-card-thumb{
+    width:100%;
+    aspect-ratio:1/1;
+    background:#111a2e;
+    overflow:hidden;
+    display:block;
+}
+
+.result-card-thumb img{
+    width:100%;
+    height:100%;
+    object-fit:cover;
+    display:block;
+}
+
+.result-card-position{
+    position:absolute;
+    top:4px;
+    left:4px;
+    color:#fff;
+    font-size:9px;
+    font-weight:700;
+    padding:2px 5px;
+    border-radius:5px;
+    letter-spacing:0.02em;
+}
+
+.result-card-position[data-position="DEL"]{ background:rgba(239,68,68,0.9); }
+.result-card-position[data-position="MED"]{ background:rgba(59,130,246,0.9); }
+.result-card-position[data-position="DEF"]{ background:rgba(34,197,94,0.9); }
+.result-card-position[data-position="POR"]{ background:rgba(245,158,11,0.9); }
+
+.result-card-badge{
+    position:absolute;
+    top:4px;
+    right:4px;
+    font-size:8px;
+    font-weight:700;
+    padding:2px 5px;
+    border-radius:5px;
+    letter-spacing:0.02em;
+}
+
+.result-card-badge.badge-new{
+    background:#facc15;
+    color:#1a1200;
+}
+
+.result-card-badge.badge-essence{
+    background:rgba(16,24,42,0.9);
+    border:1px solid #3b82f6;
+    color:#7fa8ff;
+}
+
+.result-card-stars{
+    font-size:8px;
+    color:#facc15;
+    padding:4px 5px 0;
+    letter-spacing:1px;
+    white-space:nowrap;
+    overflow:hidden;
+}
+
+.result-card-name{
+    font-size:9px;
+    font-weight:700;
+    padding:2px 5px 5px;
+    white-space:nowrap;
+    overflow:hidden;
+    text-overflow:ellipsis;
+}
+
+.pull-result-grid.is-single .result-card-thumb{
+    aspect-ratio:1/1.1;
+}
+
+.pull-result-grid.is-single .result-card-stars{
+    font-size:12px;
+    padding:8px 8px 0;
+}
+
+.pull-result-grid.is-single .result-card-name{
+    font-size:14px;
+    padding:4px 8px 10px;
+}
+
+/* Detalles del banner: lista del pool agrupada por rareza */
+
+.banner-details-list{
+    display:flex;
+    flex-direction:column;
+    gap:16px;
+}
+
+.banner-tier{
+    display:flex;
+    flex-direction:column;
+    gap:8px;
+}
+
+.banner-tier-title{
+    font-size:11px;
+    font-weight:700;
+    text-transform:uppercase;
+    letter-spacing:0.04em;
+    color:#facc15;
+}
+
+.banner-character-row{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:10px;
+    background:#0a0f1c;
+    border:1px solid #2c3a5c;
+    border-radius:10px;
+    padding:9px 12px;
+    font-size:13px;
+}
+
+.banner-character-row.is-locked{
+    color:#5b6685;
+}
+
+.banner-character-position{
+    font-size:10px;
+    font-weight:700;
+    color:#7fa8ff;
+    min-width:28px;
+}
+
+/* Toast de saldo insuficiente */
+
+.gacha-toast{
+    position:fixed;
+    left:50%;
+    bottom:32px;
+    transform:translateX(-50%);
+    background:#1a0a0a;
+    border:1px solid #ef4444;
+    color:#fca5a5;
+    font-size:13px;
+    font-weight:700;
+    padding:10px 18px;
+    border-radius:999px;
+    z-index:80;
+}
+
+.gacha-toast[hidden]{
+    display:none;
+}

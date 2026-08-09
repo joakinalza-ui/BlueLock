@@ -1,0 +1,304 @@
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+}
+
+body{
+    min-height:100vh;
+    background:#070b14;
+    color:#fff;
+    font-family:sans-serif;
+    padding-bottom:48px;
+}
+
+#menu-screen{
+    max-width:480px;
+    margin:0 auto;
+    padding:0 20px 24px;
+}
+
+.menu-header{
+    display:flex;
+    align-items:center;
+    gap:14px;
+    padding:20px 0;
+}
+
+.menu-back{
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    width:36px;
+    height:36px;
+    border-radius:50%;
+    background:#0f1626;
+    border:1px solid #2c3a5c;
+    color:#fff;
+    text-decoration:none;
+    font-size:18px;
+}
+
+.menu-header h1{
+    font-size:22px;
+    font-weight:700;
+}
+
+.menu-section{
+    background:#0d1424;
+    border:1px solid #1e2b4a;
+    border-radius:16px;
+    padding:18px;
+    margin-bottom:18px;
+}
+
+.menu-section h2{
+    font-size:15px;
+    text-transform:uppercase;
+    letter-spacing:0.04em;
+    color:#7fa8ff;
+    margin-bottom:12px;
+}
+
+.menu-hint{
+    margin-top:8px;
+    font-size:12px;
+    color:#7a86a6;
+}
+
+/* Campo de nombre editable: mismo comportamiento que la Home
+   (click para editar, tamaño de fuente ajustado al hueco disponible),
+   pero en un campo normal de settings, no en la pastilla del logo. */
+
+.name-field{
+    position:relative;
+    height:52px;
+    background:#0a0f1c;
+    border:1px solid #2c3a5c;
+    border-radius:12px;
+    padding:0 16px;
+    display:flex;
+    align-items:center;
+}
+
+#settings-name-display,
+#settings-name-input{
+    width:100%;
+    color:#fff;
+    font-weight:700;
+    line-height:1;
+    font-family:sans-serif;
+}
+
+#settings-name-display{
+    cursor:pointer;
+    white-space:nowrap;
+    overflow:hidden;
+    text-overflow:ellipsis;
+}
+
+#settings-name-input{
+    background:transparent;
+    border:none;
+    outline:none;
+    padding:0;
+}
+
+#settings-name-display[hidden],
+#settings-name-input[hidden]{
+    display:none;
+}
+
+/* Selector de personaje de la Home */
+
+.character-grid{
+    display:grid;
+    grid-template-columns:repeat(3, 1fr);
+    gap:12px;
+}
+
+.character-card{
+    background:#0a0f1c;
+    border:2px solid #2c3a5c;
+    border-radius:12px;
+    padding:8px;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    gap:6px;
+    cursor:pointer;
+    color:#fff;
+    font-family:sans-serif;
+}
+
+.character-card-thumb{
+    width:100%;
+    aspect-ratio:1/1;
+    border-radius:8px;
+    background:#111a2e;
+    overflow:hidden;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+}
+
+.character-card-thumb img{
+    width:100%;
+    height:100%;
+    object-fit:cover;
+    object-position:top center;
+}
+
+.character-card-name{
+    font-size:11px;
+    text-align:center;
+    line-height:1.2;
+}
+
+.character-card.is-selected{
+    border-color:#3b82f6;
+    box-shadow:0 0 0 2px rgba(59,130,246,0.45);
+}
+
+.character-pagination{
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    gap:16px;
+    margin-top:12px;
+}
+
+.character-page-arrow{
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    width:32px;
+    height:32px;
+    border-radius:50%;
+    background:#0a0f1c;
+    border:1px solid #2c3a5c;
+    color:#fff;
+    font-size:13px;
+    cursor:pointer;
+}
+
+.character-page-arrow:disabled{
+    opacity:0.35;
+    cursor:not-allowed;
+}
+
+.character-page-indicator{
+    min-width:110px;
+    text-align:center;
+    font-size:12px;
+    color:#9aa6c3;
+}
+
+/* Debug: botones temporales para probar sistemas cuyas fuentes reales
+   (Auto-run, Desafíos) todavía no existen. */
+
+.menu-section-debug h2{
+    color:#f59e0b;
+}
+
+.debug-btn{
+    width:100%;
+    padding:14px;
+    border-radius:12px;
+    border:1px solid #7c5312;
+    background:#2a1f0f;
+    color:#f59e0b;
+    font-weight:700;
+    font-size:14px;
+    cursor:pointer;
+}
+
+.debug-btn + .menu-hint + .debug-btn{
+    margin-top:14px;
+}
+
+.debug-btn:active{
+    background:#3a2a14;
+}
+
+/* Zona de reinicio de progreso */
+
+.menu-section-danger h2{
+    color:#f87171;
+}
+
+.danger-btn{
+    width:100%;
+    padding:14px;
+    border-radius:12px;
+    border:1px solid #7f1d1d;
+    background:#2a0f14;
+    color:#f87171;
+    font-weight:700;
+    font-size:14px;
+    cursor:pointer;
+}
+
+.danger-btn:active{
+    background:#3a1218;
+}
+
+/* Overlay de confirmación */
+
+.confirm-overlay{
+    position:fixed;
+    inset:0;
+    background:rgba(3,5,10,0.72);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    padding:24px;
+    z-index:50;
+}
+
+.confirm-overlay[hidden]{
+    display:none;
+}
+
+.confirm-box{
+    width:100%;
+    max-width:340px;
+    background:#0d1424;
+    border:1px solid #2c3a5c;
+    border-radius:16px;
+    padding:22px;
+    text-align:center;
+}
+
+.confirm-box p{
+    font-size:14px;
+    line-height:1.5;
+    color:#e5e9f5;
+    margin-bottom:20px;
+}
+
+.confirm-actions{
+    display:flex;
+    gap:12px;
+}
+
+.confirm-btn{
+    flex:1;
+    padding:12px;
+    border-radius:10px;
+    font-weight:700;
+    font-size:13px;
+    cursor:pointer;
+    border:1px solid transparent;
+}
+
+.confirm-btn-secondary{
+    background:#131c30;
+    border-color:#2c3a5c;
+    color:#fff;
+}
+
+.confirm-btn-danger{
+    background:#dc2626;
+    color:#fff;
+}

@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="manifest" href="../../manifest.json">
+    <link rel="apple-touch-icon" href="../../assets/ui/apple-touch-icon.png">
+    <meta name="theme-color" content="#070b14">
+    <script>if ("serviceWorker" in navigator) navigator.serviceWorker.register("../../sw.js");</script>
+    <title>Blue Lock Coach — Ficha del jugador</title>
+    <link rel="stylesheet" href="player.css">
+</head>
+<body>
+
+    <script>window.BL_ASSET_BASE = "../../";</script>
+    <script src="../../js/main.js"></script>
+    <script src="../../js/characters-data.js"></script>
+
+    <div id="player-screen">
+        <header class="player-header">
+            <button class="player-back" id="player-back-btn" type="button" aria-label="Volver"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 12H5M12 19l-7-7 7-7"/></svg></button>
+            <h1>Ficha del jugador</h1>
+        </header>
+
+        <div class="player-hero">
+            <span class="player-hero-position" id="player-hero-position"></span>
+            <img id="player-hero-img" alt="">
+        </div>
+
+        <div class="player-identity">
+            <div class="player-name" id="player-name"></div>
+            <div class="player-stars" id="player-stars"></div>
+            <div class="player-meta-row">
+                <span class="pd-pill element" id="player-element"></span>
+                <span class="pd-pill level" id="player-level"></span>
+                <span class="pd-pill team" id="player-team"></span>
+            </div>
+        </div>
+
+        <div class="player-tabs">
+            <button class="player-tab is-active" type="button" data-tab="resumen">Resumen</button>
+            <button class="player-tab" type="button" data-tab="habilidades">Habilidades</button>
+        </div>
+
+        <div class="player-tab-panel" data-tab-panel="resumen">
+            <div class="player-section">
+                <div class="pd-section-title">Estadísticas</div>
+                <div class="pd-stats" id="player-stats"></div>
+            </div>
+            <div class="player-section" id="player-levelup-section" hidden>
+                <div class="pd-section-title">Subir de Nivel</div>
+                <div class="player-levelup-box">
+                    <div class="player-levelup-info-row">
+                        <span class="player-levelup-current" id="player-levelup-current"></span>
+                        <span class="player-levelup-fuel" id="player-levelup-fuel"></span>
+                    </div>
+                    <div class="player-levelup-cost" id="player-levelup-cost"></div>
+                    <button class="player-levelup-btn" id="player-levelup-btn" type="button"></button>
+                </div>
+            </div>
+            <div class="player-section">
+                <div class="pd-section-title">Despertar</div>
+                <div class="player-levelup-box">
+                    <div class="player-levelup-info-row">
+                        <span class="player-levelup-current" id="player-awakening-current"></span>
+                        <span class="player-levelup-fuel" id="player-awakening-essences"></span>
+                    </div>
+                    <div class="player-levelup-cost" id="player-awakening-cost"></div>
+                    <button class="player-levelup-btn" id="player-awakening-btn" type="button"></button>
+                </div>
+            </div>
+        </div>
+
+        <div class="player-tab-panel" data-tab-panel="habilidades" hidden>
+            <div class="player-section">
+                <div class="pd-section-title">Habilidades Pasivas</div>
+                <div class="pd-passive-list" id="player-passives"></div>
+            </div>
+            <div class="player-section">
+                <div class="pd-section-title">Supertécnicas</div>
+                <div class="pd-technique-list" id="player-techniques"></div>
+            </div>
+        </div>
+
+        <div class="player-action-slot" id="player-action-slot"></div>
+    </div>
+
+    <script src="player.js"></script>
+
+</body>
+</html>

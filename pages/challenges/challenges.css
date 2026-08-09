@@ -1,0 +1,238 @@
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+}
+
+body{
+    min-height:100vh;
+    background:#070b14;
+    color:#fff;
+    font-family:sans-serif;
+}
+
+#challenges-screen{
+    max-width:480px;
+    margin:0 auto;
+    padding:16px 20px 40px;
+}
+
+.challenges-header{
+    display:flex;
+    align-items:center;
+    gap:14px;
+    margin-bottom:12px;
+}
+
+.challenges-back{
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    width:36px;
+    height:36px;
+    border-radius:50%;
+    background:#0f1626;
+    border:1px solid #2c3a5c;
+    color:#fff;
+    text-decoration:none;
+    font-size:18px;
+    flex-shrink:0;
+}
+
+.challenges-header h1{
+    flex:1;
+    text-align:center;
+    font-size:18px;
+    font-weight:700;
+    text-transform:uppercase;
+    letter-spacing:0.03em;
+}
+
+.challenges-header-spacer{
+    width:36px;
+    flex-shrink:0;
+}
+
+.challenges-intro{
+    font-size:13px;
+    color:#9aa6c3;
+    line-height:1.5;
+    margin-bottom:16px;
+}
+
+/* Selector de los 5 mapas */
+
+.challenge-section-title{
+    font-size:13px;
+    font-weight:700;
+    color:#7fa8ff;
+    text-transform:uppercase;
+    letter-spacing:0.04em;
+    margin:18px 0 10px;
+}
+
+.challenge-section-title:first-child{
+    margin-top:0;
+}
+
+.challenge-maps{
+    display:flex;
+    flex-direction:column;
+    gap:10px;
+}
+
+.challenge-map-card{
+    position:relative;
+    display:flex;
+    flex-direction:column;
+    gap:4px;
+    background:#0d1424;
+    border:1px solid #2c3a5c;
+    border-radius:14px;
+    padding:14px 16px;
+    color:#fff;
+    text-decoration:none;
+}
+
+.challenge-map-card.is-completed{
+    border-color:#facc15;
+}
+
+.challenge-map-name{
+    font-size:16px;
+    font-weight:700;
+    text-transform:uppercase;
+    letter-spacing:0.02em;
+}
+
+.challenge-map-progress{
+    font-size:13px;
+    color:#7fa8ff;
+    font-weight:700;
+    font-variant-numeric:tabular-nums;
+}
+
+.challenge-map-roster{
+    font-size:11px;
+    color:#9aa6c3;
+}
+
+.challenge-map-check{
+    position:absolute;
+    top:14px;
+    right:16px;
+    font-size:11px;
+    font-weight:700;
+    color:#1a1200;
+    background:#facc15;
+    padding:3px 8px;
+    border-radius:999px;
+}
+
+/* Aviso (sin bloqueo de la lista — editar/completar la alineación se
+   hace en la pantalla previa a cada partido, ver pages/match/) */
+
+.challenge-warning{
+    background:rgba(245,158,11,0.12);
+    border:1px solid #f59e0b;
+    color:#fde68a;
+    font-size:12px;
+    line-height:1.5;
+    padding:10px 14px;
+    border-radius:10px;
+    margin-bottom:16px;
+}
+
+.challenge-warning[hidden]{
+    display:none;
+}
+
+/* Lista de 20 partidos, en 4 bloques de 5 */
+
+.challenge-block-label{
+    font-size:12px;
+    color:#7fa8ff;
+    font-weight:700;
+    text-transform:uppercase;
+    letter-spacing:0.03em;
+    margin:14px 0 8px;
+}
+
+.challenge-block-matches{
+    display:flex;
+    flex-direction:column;
+    gap:6px;
+}
+
+.challenge-match{
+    position:relative;
+    display:flex;
+    align-items:center;
+    gap:12px;
+    background:#0d1424;
+    border:1px solid #2c3a5c;
+    border-radius:10px;
+    padding:10px 14px;
+    cursor:pointer;
+}
+
+.challenge-match.is-locked{
+    opacity:0.5;
+    cursor:not-allowed;
+}
+
+.challenge-match.is-completed{
+    border-color:#facc15;
+    cursor:default;
+}
+
+.challenge-match.is-unlocked{
+    border-color:#7fa8ff;
+}
+
+.challenge-match-number{
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    width:26px;
+    height:26px;
+    border-radius:50%;
+    background:#0a0f1c;
+    border:1px solid #2c3a5c;
+    font-size:12px;
+    font-weight:700;
+    flex-shrink:0;
+}
+
+.challenge-match-info{
+    flex:1;
+    min-width:0;
+    display:flex;
+    flex-direction:column;
+    gap:2px;
+}
+
+.challenge-match-rival{
+    font-size:13px;
+    font-weight:700;
+}
+
+.challenge-match-status{
+    font-size:11px;
+    color:#9aa6c3;
+}
+
+.challenge-match.is-unlocked .challenge-match-status{
+    color:#7fa8ff;
+}
+
+.challenge-match.is-completed .challenge-match-status{
+    color:#facc15;
+}
+
+.challenge-match-lock,
+.challenge-match-check{
+    font-size:14px;
+    flex-shrink:0;
+}
+

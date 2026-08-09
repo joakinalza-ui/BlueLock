@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="manifest" href="../../manifest.json">
+    <link rel="apple-touch-icon" href="../../assets/ui/apple-touch-icon.png">
+    <meta name="theme-color" content="#070b14">
+    <script>if ("serviceWorker" in navigator) navigator.serviceWorker.register("../../sw.js");</script>
+    <title>Blue Lock Coach — 11 VS 11</title>
+    <link rel="stylesheet" href="formation11.css">
+</head>
+<body>
+
+    <div class="formation-bg"></div>
+
+    <script>window.BL_ASSET_BASE = "../../";</script>
+    <script src="../../js/main.js"></script>
+    <script src="../../js/characters-data.js"></script>
+
+    <div id="formation-screen">
+        <header class="team-header">
+            <a class="team-back" href="../team/index.html" aria-label="Volver"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 12H5M12 19l-7-7 7-7"/></svg></a>
+            <h1></h1>
+            <span class="info-icon" tabindex="0">ⓘ
+                <span class="info-tooltip">Toca cualquier puesto del campo para asignar o cambiar jugador. Cada formación guarda su propio Once — cambiar de formación no borra las asignaciones de las demás.</span>
+            </span>
+        </header>
+
+        <div class="formation-content">
+            <div class="power-formation-row">
+                <div class="power-card">
+                    <span class="power-card-label">Poder del equipo</span>
+                    <span id="power-value" class="power-card-value"></span>
+                </div>
+
+                <div class="formation-select-row">
+                    <label for="formation-select" class="formation-select-label">Formación</label>
+                    <select id="formation-select" class="formation-select"></select>
+                </div>
+            </div>
+        </div>
+
+        <div class="pitch-field">
+            <div id="row-DEL" class="pitch-row"></div>
+            <div id="row-MED" class="pitch-row"></div>
+            <div id="row-DEF" class="pitch-row"></div>
+            <div id="row-POR" class="pitch-row"></div>
+        </div>
+    </div>
+
+    <div id="slot-picker-overlay" class="swap-modal-overlay" hidden>
+        <div class="swap-modal">
+            <p class="swap-modal-title">Elige quién ocupa este puesto</p>
+            <div class="slot-picker-filter-row">
+                <label for="slot-picker-position-filter" class="slot-picker-filter-label">Posición</label>
+                <select id="slot-picker-position-filter" class="formation-select">
+                    <option value="all">Todos</option>
+                    <option value="POR">POR</option>
+                    <option value="DEF">DEF</option>
+                    <option value="MED">MED</option>
+                    <option value="DEL">DEL</option>
+                </select>
+            </div>
+            <div id="slot-picker-list" class="swap-modal-slots"></div>
+            <div class="slot-picker-pagination">
+                <button id="slot-picker-page-prev" class="slot-picker-page-arrow" type="button" aria-label="Página anterior">◀</button>
+                <span id="slot-picker-page-indicator" class="slot-picker-page-indicator"></span>
+                <button id="slot-picker-page-next" class="slot-picker-page-arrow" type="button" aria-label="Página siguiente">▶</button>
+            </div>
+            <button id="slot-picker-cancel" class="swap-modal-cancel" type="button">Cancelar</button>
+        </div>
+    </div>
+
+    <nav class="team-tabbar">
+        <a class="team-tab" href="../../index.html">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M3 11l9-8 9 8"></path>
+                <path d="M5 10v10h14V10"></path>
+            </svg>
+            <span>Home</span>
+        </a>
+        <a class="team-tab" href="../team/index.html">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+                <circle cx="9" cy="7" r="4"></circle>
+                <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+                <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+            </svg>
+            <span>Jugadores</span>
+        </a>
+        <a class="team-tab" href="../5v5/index.html">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="12" cy="12" r="9"></circle>
+                <path d="M12 3v18M3 12h18"></path>
+            </svg>
+            <span>F5</span>
+        </a>
+        <a class="team-tab is-active" href="index.html">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <rect x="3" y="6" width="18" height="12" rx="2"></rect>
+                <path d="M12 6v12M3 12h18"></path>
+            </svg>
+            <span>F11</span>
+        </a>
+    </nav>
+
+    <script src="formation11.js"></script>
+
+</body>
+</html>

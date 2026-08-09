@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="manifest" href="manifest.json">
+    <link rel="apple-touch-icon" href="assets/ui/apple-touch-icon.png">
+    <meta name="theme-color" content="#070b14">
+    <script>if ("serviceWorker" in navigator) navigator.serviceWorker.register("sw.js");</script>
+
+    <title>Blue Lock Coach</title>
+
+    <link rel="icon" type="image/png" href="assets/icons/favicon.png">
+
+    <link rel="stylesheet" href="css/style.css">
+</head>
+
+<body>
+
+    <script>window.BL_ASSET_BASE = "";</script>
+    <script src="js/main.js"></script>
+    <script src="js/characters-data.js"></script>
+
+    <div id="home">
+        <div id="brand-badge">
+            <img id="brand-badge-icon" src="assets/ui/kakin-logo.png" alt="">
+            <span id="player-name-display"></span>
+        </div>
+        <div id="currency-badge">
+            <img id="currency-badge-icon" src="assets/ui/diamantes-badge.png" alt="">
+            <span id="diamond-count-display">0</span>
+        </div>
+        <div id="missions-wrap">
+            <img id="missions-badge" src="assets/ui/misiones-logo.png" alt="Misiones">
+            <span id="missions-notification-dot" hidden></span>
+            <button class="missions-hit" type="button" onclick="openMissionsModal()" aria-label="Misiones"></button>
+        </div>
+        <img id="isagi-sprite" alt="">
+        <script>initHomeCharacterSprite();</script>
+
+        <!-- Icono provisional (💪) hasta que el logo definitivo de la Sala
+             de Entrenamiento esté diseñado. Flota POR ENCIMA del menú
+             inferior (z-index mayor, posición propia), no es una zona más
+             de esa barra. -->
+        <a id="training-fab" href="pages/training/index.html" aria-label="Sala de Entrenamiento">💪</a>
+
+        <nav id="bottom-menu">
+            <img id="bottom-menu-logo" src="assets/ui/menuinferior-logo.png" alt="Menú inferior">
+            <a class="menu-zone menu-zone-1" href="index.html" aria-label="Inicio"></a>
+            <a class="menu-zone menu-zone-2" href="pages/team/index.html" aria-label="Equipo"></a>
+            <a class="menu-zone menu-zone-3" href="pages/play/index.html" aria-label="Jugar"></a>
+            <a class="menu-zone menu-zone-4" href="pages/gacha/index.html" aria-label="Gacha"></a>
+            <a class="menu-zone menu-zone-5" href="pages/menu/index.html" aria-label="Menú"></a>
+        </nav>
+    </div>
+
+</body>
+
+</html>

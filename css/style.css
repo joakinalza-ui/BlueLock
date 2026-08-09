@@ -1,0 +1,500 @@
+/* Reinicio */
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+}
+
+html,
+body{
+    width:100%;
+    height:100%;
+    overflow:hidden;
+    background:black;
+}
+
+/* Pantalla principal */
+
+#home{
+
+    position:relative;
+
+    width:100%;
+    max-width:480px;
+    height:100vh;
+    margin:0 auto;
+
+    background-image:url("../assets/backgrounds/home-background.png");
+
+    background-size:cover;
+    background-position:center;
+    background-repeat:no-repeat;
+
+}
+
+/* Logo/badge superior izquierdo, por encima del fondo. Contenedor
+   (mismo sitio/tamaño que tenía antes la imagen sola) + icono a
+   tamaño completo dentro + nombre de jugador editable, colocado en el
+   hueco de texto de la pastilla (medido por píxeles sobre
+   kakin-logo.png: la pastilla ocupa 13.61%-90.23% horizontal y
+   33.98%-60.55% vertical del archivo). */
+
+#brand-badge{
+
+    position:absolute;
+    top:-65px;
+    left:-38px;
+
+    width:280px;
+    height:auto;
+
+    z-index:10;
+
+}
+
+#brand-badge-icon{
+
+    display:block;
+    width:100%;
+    height:auto;
+
+}
+
+#player-name-display{
+
+    position:absolute;
+    left:40%;
+    right:11%;
+    top:33.98%;
+    height:26.57%;
+
+    display:flex;
+    align-items:center;
+
+    color:#fff;
+    font-family:sans-serif;
+    font-weight:700;
+    font-size:1.5rem;
+    line-height:1;
+    padding:0;
+
+    white-space:nowrap;
+    overflow:hidden;
+    text-overflow:ellipsis;
+
+}
+
+/* Contador de diamantes superior derecho, por encima del fondo */
+
+#currency-badge{
+
+    position:absolute;
+    top:-58px;
+    right:-50px;
+
+    width:270px;
+    height:auto;
+
+    z-index:10;
+
+}
+
+#currency-badge-icon{
+
+    display:block;
+    width:100%;
+    height:auto;
+
+}
+
+/* Contador real de diamantes, superpuesto sobre el hueco vacío que deja
+   diamantes-badge.png (misma técnica que #player-name-display sobre
+   kakin-logo.png): la pastilla vacía ocupa aprox. 43%-75% horizontal y
+   36%-55% vertical del archivo. */
+
+#diamond-count-display{
+
+    position:absolute;
+    left:43%;
+    right:25%;
+    top:36%;
+    height:19%;
+
+    display:flex;
+    align-items:center;
+
+    color:#fff;
+    font-family:sans-serif;
+    font-weight:900;
+    font-size:26px;
+    line-height:1;
+
+    white-space:nowrap;
+    overflow:hidden;
+    text-overflow:ellipsis;
+
+}
+
+/* Icono de misiones, debajo del contador de diamantes. #missions-wrap
+   ocupa el mismo sitio/tamaño que tenía antes la imagen sola; dentro,
+   la imagen llena el hueco (puede tener relleno transparente) y
+   .missions-hit es la zona clicable real, medida por píxeles: el
+   icono visible solo ocupa el 27.6%-72.33% horizontal y el
+   21.29%-75% vertical del archivo. */
+
+#missions-wrap{
+
+    position:absolute;
+    top:64px;
+    right:5px;
+
+    width:70px;
+    height:auto;
+
+    z-index:10;
+
+}
+
+#missions-badge{
+
+    display:block;
+    width:100%;
+    height:auto;
+
+}
+
+.missions-hit{
+
+    position:absolute;
+    left:27.6%;
+    top:21.29%;
+    width:44.73%;
+    height:53.71%;
+
+    background:transparent;
+    border:none;
+    padding:0;
+    cursor:pointer;
+
+}
+
+/* Punto de notificación: superpuesto en la esquina superior derecha
+   del icono visible (no del wrapper entero), solo aparece cuando hay
+   alguna misión reclamable. El icono en sí SIEMPRE se ve, con o sin
+   este punto encima. */
+#missions-notification-dot{
+
+    position:absolute;
+    top:16%;
+    left:65%;
+    width:9px;
+    height:9px;
+    border-radius:50%;
+    background:#ef4444;
+    border:2px solid #1a1200;
+    box-shadow:0 0 4px rgba(239,68,68,0.8);
+    pointer-events:none;
+
+}
+
+#missions-notification-dot[hidden]{
+    display:none;
+}
+
+/* ---- Modal de Misiones (mismo lenguaje visual que .pd-overlay/.pd-modal
+   de la ficha de jugador en Equipo/Gacha: fondo oscuro semitransparente,
+   tarjeta #0d1424 con borde #2c3a5c). Se inyecta en document.body desde
+   main.js (ensureMissionsOverlay), así que vive aquí en vez de en el
+   HTML estático. ---- */
+
+.missions-overlay{
+    position:fixed;
+    inset:0;
+    background:rgba(3,5,10,0.72);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    padding:24px;
+    z-index:60;
+}
+
+.missions-overlay[hidden]{
+    display:none;
+}
+
+.missions-modal{
+    position:relative;
+    width:100%;
+    max-width:420px;
+    max-height:88vh;
+    overflow-y:auto;
+    background:#0d1424;
+    border:1px solid #2c3a5c;
+    border-radius:18px;
+    padding:20px 18px;
+    font-family:sans-serif;
+}
+
+.missions-close{
+    position:absolute;
+    top:10px;
+    right:10px;
+    width:26px;
+    height:26px;
+    border-radius:50%;
+    background:rgba(5,8,15,0.6);
+    border:1px solid #2c3a5c;
+    color:#fff;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-size:14px;
+    line-height:1;
+    cursor:pointer;
+}
+
+.missions-title{
+    color:#fff;
+    font-size:18px;
+    font-weight:700;
+    margin:0 0 14px;
+}
+
+.missions-tabs{
+    display:flex;
+    gap:8px;
+    margin-bottom:16px;
+}
+
+.missions-tab{
+    flex:1;
+    padding:9px 6px;
+    border-radius:10px;
+    border:1px solid #2c3a5c;
+    background:#0a0f1c;
+    color:#9aa6c3;
+    font-size:13px;
+    font-weight:700;
+    cursor:pointer;
+}
+
+.missions-tab.is-active{
+    background:#16224a;
+    border-color:#7fa8ff;
+    color:#fff;
+}
+
+.missions-body{
+    display:flex;
+    flex-direction:column;
+    gap:10px;
+}
+
+.missions-empty{
+    color:#9aa6c3;
+    font-size:13px;
+    text-align:center;
+    padding:30px 0;
+}
+
+.mission-row{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:10px;
+    padding:12px;
+    border-radius:12px;
+    border:1px solid #2c3a5c;
+    background:#0a0f1c;
+}
+
+.mission-row.is-claimed{
+    opacity:0.55;
+}
+
+.mission-info{
+    display:flex;
+    flex-direction:column;
+    gap:4px;
+    min-width:0;
+}
+
+.mission-title{
+    color:#fff;
+    font-size:13.5px;
+    font-weight:700;
+}
+
+.mission-progress{
+    color:#9aa6c3;
+    font-size:12px;
+    font-variant-numeric:tabular-nums;
+}
+
+.mission-reward{
+    display:flex;
+    align-items:center;
+    gap:10px;
+    flex-shrink:0;
+}
+
+.mission-reward-amount{
+    display:flex;
+    align-items:center;
+    gap:4px;
+    color:#9aa6c3;
+    font-size:13px;
+    font-variant-numeric:tabular-nums;
+}
+
+.mission-reward-amount .diamond-icon{
+    display:inline-flex;
+    width:12px;
+    height:12px;
+    flex-shrink:0;
+}
+
+.mission-reward-amount .diamond-icon img{
+    display:block;
+    width:100%;
+    height:100%;
+    object-fit:contain;
+}
+
+.mission-claim-btn{
+    padding:8px 14px;
+    border-radius:8px;
+    border:none;
+    background:#7fa8ff;
+    color:#0a0f1c;
+    font-weight:700;
+    font-size:12.5px;
+    cursor:pointer;
+}
+
+.mission-claim-btn:disabled{
+    background:#1c2438;
+    color:#5b6580;
+    cursor:not-allowed;
+}
+
+.mission-claimed-label{
+    color:#4ade80;
+    font-size:12px;
+    font-weight:700;
+}
+
+/* Sprite del personaje elegido, centrado y pegado abajo, por debajo
+   (detrás) del menú inferior en el orden de capas. Ancho y alto FIJOS
+   a propósito: con object-fit:cover, cualquier sprite (presente o
+   futuro) queda encuadrado igual sin necesitar medidas ni ajustes por
+   personaje. object-position es solo el valor por defecto — js/main.js
+   lo sobrescribe en línea si el personaje trae su propio
+   "homeImagePosition" en CHARACTER_ROSTER.
+
+   height:78vh es el tamaño BASE (antes 70vh), elegido para dejar
+   margen de seguridad incluso en el peor caso: con el escalado por
+   alturaCm (ver main.js, hasta 1.1x) aplicado encima vía transform
+   desde transform-origin:bottom center, el borde superior del sprite
+   queda ~22px por debajo del badge de Misiones al escalado máximo
+   teórico (1.1x) — medido en vivo a 375×812. No subir sin volver a
+   medir contra el header. */
+
+#isagi-sprite{
+
+    position:absolute;
+    bottom: -30px;
+    left:50%;
+    transform:translateX(-50%);
+    transform-origin:50% 100%;
+
+    width:100%;
+    height:78vh;
+    object-fit:cover;
+    object-position:top center;
+
+    z-index:5;
+
+}
+
+/* Acceso a la Sala de Entrenamiento: botón flotante circular, POR
+   ENCIMA del menú inferior (z-index mayor que #bottom-menu). La franja
+   visible de los iconos del menú arranca a ~65px del borde inferior
+   del viewport — bottom:130px deja ~55-60px de margen limpio por
+   encima de esa franja (antes con 80px quedaba pegado casi encima del
+   icono "Menú", en la esquina derecha). No es una zona más de esa
+   barra. Icono provisional (💪) hasta tener el logo definitivo. */
+
+#training-fab{
+
+    position:absolute;
+    right:16px;
+    bottom:130px;
+
+    width:52px;
+    height:52px;
+    border-radius:50%;
+
+    display:flex;
+    align-items:center;
+    justify-content:center;
+
+    background:linear-gradient(180deg, #2c4a8f 0%, #16224a 100%);
+    border:1px solid #7fa8ff;
+    box-shadow:0 4px 14px rgba(0,0,0,0.5);
+
+    font-size:24px;
+    text-decoration:none;
+
+    z-index:20;
+
+}
+
+/* Menú inferior: contenedor pegado abajo (misma posición/tamaño que
+   tenía la imagen sola) + la imagen dentro a tamaño completo + 5
+   zonas clicables invisibles, una por icono (Inicio/Equipo/Jugar/
+   Gacha/Menú), repartidas a partes iguales. */
+
+#bottom-menu{
+
+    position:absolute;
+    bottom:-120px;
+    left:49%;
+    transform:translateX(-50%);
+
+    width:116%;
+
+    z-index:10;
+
+}
+
+#bottom-menu-logo{
+
+    display:block;
+    width:100%;
+    height:auto;
+
+}
+
+/* Medido por píxeles sobre menuinferior-logo.png: el contenido visible
+   (barra + iconos) solo ocupa del 36.13% al 61.33% de la altura del
+   archivo — el resto es transparente. Antes las zonas usaban
+   top:0;height:100%, así que cubrían también esa franja transparente
+   de arriba (por eso se podía hacer click "por encima" del icono). */
+.menu-zone{
+
+    position:absolute;
+    top:36.13%;
+    height:25.2%;
+
+}
+
+/* Reparto horizontal también ajustado al ancho real visible
+   (8.72%-92.71%, medido por píxeles) en vez de sobre el 0-100% del
+   lienzo completo. */
+.menu-zone-1{ left:8.72%;   width:16.63%; }
+.menu-zone-2{ left:25.35%;  width:15.73%; }
+.menu-zone-3{ left:41.08%;  width:17.51%; }
+.menu-zone-4{ left:58.59%;  width:15.75%; }
+.menu-zone-5{ left:74.34%;  width:18.37%; }
