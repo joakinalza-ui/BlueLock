@@ -474,7 +474,17 @@ function fitPrematchPitchCardSize() {
     if (!nonEmptyRows.length) return;
 
     const sampleCard = field.querySelector(".player-card");
-    const sampleRow = nonEmptyRows[0];
+    const maxCardsInRow = Math.max(...nonEmptyRows.map((row) => row.children.length));
+
+    // Espacio lateral entre cartas de la misma fila: esta pantalla
+    // sirve tanto al modo 5v5 (como mucho 2 por fila, igual que F5) como
+    // al 11v11 (hasta 5, igual que F11) según el partido — así que en
+    // vez de un gap fijo, se calcula con el mismo criterio de densidad
+    // que ya usan esas dos pantallas (mucho más aire cuantas menos
+    // cartas comparten fila) en vez de dejar siempre el mismo hueco
+    // ajustado pensado para el caso más apretado (11v11).
+    const columnGap = maxCardsInRow <= 2 ? 30 : maxCardsInRow === 3 ? 18 : maxCardsInRow === 4 ? 12 : 8;
+    document.documentElement.style.setProperty("--prematch-column-gap", columnGap + "px");
 
     const fieldStyle = getComputedStyle(field);
     const fieldRect = field.getBoundingClientRect();
@@ -483,7 +493,6 @@ function fitPrematchPitchCardSize() {
     const paddingLeft = parseFloat(fieldStyle.paddingLeft) || 0;
     const paddingRight = parseFloat(fieldStyle.paddingRight) || 0;
     const rowGap = parseFloat(fieldStyle.rowGap || fieldStyle.gap) || 10;
-    const columnGap = parseFloat(getComputedStyle(sampleRow).columnGap || getComputedStyle(sampleRow).gap) || 14;
 
     // "Chroma" de texto de la carta: alto real menos el ancho actual
     // (el retrato es 1:1, así que el resto del alto es texto/badges).
@@ -496,7 +505,6 @@ function fitPrematchPitchCardSize() {
     const availableHeight = fieldRect.height - paddingTop - paddingBottom - (allRows.length - 1) * rowGap;
     const maxWidthByHeight = availableHeight / allRows.length - chrome;
 
-    const maxCardsInRow = Math.max(...nonEmptyRows.map((row) => row.children.length));
     const availableWidth = fieldRect.width - paddingLeft - paddingRight;
     const maxWidthByWidth = (availableWidth - (maxCardsInRow - 1) * columnGap) / maxCardsInRow;
 
