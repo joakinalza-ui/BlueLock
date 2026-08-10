@@ -215,10 +215,13 @@ body{
     bottom:0;
     z-index:2;
     overflow:hidden;
-    padding:2px 20px 2px;
+    /* padding-bottom despeja el hueco del .points-shop-btn fijo (que
+       ahora flota fuera de este flujo, ver arriba), para que los
+       botones de invocar no queden tapados detrás. */
+    padding:4px 20px 52px;
     display:flex;
     flex-direction:column;
-    gap:4px;
+    gap:3px;
 }
 
 /* Banner único de reclutamiento */
@@ -231,7 +234,7 @@ body{
     background:
         linear-gradient(180deg, rgba(5,8,15,0.15) 0%, rgba(5,8,15,0.75) 100%),
         linear-gradient(135deg, #16224a 0%, #0b142c 60%, #070b14 100%);
-    padding:8px 16px;
+    padding:5px 16px;
     display:flex;
     flex-direction:column;
     gap:3px;
@@ -282,7 +285,7 @@ body{
     align-items:center;
     justify-content:space-between;
     gap:10px;
-    padding:2px 12px;
+    padding:3px 12px;
     border-radius:12px;
     border:1px solid #f59e0b;
     background:linear-gradient(135deg, rgba(245,158,11,0.16) 0%, #0d1424 65%);
@@ -333,7 +336,7 @@ body{
     background:#0d1424;
     border:1px solid #1e2b4a;
     border-radius:12px;
-    padding:3px 14px;
+    padding:4px 14px;
 }
 
 .pity-label-row{
@@ -395,7 +398,7 @@ body{
     align-items:center;
     justify-content:center;
     gap:3px;
-    padding:3px 10px;
+    padding:5px 10px;
     border-radius:14px;
     background:linear-gradient(160deg, rgba(255,255,255,0.97) 0%, rgba(219,234,254,0.92) 100%);
     box-shadow:0 4px 14px rgba(3,8,20,0.35);
@@ -414,7 +417,7 @@ body{
 
 .pull-btn-x10{
     border:2px solid #eab308;
-    padding-bottom:12px;
+    padding-bottom:11px;
     background:linear-gradient(160deg, rgba(255,255,255,0.97) 0%, rgba(254,249,195,0.92) 100%);
 }
 
@@ -461,13 +464,24 @@ body{
 /* Botón de acceso a la Tienda de Puntos, debajo de los botones de
    invocar */
 
+/* Fuera del flujo de .gacha-content (ver comentario en index.html):
+   anclado directamente al borde inferior real de la pantalla, así
+   nunca compite por espacio con el resto de botones dentro de la
+   franja de suelo de la imagen — que varía de alto según el
+   dispositivo — ni puede quedar parcialmente tapado. */
 .points-shop-btn{
-    flex-shrink:0;
+    position:fixed;
+    left:50%;
+    bottom:14px;
+    transform:translateX(-50%);
+    width:calc(100% - 40px);
+    max-width:440px;
+    z-index:10;
     display:flex;
     align-items:center;
     justify-content:space-between;
     gap:10px;
-    padding:4px 16px;
+    padding:11px 16px;
     border-radius:12px;
     border:1px solid #2c3a5c;
     background:#0d1424;
@@ -475,6 +489,7 @@ body{
     font-size:13px;
     font-weight:700;
     cursor:pointer;
+    box-shadow:0 4px 14px rgba(3,8,20,0.5);
 }
 
 .points-shop-btn-count{
