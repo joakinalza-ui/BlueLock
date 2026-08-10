@@ -236,9 +236,9 @@ body{
     display:flex;
     flex-direction:column;
     justify-content:space-between;
-    gap:12px;
+    gap:9px;
     min-height:0;
-    padding:12px 4px;
+    padding:9px 0;
 }
 
 .pitch-row{
@@ -327,7 +327,7 @@ body{
 .player-card-stars{
     font-size:9px;
     color:#facc15;
-    padding:4px 7px 0;
+    padding:3px 7px 0;
     letter-spacing:1px;
     white-space:nowrap;
     overflow:hidden;
@@ -336,7 +336,7 @@ body{
 .player-card-name{
     font-size:10px;
     font-weight:700;
-    padding:2px 7px;
+    padding:1px 7px;
     line-height:1.15;
     display:-webkit-box;
     -webkit-line-clamp:2;
@@ -348,7 +348,7 @@ body{
 .player-card-level{
     font-size:9px;
     color:#9aa6c3;
-    padding:0 7px 5px;
+    padding:0 7px 4px;
 }
 
 .pitch-slot-empty{
