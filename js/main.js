@@ -2948,20 +2948,27 @@ document.addEventListener("DOMContentLoaded", () => {
 // el icono se quedaría con el estado de cuando se abandonó la página.
 window.addEventListener("pageshow", updateHomeMissionsIndicator);
 
-// Aviso de nueva versión disponible — cada página registra su propio
-// Service Worker (ver <script> en el <head> de cada .html), pero
-// "controllerchange" es un evento global de navigator.serviceWorker,
-// así que este único listener (cargado por TODAS las páginas vía
-// main.js) detecta la actualización venga de donde venga. Con
-// skipWaiting()+clients.claim() en sw.js, en cuanto el navegador
-// descarga un sw.js distinto de bytes, la nueva versión toma el
-// control casi al momento — este evento es esa señal. Como en una PWA
-// de iOS "volver a abrir" muchas veces NO hace una petición de red de
-// verdad (el proceso se queda congelado en memoria en vez de cerrarse
-// del todo), se fuerza también una comprobación manual al recuperar
-// el foco, para no depender solo de la navegación normal.
+// Aviso de nueva versión disponible. Ir por el Service Worker
+// ("controllerchange") no valía: ese evento SOLO salta si sw.js en sí
+// cambia de bytes, y casi ningún cambio real (CSS/JS/HTML de las
+// pantallas) toca ese archivo — en la práctica casi nunca disparaba.
+// En su lugar, version.txt (un simple timestamp, un archivo suelto
+// más en el repo) se descarga SIEMPRE fresco (cache:"no-store", sin
+// pasar por el Service Worker ni la caché HTTP) al abrir cualquier
+// página y de nuevo cada vez que se recupera el foco — si el valor ya
+// no coincide con el que se leyó al cargar esta página, es que hay una
+// versión nueva publicada. Recuerda actualizar version.txt en cada
+// commit que cambie algo visible, si no este aviso no se entera.
 (function initUpdateNotice() {
-    if (!("serviceWorker" in navigator)) return;
+    const versionUrl = resolveAssetPath("version.txt");
+    let initialVersion = null;
+
+    function fetchVersion() {
+        return fetch(versionUrl, { cache: "no-store" })
+            .then((r) => (r.ok ? r.text() : null))
+            .then((text) => (text ? text.trim() : null))
+            .catch(() => null);
+    }
 
     function showUpdateBanner() {
         if (document.getElementById("update-banner")) return;
@@ -2976,21 +2983,20 @@ window.addEventListener("pageshow", updateHomeMissionsIndicator);
         document.body.appendChild(banner);
     }
 
-    let reloadedOnce = false;
-    navigator.serviceWorker.addEventListener("controllerchange", () => {
-        if (reloadedOnce) return;
-        reloadedOnce = true;
-        showUpdateBanner();
-    });
-
     function checkForUpdate() {
-        navigator.serviceWorker.getRegistration().then((reg) => {
-            if (reg) reg.update();
+        if (initialVersion === null) return;
+        fetchVersion().then((current) => {
+            if (current && current !== initialVersion) showUpdateBanner();
         });
     }
+
+    fetchVersion().then((v) => {
+        initialVersion = v;
+    });
 
     document.addEventListener("visibilitychange", () => {
         if (document.visibilityState === "visible") checkForUpdate();
     });
     window.addEventListener("focus", checkForUpdate);
+    setInterval(checkForUpdate, 60000);
 })();
