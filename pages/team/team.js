@@ -38,14 +38,13 @@ function buildPlayerCardMarkup(character) {
     `;
 }
 
-// Solo se alinean las miniaturas con arte real (sprite propio): el
-// retrato placeholder genérico es el mismo archivo para todos, así que
-// no hay ninguna inconsistencia de encuadre que corregir ahí. Se usa
-// Isagi (CHARACTER_ROSTER[0], el primero con arte real en el proyecto)
-// como referencia, igual que en el selector de personaje de la Home.
-function alignAllThumbs() {
-    alignRealSpriteThumbs('.player-card-thumb img[data-real-sprite="true"]');
-}
+// Ya no hace falta alinear nada aquí: las tarjetas usan las fotos
+// "-thumb" (ver getCharacterThumbSprite en main.js), pre-recortadas en
+// el servidor con un encuadre consistente — la corrección en tiempo de
+// ejecución (alignRealSpriteThumbs) solo sigue haciendo falta donde se
+// muestra la foto SIN recortar (selector de personaje de la Home, en
+// menu.js), no aquí.
+function alignAllThumbs() {}
 
 function renderQuintetoGrid() {
     const grid = document.getElementById("quinteto-grid");
@@ -307,12 +306,6 @@ function renderSlotPickerPage() {
         });
         listContainer.appendChild(row);
     });
-
-    // Mismo sistema de alineación por contenido que el resto de la app
-    // (Home/Colección/F5/F11/Fichajes/Gacha) — solo se alinean los
-    // sprites reales, el placeholder de la fila "Vacío" ya es
-    // consistente de por sí.
-    alignRealSpriteThumbs('.swap-modal-slot-thumb img[data-real-sprite="true"]');
 
     if (indicator) indicator.textContent = `Página ${slotPickerPage + 1} de ${totalPages}`;
     if (prevBtn) prevBtn.disabled = slotPickerPage <= 0;

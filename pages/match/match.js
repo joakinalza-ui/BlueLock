@@ -784,11 +784,6 @@ function renderPrematchPitch(lineup, ids, options = {}) {
         renderPrematchPitchReadOnly(lineup, options);
     }
 
-    // Alinea cada sprite real según su propio contenido (mide qué
-    // porcentaje del lienzo ocupa el personaje y compensa margen/ancho
-    // aparente), igual que Home/Colección/F5/F11 — el placeholder de
-    // silueta no se toca, ya es consistente de por sí.
-    alignRealSpriteThumbs('.prematch-pitch-row .player-card-thumb img[data-real-sprite="true"]');
 }
 
 // Selector de sustitución de "Tu equipo" — mismo patrón (paginado de 6
@@ -875,8 +870,6 @@ function renderPrematchSlotPickerList() {
         });
         listContainer.appendChild(card);
     });
-
-    alignRealSpriteThumbs('#slot-picker-list .player-card-thumb img[data-real-sprite="true"]');
 
     if (indicator) indicator.textContent = `Página ${prematchSlotPickerPage + 1} de ${totalPages}`;
     if (prevBtn) prevBtn.disabled = prematchSlotPickerPage <= 0;

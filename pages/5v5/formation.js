@@ -163,7 +163,6 @@ function renderFormation() {
         powerEl.textContent = totalPower;
     }
 
-    alignRealSpriteThumbs('.player-card-thumb img[data-real-sprite="true"]');
 }
 
 // Modifica el Quinteto Principal directamente (mismos datos que
@@ -251,7 +250,6 @@ function renderSlotPickerList(slotIndex) {
     // Mismo sistema de alineación por contenido que el resto de la app
     // (Home/Colección/F5/F11/Fichajes/Gacha) — solo se alinean los
     // sprites reales, el placeholder "Vacío" ya es consistente de por sí.
-    alignRealSpriteThumbs('.player-card-thumb img[data-real-sprite="true"]');
 
     if (indicator) indicator.textContent = `Página ${slotPickerPage + 1} de ${totalPages}`;
     if (prevBtn) prevBtn.disabled = slotPickerPage <= 0;

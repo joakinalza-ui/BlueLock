@@ -155,7 +155,6 @@ function showPullResults(results) {
         grid.appendChild(card);
     });
     overlay.hidden = false;
-    alignRealSpriteThumbs('#pull-result-grid img[data-real-sprite="true"]');
 }
 
 // La tirada x1 usa 1 Ticket de Gacha gratuito si hay alguno disponible
@@ -281,7 +280,6 @@ function renderPointsShop() {
         .slice()
         .sort((a, b) => a.name.localeCompare(b.name));
     list.innerHTML = threeStarRoster.map(buildPointsShopRowMarkup).join("");
-    alignRealSpriteThumbs('#points-shop-list img[data-real-sprite="true"]');
 }
 
 function showPointsShopToast(text) {

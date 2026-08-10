@@ -41,8 +41,6 @@ function renderMap() {
         .map((id, i) => buildNodeMarkup(id, i))
         .join('<div class="transfer-connector"></div>');
 
-    alignRealSpriteThumbs('.transfer-node-portrait img[data-real-sprite="true"]');
-
     container.querySelectorAll(".transfer-node.is-unlocked").forEach((node) => {
         node.addEventListener("click", () => {
             const characterId = node.dataset.characterId;
