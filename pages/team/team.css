@@ -529,10 +529,13 @@ body{
 .team-select{
     flex:1;
     min-width:0;
-    background:#0a0f1c;
+    appearance:none;
+    -webkit-appearance:none;
+    background:#0a0f1c url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%237fa8ff' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E") no-repeat right 6px center;
+    background-size:10px;
     border:1px solid #2c3a5c;
     border-radius:10px;
-    padding:10px 8px;
+    padding:10px 22px 10px 8px;
     color:#fff;
     font-size:12px;
 }
