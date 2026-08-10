@@ -294,14 +294,14 @@ body{
 
 .player-card-position{
     position:absolute;
-    bottom:5px;
-    right:5px;
+    bottom:4px;
+    right:4px;
     background:rgba(59,130,246,0.9);
     color:#fff;
-    font-size:10px;
+    font-size:8px;
     font-weight:700;
-    padding:1px 6px;
-    border-radius:5px;
+    padding:1px 5px;
+    border-radius:4px;
     letter-spacing:0.01em;
 }
 
@@ -316,10 +316,10 @@ body{
     position:absolute;
     bottom:4px;
     left:4px;
-    font-size:10px;
+    font-size:8px;
     font-weight:700;
-    padding:1px 6px;
-    border-radius:5px;
+    padding:1px 5px;
+    border-radius:4px;
     letter-spacing:0.02em;
 }
 

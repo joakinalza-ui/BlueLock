@@ -289,7 +289,7 @@ function initSlotPicker() {
 // usuario, para que las cartas queden un poco más bajas sin perder
 // ancho (el hueco sobrante lo reparte justify-content:space-between
 // de .pitch-field como aire extra entre filas).
-const PITCH_ROW_HEIGHT_USAGE = 0.97;
+const PITCH_ROW_HEIGHT_USAGE = 1;
 
 function fitPitchCardSize() {
     const field = document.querySelector(".pitch-field");
