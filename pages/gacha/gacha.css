@@ -30,17 +30,14 @@ body{
 
 /* assets/backgrounds/gacha-fondo.webp ENTERA como fondo del frame:
    aspect-ratio mantiene siempre la misma proporción que el PNG
-   (853×1496 — recortada del suelo vacío de sobra bajo la puerta, que
-   no tenía contenido, para que el frame llegue más ancho en móviles
-   más cortos/anchos como el iPhone SE sin recortar la puerta ni el
-   rótulo "WILD CARD"); width/height:auto + max-width/max-height:100%
-   hacen que el frame se encoja por lo que haga falta sin deformar la
+   (853×1844); width/height:auto + max-width/max-height:100% hacen que
+   el frame se encoja por lo que haga falta sin recortar ni deformar la
    imagen — mismo patrón que "Jugar". Header y contenido se posicionan
-   dentro en % medidos sobre el propio PNG (ver .gacha-content). */
+   dentro en % medidos sobre el propio PNG. */
 #gacha-bg-frame{
     position:relative;
-    width:min(100%, calc(100dvh * 853 / 1496));
-    aspect-ratio:853/1496;
+    width:min(100%, calc(100dvh * 853 / 1844));
+    aspect-ratio:853/1844;
     background-image:url("../../assets/backgrounds/gacha-fondo.webp");
     background-size:100% 100%;
     background-repeat:no-repeat;
@@ -59,7 +56,7 @@ body{
     content:"";
     position:absolute;
     top:0; left:0; right:0;
-    height:13.6%;
+    height:11%;
     background:linear-gradient(180deg,
         rgba(204,213,239,1) 0%,
         rgba(204,213,239,1) 71%,
@@ -200,14 +197,13 @@ body{
 }
 
 /* Se superpone en la zona blanca/suelo de la imagen, debajo de la
-   puerta — top:81.3% medido contra el punto donde termina realmente el
-   marco/neón de la puerta en el PNG (fila ~1217 de 1496, tras el
-   recorte del suelo vacío — antes era 66% de 1844, misma fila en
-   valor absoluto), con margen extra para que la puerta quede completa
-   y despejada. overflow:hidden como red de seguridad. */
+   puerta — top:66% medido contra el punto donde termina realmente el
+   marco/neón de la puerta en el PNG (fila ~1190 de 1844 ≈ 64.5%), con
+   margen extra para que la puerta quede completa y despejada.
+   overflow:hidden como red de seguridad. */
 .gacha-content{
     position:absolute;
-    top:81.3%;
+    top:66%;
     left:0;
     right:0;
     bottom:0;
