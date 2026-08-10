@@ -2947,3 +2947,50 @@ document.addEventListener("DOMContentLoaded", () => {
 // atrás/adelante), DOMContentLoaded no vuelve a dispararse — sin esto,
 // el icono se quedaría con el estado de cuando se abandonó la página.
 window.addEventListener("pageshow", updateHomeMissionsIndicator);
+
+// Aviso de nueva versión disponible — cada página registra su propio
+// Service Worker (ver <script> en el <head> de cada .html), pero
+// "controllerchange" es un evento global de navigator.serviceWorker,
+// así que este único listener (cargado por TODAS las páginas vía
+// main.js) detecta la actualización venga de donde venga. Con
+// skipWaiting()+clients.claim() en sw.js, en cuanto el navegador
+// descarga un sw.js distinto de bytes, la nueva versión toma el
+// control casi al momento — este evento es esa señal. Como en una PWA
+// de iOS "volver a abrir" muchas veces NO hace una petición de red de
+// verdad (el proceso se queda congelado en memoria en vez de cerrarse
+// del todo), se fuerza también una comprobación manual al recuperar
+// el foco, para no depender solo de la navegación normal.
+(function initUpdateNotice() {
+    if (!("serviceWorker" in navigator)) return;
+
+    function showUpdateBanner() {
+        if (document.getElementById("update-banner")) return;
+        const banner = document.createElement("div");
+        banner.id = "update-banner";
+        banner.style.cssText = "position:fixed;left:50%;bottom:18px;transform:translateX(-50%);z-index:9999;display:flex;align-items:center;gap:10px;background:#0d1424;border:1px solid #7fa8ff;border-radius:999px;padding:10px 10px 10px 16px;box-shadow:0 6px 20px rgba(0,0,0,0.5);font-family:sans-serif;max-width:92vw;";
+        banner.innerHTML = `
+            <span style="color:#fff;font-size:13px;font-weight:600;white-space:nowrap;">Hay una versión nueva</span>
+            <button type="button" style="background:#7fa8ff;color:#0a0f1c;border:none;border-radius:999px;padding:7px 14px;font-size:13px;font-weight:700;cursor:pointer;white-space:nowrap;">Recargar</button>
+        `;
+        banner.querySelector("button").addEventListener("click", () => window.location.reload());
+        document.body.appendChild(banner);
+    }
+
+    let reloadedOnce = false;
+    navigator.serviceWorker.addEventListener("controllerchange", () => {
+        if (reloadedOnce) return;
+        reloadedOnce = true;
+        showUpdateBanner();
+    });
+
+    function checkForUpdate() {
+        navigator.serviceWorker.getRegistration().then((reg) => {
+            if (reg) reg.update();
+        });
+    }
+
+    document.addEventListener("visibilitychange", () => {
+        if (document.visibilityState === "visible") checkForUpdate();
+    });
+    window.addEventListener("focus", checkForUpdate);
+})();
