@@ -155,21 +155,22 @@ body{
 /* Poder del equipo */
 
 .power-card{
-    flex:0.85;
+    flex:1;
     min-width:0;
     display:flex;
     align-items:center;
-    gap:9px;
+    gap:7px;
     background:linear-gradient(135deg, #10192e, #0d1424);
     border:1px solid #1e2b4a;
     border-left:3px solid #7fa8ff;
     border-radius:14px;
-    padding:8px 12px;
+    padding:8px 10px;
+    overflow:hidden;
 }
 
 .power-card-icon{
     flex-shrink:0;
-    font-size:19px;
+    font-size:17px;
     line-height:1;
     filter:drop-shadow(0 0 4px rgba(127,168,255,0.6));
 }
@@ -184,10 +185,10 @@ body{
 .power-card-label{
     font-size:10px;
     text-transform:uppercase;
-    letter-spacing:0.04em;
+    letter-spacing:0.03em;
     color:#7fa8ff;
     font-weight:700;
-    white-space:nowrap;
+    line-height:1.2;
 }
 
 .power-card-value{
@@ -200,7 +201,7 @@ body{
 /* Selector de formación */
 
 .formation-select-row{
-    flex:1.15;
+    flex:1;
     min-width:0;
     display:flex;
     align-items:center;
@@ -255,7 +256,7 @@ body{
 .pitch-row{
     display:flex;
     justify-content:center;
-    gap:24px;
+    gap:34px;
 }
 
 /* Cartas de jugador sobre el campo (mismo componente visual que en
