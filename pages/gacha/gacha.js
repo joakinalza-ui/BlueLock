@@ -1,4 +1,4 @@
-const PLACEHOLDER_PORTRAIT = "assets/characters/portraits/placeholder.png";
+const PLACEHOLDER_PORTRAIT = "assets/characters/portraits/placeholder.webp";
 
 // Probabilidades por rareza en una tirada normal (antes de que el
 // pity fuerce un ★3). El pool solo llega hasta ★3 en este juego.
@@ -82,7 +82,7 @@ function updatePullX1CostDisplay() {
     if (getGachaTickets() >= GACHA_TICKETS_FOR_X1) {
         costEl.innerHTML = '<span class="ticket-icon">🎫</span> GRATIS';
     } else {
-        costEl.innerHTML = '<span class="diamond-icon"><img src="../../assets/ui/diamond-icon.png" alt=""></span> 150';
+        costEl.innerHTML = '<span class="diamond-icon"><img src="../../assets/ui/diamond-icon.webp" alt=""></span> 150';
     }
 }
 
@@ -91,7 +91,7 @@ function updatePullX10CostDisplay() {
     if (getGachaTickets() >= GACHA_TICKETS_FOR_X10) {
         costEl.innerHTML = `<span class="ticket-icon">🎫</span> ${GACHA_TICKETS_FOR_X10} tickets — GRATIS`;
     } else {
-        costEl.innerHTML = '<span class="diamond-icon"><img src="../../assets/ui/diamond-icon.png" alt=""></span> 1.500';
+        costEl.innerHTML = '<span class="diamond-icon"><img src="../../assets/ui/diamond-icon.webp" alt=""></span> 1.500';
     }
 }
 

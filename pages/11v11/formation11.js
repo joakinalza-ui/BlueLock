@@ -1,4 +1,4 @@
-const PLACEHOLDER_PORTRAIT = "assets/characters/portraits/placeholder.png";
+const PLACEHOLDER_PORTRAIT = "assets/characters/portraits/placeholder.webp";
 
 // FORMATIONS_11V11 y FORMATION_11V11_DEFAULT ya están declaradas en
 // main.js — compartidas con la pantalla previa al partido en 11v11

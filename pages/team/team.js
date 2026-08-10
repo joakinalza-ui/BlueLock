@@ -1,4 +1,4 @@
-const PLACEHOLDER_PORTRAIT = "assets/characters/portraits/placeholder.png";
+const PLACEHOLDER_PORTRAIT = "assets/characters/portraits/placeholder.webp";
 
 // Modo edición del Quinteto: mientras está activo, pendingQuinteto es
 // una copia de trabajo (5 ids o null) que no se guarda en localStorage

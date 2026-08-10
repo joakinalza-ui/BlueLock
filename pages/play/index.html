@@ -6,6 +6,9 @@
     <link rel="manifest" href="../../manifest.json">
     <link rel="apple-touch-icon" href="../../assets/ui/apple-touch-icon.png">
     <meta name="theme-color" content="#070b14">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="Blue Lock">
     <script>if ("serviceWorker" in navigator) navigator.serviceWorker.register("../../sw.js");</script>
     <title>Blue Lock Coach — Jugar</title>
     <link rel="stylesheet" href="play.css">
@@ -17,7 +20,7 @@
     <script src="../../js/characters-data.js"></script>
 
     <div id="play-screen">
-        <!-- assets/backgrounds/jugar-fondo.png completa, sin recortar, como
+        <!-- assets/backgrounds/jugar-fondo.webp completa, sin recortar, como
              único fondo (aspect-ratio fija el alto exacto de la imagen para
              cada ancho, así background-size:100% 100% nunca la deforma ni
              la recorta). Las 4 "cajas" de color ya vienen dibujadas en la
@@ -29,7 +32,7 @@
                 <h1>Jugar</h1>
                 <span class="play-info-icon" title="Información" aria-label="Información">ⓘ</span>
                 <div class="play-currencies">
-                    <span class="play-currency"><span class="diamond-icon"><img src="../../assets/ui/diamond-icon.png" alt=""></span><span id="diamond-count">0</span></span>
+                    <span class="play-currency"><span class="diamond-icon"><img src="../../assets/ui/diamond-icon.webp" alt=""></span><span id="diamond-count">0</span></span>
                     <span class="play-currency"><span class="points-icon">🎫</span><span id="points-count">0</span></span>
                 </div>
             </header>

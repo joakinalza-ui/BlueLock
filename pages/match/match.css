@@ -165,7 +165,7 @@ body.prematch-active #match-screen{
     background-color:#0b2e18;
     background-image:
         linear-gradient(180deg, rgba(5,8,15,0.55) 0%, rgba(5,8,15,0.15) 20%, rgba(5,8,15,0.2) 70%, rgba(5,8,15,0.6) 100%),
-        url("../../assets/backgrounds/campo-5v5.png");
+        url("../../assets/backgrounds/campo-5v5.webp");
     background-size:cover, cover;
     background-position:center, center;
     background-repeat:no-repeat, no-repeat;

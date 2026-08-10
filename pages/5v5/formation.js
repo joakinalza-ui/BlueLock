@@ -1,4 +1,4 @@
-const PLACEHOLDER_PORTRAIT = "assets/characters/portraits/placeholder.png";
+const PLACEHOLDER_PORTRAIT = "assets/characters/portraits/placeholder.webp";
 
 // FORMATIONS_5V5 y FORMATION_5V5_DEFAULT ya están declaradas en
 // main.js — compartidas con el selector de alineación de Desafíos

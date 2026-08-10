@@ -37,7 +37,7 @@ const CHARACTERS_DATA = [
         "element": "Fuego",
         "rarity": 1,
         "unlocked": true,
-        "sprite": "assets/characters/sprites/V/hijikata-sprite.png",
+        "sprite": "assets/characters/sprites/V/hijikata-sprite.webp",
         "techniques": [
             {
                 "id": "kisaburo-hijikata-tech-0",
@@ -74,7 +74,7 @@ const CHARACTERS_DATA = [
         "element": "Bosque",
         "rarity": 1,
         "unlocked": true,
-        "sprite": "assets/characters/sprites/Z/kuon-sprite.png",
+        "sprite": "assets/characters/sprites/Z/kuon-sprite.webp",
         "techniques": [
             {
                 "id": "wataru-kuon-tech-0",
@@ -111,7 +111,7 @@ const CHARACTERS_DATA = [
         "element": "Montaña",
         "rarity": 1,
         "unlocked": true,
-        "sprite": "assets/characters/sprites/V/nerima-sprite.png",
+        "sprite": "assets/characters/sprites/V/nerima-sprite.webp",
         "techniques": [
             {
                 "id": "retsu-nerima-tech-0",
@@ -148,7 +148,7 @@ const CHARACTERS_DATA = [
         "element": "Montaña",
         "rarity": 1,
         "unlocked": true,
-        "sprite": "assets/characters/sprites/W/shisiya-sprite.png",
+        "sprite": "assets/characters/sprites/W/shisiya-sprite.webp",
         "techniques": [
             {
                 "id": "kei-shishiya-tech-0",
@@ -185,7 +185,7 @@ const CHARACTERS_DATA = [
         "element": "Montaña",
         "rarity": 1,
         "unlocked": true,
-        "sprite": "assets/characters/sprites/X/eiyu-sprite.png",
+        "sprite": "assets/characters/sprites/X/eiyu-sprite.webp",
         "techniques": [
             {
                 "id": "tsukoteru-eiyu-tech-0",
@@ -222,7 +222,7 @@ const CHARACTERS_DATA = [
         "element": "Aire",
         "rarity": 1,
         "unlocked": true,
-        "sprite": "assets/characters/sprites/Z/imamura-sprite.png",
+        "sprite": "assets/characters/sprites/Z/imamura-sprite.webp",
         "techniques": [
             {
                 "id": "yudai-imamura-tech-0",
@@ -259,7 +259,7 @@ const CHARACTERS_DATA = [
         "element": "Bosque",
         "rarity": 1,
         "unlocked": true,
-        "sprite": "assets/characters/sprites/Z/naruhaya-sprite.png",
+        "sprite": "assets/characters/sprites/Z/naruhaya-sprite.webp",
         "techniques": [
             {
                 "id": "asahi-naruhaya-tech-0",
@@ -296,7 +296,7 @@ const CHARACTERS_DATA = [
         "element": "Montaña",
         "rarity": 1,
         "unlocked": true,
-        "sprite": "assets/characters/sprites/V/atatame-sprite.png",
+        "sprite": "assets/characters/sprites/V/atatame-sprite.webp",
         "techniques": [
             {
                 "id": "masumi-atatame-tech-0",
@@ -333,7 +333,7 @@ const CHARACTERS_DATA = [
         "element": "Montaña",
         "rarity": 1,
         "unlocked": true,
-        "sprite": "assets/characters/sprites/X/meji-sprite.png",
+        "sprite": "assets/characters/sprites/X/meji-sprite.webp",
         "techniques": [
             {
                 "id": "haato-meiji-tech-0",
@@ -370,7 +370,7 @@ const CHARACTERS_DATA = [
         "element": "Aire",
         "rarity": 1,
         "unlocked": true,
-        "sprite": "assets/characters/sprites/W/amazora-sprite.png",
+        "sprite": "assets/characters/sprites/W/amazora-sprite.webp",
         "techniques": [
             {
                 "id": "yusei-amazora-tech-0",
@@ -407,7 +407,7 @@ const CHARACTERS_DATA = [
         "element": "Montaña",
         "rarity": 1,
         "unlocked": true,
-        "sprite": "assets/characters/sprites/X/sanga-sprite.png",
+        "sprite": "assets/characters/sprites/X/sanga-sprite.webp",
         "techniques": [
             {
                 "id": "rian-sanga-tech-0",
@@ -444,7 +444,7 @@ const CHARACTERS_DATA = [
         "element": "Bosque",
         "rarity": 3,
         "unlocked": false,
-        "sprite": "assets/characters/sprites/Z/isagi-sprite.png",
+        "sprite": "assets/characters/sprites/Z/isagi-sprite.webp",
         "techniques": [
             {
                 "id": "isagi-yoichi-tech-0",
@@ -501,7 +501,7 @@ const CHARACTERS_DATA = [
         "element": "Aire",
         "rarity": 3,
         "unlocked": false,
-        "sprite": "assets/characters/sprites/Z/bachira-sprite.png",
+        "sprite": "assets/characters/sprites/Z/bachira-sprite.webp",
         "techniques": [
             {
                 "id": "bachira-meguru-tech-0",
@@ -538,7 +538,7 @@ const CHARACTERS_DATA = [
         "element": "Aire",
         "rarity": 3,
         "unlocked": false,
-        "sprite": "assets/characters/sprites/Z/chigiri-sprite.png",
+        "sprite": "assets/characters/sprites/Z/chigiri-sprite.webp",
         "techniques": [
             {
                 "id": "chigiri-hyoma-tech-0",
@@ -575,7 +575,7 @@ const CHARACTERS_DATA = [
         "element": "Montaña",
         "rarity": 3,
         "unlocked": false,
-        "sprite": "assets/characters/sprites/Z/kunigami-sprite.png",
+        "sprite": "assets/characters/sprites/Z/kunigami-sprite.webp",
         "techniques": [
             {
                 "id": "kunigami-rensuke-tech-0",
@@ -612,7 +612,7 @@ const CHARACTERS_DATA = [
         "element": "Bosque",
         "rarity": 3,
         "unlocked": false,
-        "sprite": "assets/characters/sprites/V/nagi-sprite.png",
+        "sprite": "assets/characters/sprites/V/nagi-sprite.webp",
         "techniques": [
             {
                 "id": "nagi-seishiro-tech-0",
@@ -649,7 +649,7 @@ const CHARACTERS_DATA = [
         "element": "Bosque",
         "rarity": 3,
         "unlocked": false,
-        "sprite": "assets/characters/sprites/V/reo-sprite.png",
+        "sprite": "assets/characters/sprites/V/reo-sprite.webp",
         "techniques": [
             {
                 "id": "reo-mikage-tech-0",
@@ -686,7 +686,7 @@ const CHARACTERS_DATA = [
         "element": "Aire",
         "rarity": 3,
         "unlocked": false,
-        "sprite": "assets/characters/sprites/sin-equipo/aryu-sprite.png",
+        "sprite": "assets/characters/sprites/sin-equipo/aryu-sprite.webp",
         "techniques": [
             {
                 "id": "aryu-jyubei-tech-0",
@@ -723,7 +723,7 @@ const CHARACTERS_DATA = [
         "element": "Bosque",
         "rarity": 3,
         "unlocked": false,
-        "sprite": "assets/characters/sprites/sin-equipo/rin-sprite.png",
+        "sprite": "assets/characters/sprites/sin-equipo/rin-sprite.webp",
         "techniques": [
             {
                 "id": "rin-itoshi-tech-0",
@@ -760,7 +760,7 @@ const CHARACTERS_DATA = [
         "element": "Fuego",
         "rarity": 3,
         "unlocked": false,
-        "sprite": "assets/characters/sprites/X/barou-sprite.png",
+        "sprite": "assets/characters/sprites/X/barou-sprite.webp",
         "techniques": [
             {
                 "id": "shoei-barou-tech-0",
@@ -797,7 +797,7 @@ const CHARACTERS_DATA = [
         "element": "Aire",
         "rarity": 3,
         "unlocked": false,
-        "sprite": "assets/characters/sprites/V/zantetsu-sprite.png",
+        "sprite": "assets/characters/sprites/V/zantetsu-sprite.webp",
         "techniques": [
             {
                 "id": "zantetsu-tsurugi-tech-0",
@@ -834,7 +834,7 @@ const CHARACTERS_DATA = [
         "element": "Bosque",
         "rarity": 3,
         "unlocked": false,
-        "sprite": "assets/characters/sprites/Y/niko-sprite.png",
+        "sprite": "assets/characters/sprites/Y/niko-sprite.webp",
         "techniques": [
             {
                 "id": "ikki-niko-tech-0",
@@ -871,7 +871,7 @@ const CHARACTERS_DATA = [
         "element": "Montaña",
         "rarity": 3,
         "unlocked": false,
-        "sprite": "assets/characters/sprites/sin-equipo/tokimitsu-sprite.png",
+        "sprite": "assets/characters/sprites/sin-equipo/tokimitsu-sprite.webp",
         "techniques": [
             {
                 "id": "aoshi-tokimitsu-tech-0",
@@ -908,7 +908,7 @@ const CHARACTERS_DATA = [
         "element": "Aire",
         "rarity": 2,
         "unlocked": false,
-        "sprite": "assets/characters/sprites/sin-equipo/kira-sprite.png",
+        "sprite": "assets/characters/sprites/sin-equipo/kira-sprite.webp",
         "techniques": [
             {
                 "id": "kira-ryosuke-tech-0",
@@ -945,7 +945,7 @@ const CHARACTERS_DATA = [
         "element": "Montaña",
         "rarity": 2,
         "unlocked": false,
-        "sprite": "assets/characters/sprites/Z/gagamaru-sprite.png",
+        "sprite": "assets/characters/sprites/Z/gagamaru-sprite.webp",
         "techniques": [
             {
                 "id": "gagamaru-gin-tech-0",
@@ -982,7 +982,7 @@ const CHARACTERS_DATA = [
         "element": "Fuego",
         "rarity": 2,
         "unlocked": false,
-        "sprite": "assets/characters/sprites/Z/raichi-sprite.png",
+        "sprite": "assets/characters/sprites/Z/raichi-sprite.webp",
         "techniques": [
             {
                 "id": "jingo-raichi-tech-0",
@@ -1020,7 +1020,7 @@ const CHARACTERS_DATA = [
         "rarity": 2,
         "unlocked": false,
         "gachaExcluded": true,
-        "sprite": "assets/characters/sprites/Z/igaguri-sprite.png",
+        "sprite": "assets/characters/sprites/Z/igaguri-sprite.webp",
         "techniques": [
             {
                 "id": "gurimu-igarashi-tech-0",
@@ -1057,7 +1057,7 @@ const CHARACTERS_DATA = [
         "element": "Bosque",
         "rarity": 2,
         "unlocked": false,
-        "sprite": "assets/characters/sprites/W/keisuke-sprite.png",
+        "sprite": "assets/characters/sprites/W/keisuke-sprite.webp",
         "techniques": [
             {
                 "id": "keisuke-wanima-tech-0",
@@ -1122,7 +1122,7 @@ const CHARACTERS_DATA = [
         "element": "Fuego",
         "rarity": 2,
         "unlocked": false,
-        "sprite": "assets/characters/sprites/W/junichi-sprite.png",
+        "sprite": "assets/characters/sprites/W/junichi-sprite.webp",
         "techniques": [
             {
                 "id": "junichi-wanima-tech-0",
@@ -1187,7 +1187,7 @@ const CHARACTERS_DATA = [
         "element": "Aire",
         "rarity": 2,
         "unlocked": false,
-        "sprite": "assets/characters/sprites/Y/okawa-sprite.png",
+        "sprite": "assets/characters/sprites/Y/okawa-sprite.webp",
         "techniques": [
             {
                 "id": "hibiki-ookawa-tech-0",
@@ -1225,7 +1225,7 @@ const CHARACTERS_DATA = [
         "rarity": 2,
         "unlocked": false,
         "gachaExcluded": true,
-        "sprite": "assets/characters/sprites/Z/iemon-sprite.png",
+        "sprite": "assets/characters/sprites/Z/iemon-sprite.webp",
         "techniques": [
             {
                 "id": "iemon-naoyuki-tech-0",
@@ -1263,7 +1263,7 @@ const CHARACTERS_DATA = [
         "rarity": 1,
         "unlocked": false,
         "gachaExcluded": true,
-        "sprite": "assets/characters/sprites/V/nemoto-sprite.png",
+        "sprite": "assets/characters/sprites/V/nemoto-sprite.webp",
         "techniques": [
             {
                 "id": "sota-nemoto-tech-0",
@@ -1300,7 +1300,7 @@ const CHARACTERS_DATA = [
         "element": "Aire",
         "rarity": 1,
         "unlocked": false,
-        "sprite": "assets/characters/sprites/V/hohai-sprite.png",
+        "sprite": "assets/characters/sprites/V/hohai-sprite.webp",
         "techniques": [
             {
                 "id": "rikiya-hohai-tech-0",
@@ -1337,7 +1337,7 @@ const CHARACTERS_DATA = [
         "element": "Bosque",
         "rarity": 1,
         "unlocked": false,
-        "sprite": "assets/characters/sprites/V/Midorikawa-sprite.png",
+        "sprite": "assets/characters/sprites/V/Midorikawa-sprite.webp",
         "techniques": [
             {
                 "id": "hirakazu-midorikawa-tech-0",
@@ -1374,7 +1374,7 @@ const CHARACTERS_DATA = [
         "element": "Montaña",
         "rarity": 1,
         "unlocked": false,
-        "sprite": "assets/characters/sprites/V/ebina-sprite.png",
+        "sprite": "assets/characters/sprites/V/ebina-sprite.webp",
         "techniques": [
             {
                 "id": "shuhei-ebina-tech-0",
@@ -1411,7 +1411,7 @@ const CHARACTERS_DATA = [
         "element": "Bosque",
         "rarity": 1,
         "unlocked": false,
-        "sprite": "assets/characters/sprites/V/torikai-sprite.png",
+        "sprite": "assets/characters/sprites/V/torikai-sprite.webp",
         "techniques": [
             {
                 "id": "kanji-torikai-tech-0",
@@ -1448,7 +1448,7 @@ const CHARACTERS_DATA = [
         "element": "Fuego",
         "rarity": 1,
         "unlocked": false,
-        "sprite": "assets/characters/sprites/W/mera-sprite.png",
+        "sprite": "assets/characters/sprites/W/mera-sprite.webp",
         "techniques": [
             {
                 "id": "koki-mera-tech-0",
@@ -1485,7 +1485,7 @@ const CHARACTERS_DATA = [
         "element": "Fuego",
         "rarity": 1,
         "unlocked": false,
-        "sprite": "assets/characters/sprites/W/tokita-sprite.png",
+        "sprite": "assets/characters/sprites/W/tokita-sprite.webp",
         "techniques": [
             {
                 "id": "kai-tokita-tech-0",
@@ -1522,7 +1522,7 @@ const CHARACTERS_DATA = [
         "element": "Bosque",
         "rarity": 1,
         "unlocked": false,
-        "sprite": "assets/characters/sprites/W/koshinaka-sprite.png",
+        "sprite": "assets/characters/sprites/W/koshinaka-sprite.webp",
         "techniques": [
             {
                 "id": "yujin-koshinaka-tech-0",
@@ -1559,7 +1559,7 @@ const CHARACTERS_DATA = [
         "element": "Montaña",
         "rarity": 1,
         "unlocked": false,
-        "sprite": "assets/characters/sprites/W/isezaki-sprite.png",
+        "sprite": "assets/characters/sprites/W/isezaki-sprite.webp",
         "techniques": [
             {
                 "id": "takuma-isezaki-tech-0",
@@ -1596,7 +1596,7 @@ const CHARACTERS_DATA = [
         "element": "Aire",
         "rarity": 1,
         "unlocked": false,
-        "sprite": "assets/characters/sprites/W/jigen-sprite.png",
+        "sprite": "assets/characters/sprites/W/jigen-sprite.webp",
         "techniques": [
             {
                 "id": "noboru-jigen-tech-0",
@@ -1633,7 +1633,7 @@ const CHARACTERS_DATA = [
         "element": "Fuego",
         "rarity": 1,
         "unlocked": false,
-        "sprite": "assets/characters/sprites/W/munakata-sprite.png",
+        "sprite": "assets/characters/sprites/W/munakata-sprite.webp",
         "techniques": [
             {
                 "id": "hiromu-munakata-tech-0",
@@ -1670,7 +1670,7 @@ const CHARACTERS_DATA = [
         "element": "Fuego",
         "rarity": 1,
         "unlocked": false,
-        "sprite": "assets/characters/sprites/X/banku-sprite.png",
+        "sprite": "assets/characters/sprites/X/banku-sprite.webp",
         "techniques": [
             {
                 "id": "yawara-banku-tech-0",
@@ -1707,7 +1707,7 @@ const CHARACTERS_DATA = [
         "element": "Aire",
         "rarity": 1,
         "unlocked": false,
-        "sprite": "assets/characters/sprites/X/morinaga-sprite.png",
+        "sprite": "assets/characters/sprites/X/morinaga-sprite.webp",
         "techniques": [
             {
                 "id": "daiya-morinaga-tech-0",
@@ -1744,7 +1744,7 @@ const CHARACTERS_DATA = [
         "element": "Bosque",
         "rarity": 1,
         "unlocked": false,
-        "sprite": "assets/characters/sprites/X/ezaki-sprite.png",
+        "sprite": "assets/characters/sprites/X/ezaki-sprite.webp",
         "techniques": [
             {
                 "id": "chihiro-ezaki-tech-0",
@@ -1781,7 +1781,7 @@ const CHARACTERS_DATA = [
         "element": "Fuego",
         "rarity": 1,
         "unlocked": false,
-        "sprite": "assets/characters/sprites/X/otsuka-sprite.png",
+        "sprite": "assets/characters/sprites/X/otsuka-sprite.webp",
         "techniques": [
             {
                 "id": "kosei-otsuka-tech-0",
@@ -1818,7 +1818,7 @@ const CHARACTERS_DATA = [
         "element": "Aire",
         "rarity": 1,
         "unlocked": false,
-        "sprite": "assets/characters/sprites/X/kora-sprite.png",
+        "sprite": "assets/characters/sprites/X/kora-sprite.webp",
         "techniques": [
             {
                 "id": "buruto-kora-tech-0",
@@ -1856,7 +1856,7 @@ const CHARACTERS_DATA = [
         "rarity": 1,
         "unlocked": false,
         "gachaExcluded": true,
-        "sprite": "assets/characters/sprites/Y/kagura-sprite.png",
+        "sprite": "assets/characters/sprites/Y/kagura-sprite.webp",
         "techniques": [
             {
                 "id": "soshi-kagura-tech-0",
@@ -1893,7 +1893,7 @@ const CHARACTERS_DATA = [
         "element": "Bosque",
         "rarity": 1,
         "unlocked": false,
-        "sprite": "assets/characters/sprites/Y/rokaku-sprite.png",
+        "sprite": "assets/characters/sprites/Y/rokaku-sprite.webp",
         "techniques": [
             {
                 "id": "fuma-rokkaku-tech-0",
@@ -1931,7 +1931,7 @@ const CHARACTERS_DATA = [
         "rarity": 1,
         "unlocked": false,
         "gachaExcluded": true,
-        "sprite": "assets/characters/sprites/X/daido-sprite.png",
+        "sprite": "assets/characters/sprites/X/daido-sprite.webp",
         "techniques": [
             {
                 "id": "burai-daido-tech-0",
@@ -1968,7 +1968,7 @@ const CHARACTERS_DATA = [
         "element": "Aire",
         "rarity": 1,
         "unlocked": false,
-        "sprite": "assets/characters/sprites/Y/takeyama-sprite.png",
+        "sprite": "assets/characters/sprites/Y/takeyama-sprite.webp",
         "techniques": [
             {
                 "id": "mareto-takeyama-tech-0",
@@ -2005,7 +2005,7 @@ const CHARACTERS_DATA = [
         "element": "Montaña",
         "rarity": 1,
         "unlocked": false,
-        "sprite": "assets/characters/sprites/Y/koshiba-sprite.png",
+        "sprite": "assets/characters/sprites/Y/koshiba-sprite.webp",
         "techniques": [
             {
                 "id": "hyuga-koshiba-tech-0",
@@ -2043,7 +2043,7 @@ const CHARACTERS_DATA = [
         "rarity": 1,
         "unlocked": false,
         "gachaExcluded": true,
-        "sprite": "assets/characters/sprites/W/fuwa-sprite.png",
+        "sprite": "assets/characters/sprites/W/fuwa-sprite.webp",
         "techniques": [
             {
                 "id": "raito-fuwa-tech-0",
@@ -2080,7 +2080,7 @@ const CHARACTERS_DATA = [
         "element": "Bosque",
         "rarity": 1,
         "unlocked": false,
-        "sprite": "assets/characters/sprites/X/dokomo-sprite.png",
+        "sprite": "assets/characters/sprites/X/dokomo-sprite.webp",
         "techniques": [
             {
                 "id": "yuza-dokomo-tech-0",
@@ -2117,7 +2117,7 @@ const CHARACTERS_DATA = [
         "element": "Montaña",
         "rarity": 1,
         "unlocked": false,
-        "sprite": "assets/characters/sprites/Y/ito-sprite.png",
+        "sprite": "assets/characters/sprites/Y/ito-sprite.webp",
         "techniques": [
             {
                 "id": "juraki-ito-tech-0",
@@ -2154,7 +2154,7 @@ const CHARACTERS_DATA = [
         "element": "Aire",
         "rarity": 1,
         "unlocked": false,
-        "sprite": "assets/characters/sprites/Y/zuzuki-sprite.png",
+        "sprite": "assets/characters/sprites/Y/zuzuki-sprite.webp",
         "equipoOriginal": "Y",
         "techniques": [
             {
@@ -2191,7 +2191,7 @@ const CHARACTERS_DATA = [
         "element": "Aire",
         "rarity": 1,
         "unlocked": false,
-        "sprite": "assets/characters/sprites/Y/madoka-sprite.png",
+        "sprite": "assets/characters/sprites/Y/madoka-sprite.webp",
         "equipoOriginal": "Y",
         "techniques": [
             {
@@ -2228,7 +2228,7 @@ const CHARACTERS_DATA = [
         "element": "Bosque",
         "rarity": 1,
         "unlocked": false,
-        "sprite": "assets/characters/sprites/Y/shinichi-sprite.png",
+        "sprite": "assets/characters/sprites/Y/shinichi-sprite.webp",
         "equipoOriginal": "Y",
         "techniques": [
             {
@@ -2265,7 +2265,7 @@ const CHARACTERS_DATA = [
         "element": "Fuego",
         "rarity": 1,
         "unlocked": false,
-        "sprite": "assets/characters/sprites/Y/sato-sprite.png",
+        "sprite": "assets/characters/sprites/Y/sato-sprite.webp",
         "equipoOriginal": "Y",
         "techniques": [
             {

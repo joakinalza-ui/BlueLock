@@ -6,6 +6,9 @@
     <link rel="manifest" href="../../manifest.json">
     <link rel="apple-touch-icon" href="../../assets/ui/apple-touch-icon.png">
     <meta name="theme-color" content="#070b14">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="Blue Lock">
     <script>if ("serviceWorker" in navigator) navigator.serviceWorker.register("../../sw.js");</script>
     <title>Blue Lock Coach — Gacha</title>
     <link rel="stylesheet" href="gacha.css?v=28">
@@ -17,7 +20,7 @@
     <script src="../../js/characters-data.js"></script>
 
     <div id="gacha-screen">
-        <!-- assets/backgrounds/gacha-fondo.png ENTERA, sin recortar, como
+        <!-- assets/backgrounds/gacha-fondo.webp ENTERA, sin recortar, como
              único fondo: aspect-ratio fija el alto exacto de la imagen
              para cada ancho, así background-size:100% 100% nunca la
              deforma ni la recorta. El header y el contenido interactivo
@@ -35,7 +38,7 @@
                     <span id="ticket-count">0</span>
                 </span>
                 <span class="diamond-counter">
-                    <span class="diamond-icon"><img src="../../assets/ui/diamond-icon.png" alt=""></span>
+                    <span class="diamond-icon"><img src="../../assets/ui/diamond-icon.webp" alt=""></span>
                     <span id="diamond-count">0</span>
                 </span>
             </header>
@@ -70,11 +73,11 @@
                 <div class="pull-buttons">
                     <button class="pull-btn pull-btn-x1" id="pull-x1-btn" type="button">
                         <span class="pull-btn-title">INVOCAR x1</span>
-                        <span class="pull-btn-cost" id="pull-x1-cost"><span class="diamond-icon"><img src="../../assets/ui/diamond-icon.png" alt=""></span> 300</span>
+                        <span class="pull-btn-cost" id="pull-x1-cost"><span class="diamond-icon"><img src="../../assets/ui/diamond-icon.webp" alt=""></span> 300</span>
                     </button>
                     <button class="pull-btn pull-btn-x10" id="pull-x10-btn" type="button">
                         <span class="pull-btn-title">INVOCAR x10</span>
-                        <span class="pull-btn-cost" id="pull-x10-cost"><span class="diamond-icon"><img src="../../assets/ui/diamond-icon.png" alt=""></span> 2.700</span>
+                        <span class="pull-btn-cost" id="pull-x10-cost"><span class="diamond-icon"><img src="../../assets/ui/diamond-icon.webp" alt=""></span> 2.700</span>
                         <span class="pull-btn-guarantee-ribbon" id="pull-x10-guarantee" hidden>★3 GARANTIZADO</span>
                     </button>
                 </div>

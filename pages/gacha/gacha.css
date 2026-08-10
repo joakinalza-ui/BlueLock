@@ -28,7 +28,7 @@ body{
     overflow:hidden;
 }
 
-/* assets/backgrounds/gacha-fondo.png ENTERA como fondo del frame:
+/* assets/backgrounds/gacha-fondo.webp ENTERA como fondo del frame:
    aspect-ratio mantiene siempre la misma proporción que el PNG
    (853×1844); width/height:auto + max-width/max-height:100% hacen que
    el frame se encoja por lo que haga falta sin recortar ni deformar la
@@ -38,7 +38,7 @@ body{
     position:relative;
     width:min(100%, calc(100dvh * 853 / 1844));
     aspect-ratio:853/1844;
-    background-image:url("../../assets/backgrounds/gacha-fondo.png");
+    background-image:url("../../assets/backgrounds/gacha-fondo.webp");
     background-size:100% 100%;
     background-repeat:no-repeat;
     overflow:hidden;

@@ -1,4 +1,4 @@
-const PLACEHOLDER_PORTRAIT = "assets/characters/portraits/placeholder.png";
+const PLACEHOLDER_PORTRAIT = "assets/characters/portraits/placeholder.webp";
 
 function buildNodeMarkup(characterId, index) {
     const character = CHARACTERS_DATA.find((c) => c.id === characterId);
