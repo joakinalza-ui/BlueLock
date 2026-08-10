@@ -284,10 +284,17 @@ function initSlotPicker() {
 // que solo encaja en algunas pantallas. Siempre hay 4 filas (DEL/MED/
 // DEF/POR); las de hasta 4 puestos usan --card-width, la de 5 (3-5-2)
 // usa --card-width-compact.
+// Deja un pequeño margen (97% del hueco por fila) en vez de ocupar el
+// alto disponible al completo — mismo ajuste que F5, a petición del
+// usuario, para que las cartas queden un poco más bajas sin perder
+// ancho (el hueco sobrante lo reparte justify-content:space-between
+// de .pitch-field como aire extra entre filas).
+const PITCH_ROW_HEIGHT_USAGE = 0.97;
+
 function fitPitchCardSize() {
     const field = document.querySelector(".pitch-field");
     const row = document.querySelector(".pitch-row");
-    const sampleCard = document.querySelector(".player-card, .pitch-slot-empty");
+    const sampleCard = document.querySelector(".player-card");
     if (!field || !row) return;
 
     const fieldStyle = getComputedStyle(field);
@@ -301,6 +308,9 @@ function fitPitchCardSize() {
 
     // "Chroma" de texto de la carta: alto real menos el ancho actual
     // (el retrato es 1:1, así que el resto del alto es texto/badges).
+    // Solo se mide sobre una carta real (.player-card): un hueco vacío
+    // (.pitch-slot-empty) tiene su propia proporción fija de placeholder
+    // y no sirve de referencia para el chroma de texto.
     let chrome = 52;
     if (sampleCard) {
         const cardRect = sampleCard.getBoundingClientRect();
@@ -308,7 +318,7 @@ function fitPitchCardSize() {
     }
 
     const availableHeight = fieldRect.height - paddingTop - paddingBottom - 3 * rowGap;
-    const maxWidthByHeight = availableHeight / 4 - chrome;
+    const maxWidthByHeight = (availableHeight / 4) * PITCH_ROW_HEIGHT_USAGE - chrome;
 
     const availableWidth = fieldRect.width - paddingLeft - paddingRight;
     const maxWidthByWidth4 = (availableWidth - 3 * columnGap) / 4;
