@@ -306,7 +306,7 @@ body.prematch-active #match-screen{
     justify-content:center;
     align-items:center;
     flex-wrap:wrap;
-    gap:10px;
+    gap:6px;
 }
 
 .prematch-pitch-row .player-card{
