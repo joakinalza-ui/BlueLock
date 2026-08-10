@@ -352,8 +352,13 @@ body{
     padding:0;
 }
 
+/* Sin aspect-ratio fijo: si se fuerza una altura de tarjeta concreta,
+   la foto (aspect-ratio:1/1) se encoge para dejarle sitio al nombre y
+   dejar de ser cuadrada, recortando la cara según lo alto que le
+   tocara quedar a cada personaje — igual que ya funciona bien en las
+   tarjetas de la Colección (sin esta restricción), que la altura la
+   ponga el contenido. */
 .quinteto-grid .player-card{
-    aspect-ratio:3/4;
     cursor:pointer;
     border-radius:14px;
     border-width:2px;
