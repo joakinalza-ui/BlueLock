@@ -275,8 +275,8 @@ body{
 
 .player-card-position{
     position:absolute;
-    top:5px;
-    left:5px;
+    bottom:5px;
+    right:5px;
     background:rgba(59,130,246,0.9);
     color:#fff;
     font-size:10px;

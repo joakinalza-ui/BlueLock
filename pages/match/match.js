@@ -636,8 +636,8 @@ function buildPrematchCardMarkup(character, fixedLevel, fixedAwakening, slotPosi
         <span class="player-card-thumb">
             <img src="${resolveAssetPath(spritePath)}" alt="${character.name}" data-real-sprite="${hasRealSprite}">
             ${buildAwakeningBadgeMarkup(character.id, fixedAwakening)}
+            <span class="player-card-position" data-position="${position}">${position}</span>
         </span>
-        <span class="player-card-position" data-position="${position}">${position}</span>
         <span class="player-card-stars">${"★".repeat(character.rarity)}</span>
         <span class="player-card-name">${character.name}</span>
         <span class="player-card-level">Nv. ${level}</span>
