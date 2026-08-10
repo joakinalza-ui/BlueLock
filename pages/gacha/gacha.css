@@ -215,10 +215,10 @@ body{
     bottom:0;
     z-index:2;
     overflow:hidden;
-    padding:4px 20px 4px;
+    padding:2px 20px 2px;
     display:flex;
     flex-direction:column;
-    gap:3px;
+    gap:1px;
 }
 
 /* Banner único de reclutamiento */
@@ -282,7 +282,7 @@ body{
     align-items:center;
     justify-content:space-between;
     gap:10px;
-    padding:4px 12px;
+    padding:2px 12px;
     border-radius:12px;
     border:1px solid #f59e0b;
     background:linear-gradient(135deg, rgba(245,158,11,0.16) 0%, #0d1424 65%);
@@ -333,7 +333,7 @@ body{
     background:#0d1424;
     border:1px solid #1e2b4a;
     border-radius:12px;
-    padding:4px 14px;
+    padding:3px 14px;
 }
 
 .pity-label-row{
@@ -395,7 +395,7 @@ body{
     align-items:center;
     justify-content:center;
     gap:3px;
-    padding:5px 10px;
+    padding:3px 10px;
     border-radius:14px;
     background:linear-gradient(160deg, rgba(255,255,255,0.97) 0%, rgba(219,234,254,0.92) 100%);
     box-shadow:0 4px 14px rgba(3,8,20,0.35);
@@ -414,7 +414,7 @@ body{
 
 .pull-btn-x10{
     border:2px solid #eab308;
-    padding-bottom:17px;
+    padding-bottom:10px;
     background:linear-gradient(160deg, rgba(255,255,255,0.97) 0%, rgba(254,249,195,0.92) 100%);
 }
 
@@ -467,7 +467,7 @@ body{
     align-items:center;
     justify-content:space-between;
     gap:10px;
-    padding:6px 16px;
+    padding:4px 16px;
     border-radius:12px;
     border:1px solid #2c3a5c;
     background:#0d1424;
