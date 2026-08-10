@@ -218,7 +218,7 @@ body{
     padding:2px 20px 2px;
     display:flex;
     flex-direction:column;
-    gap:1px;
+    gap:4px;
 }
 
 /* Banner único de reclutamiento */
@@ -414,7 +414,7 @@ body{
 
 .pull-btn-x10{
     border:2px solid #eab308;
-    padding-bottom:10px;
+    padding-bottom:12px;
     background:linear-gradient(160deg, rgba(255,255,255,0.97) 0%, rgba(254,249,195,0.92) 100%);
 }
 
