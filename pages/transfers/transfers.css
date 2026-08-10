@@ -98,16 +98,16 @@ body{
 
 .transfer-connector{
     width:2px;
-    height:22px;
+    height:30px;
     background:repeating-linear-gradient(to bottom, #2c3a5c 0, #2c3a5c 4px, transparent 4px, transparent 8px);
 }
 
 .transfer-node{
     display:flex;
     align-items:center;
-    gap:14px;
+    gap:16px;
     width:100%;
-    padding:12px 16px;
+    padding:14px 18px;
     border-radius:16px;
     border:1px solid #2c3a5c;
     background:#0d1424;
@@ -131,8 +131,8 @@ body{
 .transfer-node-portrait{
     position:relative;
     flex-shrink:0;
-    width:60px;
-    height:60px;
+    width:72px;
+    height:72px;
     border-radius:50%;
     overflow:hidden;
     background:#111a2e;
