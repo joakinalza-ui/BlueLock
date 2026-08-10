@@ -165,17 +165,19 @@ body.prematch-active #match-screen{
 }
 
 .prematch-power-label{
-    font-size:11px;
+    font-size:10px;
     color:#7fa8ff;
     font-weight:700;
     text-transform:uppercase;
     letter-spacing:0.03em;
+    white-space:nowrap;
 }
 
 .prematch-power-value{
     font-size:22px;
     font-weight:700;
     color:#fff;
+    line-height:1.1;
 }
 
 .prematch-control-row{
@@ -197,11 +199,12 @@ body.prematch-active #match-screen{
     display:flex;
     align-items:center;
     justify-content:center;
-    gap:10px;
-    background:#0d1424;
+    gap:8px;
+    background:linear-gradient(135deg, #10192e, #0d1424);
     border:1px solid #1e2b4a;
+    border-left:3px solid #7fa8ff;
     border-radius:14px;
-    padding:9px 10px;
+    padding:8px 8px;
 }
 
 .prematch-power-inline{
@@ -216,14 +219,14 @@ body.prematch-active #match-screen{
     display:flex;
     align-items:center;
     justify-content:center;
-    width:32px;
-    height:32px;
+    width:28px;
+    height:28px;
     border-radius:50%;
-    background:#0f1626;
-    border:1px solid #2c3a5c;
+    background:rgba(127,168,255,0.12);
+    border:1px solid rgba(127,168,255,0.35);
     color:#7fa8ff;
     font-family:sans-serif;
-    font-size:16px;
+    font-size:15px;
     cursor:pointer;
     flex-shrink:0;
 }
@@ -240,10 +243,11 @@ body.prematch-active #match-screen{
     align-items:center;
     justify-content:space-between;
     gap:8px;
-    background:#0d1424;
+    background:linear-gradient(135deg, #10192e, #0d1424);
     border:1px solid #1e2b4a;
+    border-left:3px solid #7fa8ff;
     border-radius:14px;
-    padding:9px 12px;
+    padding:8px 10px;
 }
 
 .prematch-formation-box[hidden]{
@@ -252,15 +256,17 @@ body.prematch-active #match-screen{
 
 .prematch-formation-select{
     min-width:0;
+    flex-shrink:1;
     appearance:none;
     -webkit-appearance:none;
     background:#0a0f1c url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%237fa8ff' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E") no-repeat right 6px center;
     background-size:10px;
     border:1px solid #2c3a5c;
     border-radius:10px;
-    padding:6px 22px 6px 8px;
+    padding:6px 20px 6px 8px;
     color:#fff;
     font-size:12px;
+    font-weight:600;
     font-family:sans-serif;
 }
 
