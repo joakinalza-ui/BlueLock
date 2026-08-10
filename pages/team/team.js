@@ -21,7 +21,7 @@ function buildStars(rarity) {
 function buildPlayerCardMarkup(character) {
     const level = getCharacterLevel(character.id);
     const hasRealSprite = !!character.sprite;
-    const spritePath = hasRealSprite ? character.sprite : PLACEHOLDER_PORTRAIT;
+    const spritePath = hasRealSprite ? getCharacterThumbSprite(character) : PLACEHOLDER_PORTRAIT;
     const upgradeBadge = hasCharacterUpgradeAvailable(character)
         ? '<span class="player-card-upgrade-badge" title="Puede subir de Nivel o Despertar"></span>'
         : "";
@@ -289,7 +289,7 @@ function renderSlotPickerPage() {
 
     pageItems.forEach((character) => {
         const hasRealSprite = !!character.sprite;
-        const spritePath = hasRealSprite ? character.sprite : PLACEHOLDER_PORTRAIT;
+        const spritePath = hasRealSprite ? getCharacterThumbSprite(character) : PLACEHOLDER_PORTRAIT;
         const row = document.createElement("button");
         row.type = "button";
         row.className = "swap-modal-slot";

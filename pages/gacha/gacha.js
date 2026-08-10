@@ -128,7 +128,7 @@ function showInsufficientFundsToast() {
 function buildResultCardMarkup(result) {
     const character = result.character;
     const hasRealSprite = !!character.sprite;
-    const spritePath = hasRealSprite ? character.sprite : PLACEHOLDER_PORTRAIT;
+    const spritePath = hasRealSprite ? getCharacterThumbSprite(character) : PLACEHOLDER_PORTRAIT;
     const badge = result.isNew
         ? '<span class="result-card-badge badge-new">¡NUEVO!</span>'
         : `<span class="result-card-badge badge-essence">+${result.essenceGained} Esen.</span>`;
@@ -255,7 +255,7 @@ function updatePointsShopButtonCount() {
 function buildPointsShopRowMarkup(character) {
     const canAfford = getRecruitPoints() >= RECRUIT_POINTS_REDEEM_COST;
     const hasRealSprite = !!character.sprite;
-    const spritePath = hasRealSprite ? character.sprite : PLACEHOLDER_PORTRAIT;
+    const spritePath = hasRealSprite ? getCharacterThumbSprite(character) : PLACEHOLDER_PORTRAIT;
     const owned = isCharacterUnlocked(character);
 
     return `

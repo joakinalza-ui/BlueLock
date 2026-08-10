@@ -630,7 +630,7 @@ function renderStoryPreMatch(chapterKey) {
 function buildPrematchCardMarkup(character, fixedLevel, fixedAwakening, slotPosition) {
     const level = fixedLevel !== undefined ? fixedLevel : getCharacterLevel(character.id);
     const hasRealSprite = !!character.sprite;
-    const spritePath = hasRealSprite ? character.sprite : PLAYER_DETAIL_PLACEHOLDER;
+    const spritePath = hasRealSprite ? getCharacterThumbSprite(character) : PLAYER_DETAIL_PLACEHOLDER;
     const position = slotPosition || character.position;
     return `
         <span class="player-card-thumb">

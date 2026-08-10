@@ -1896,6 +1896,17 @@ function resolveAssetPath(path) {
     return (window.BL_ASSET_BASE || "") + path;
 }
 
+// Las tarjetas pequeñas (Colección, Quinteto, F5/F11, previa al
+// partido) usan una versión recortada de cada foto (mismo archivo,
+// sufijo "-thumb", generada aparte SIN tocar el original) para que el
+// personaje ocupe siempre la misma proporción del cuadro — la foto
+// completa (sin recortar) se sigue usando tal cual en la Home y en la
+// Ficha de Jugador, donde se ve a cuerpo entero.
+function getCharacterThumbSprite(character) {
+    if (!character.sprite) return character.sprite;
+    return character.sprite.replace(/\.webp$/, "-thumb.webp");
+}
+
 function getHomeCharacterId() {
     const stored = localStorage.getItem(HOME_CHARACTER_KEY);
     return CHARACTER_ROSTER.some((c) => c.id === stored) ? stored : HOME_CHARACTER_DEFAULT;

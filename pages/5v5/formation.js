@@ -18,7 +18,7 @@ function buildStars(rarity) {
 function buildPlayerCardMarkup(character, slotPosition) {
     const level = getCharacterLevel(character.id);
     const hasRealSprite = !!character.sprite;
-    const spritePath = hasRealSprite ? character.sprite : PLACEHOLDER_PORTRAIT;
+    const spritePath = hasRealSprite ? getCharacterThumbSprite(character) : PLACEHOLDER_PORTRAIT;
     const position = slotPosition || character.position;
     return `
         <span class="player-card-thumb">

@@ -3,7 +3,7 @@ const PLACEHOLDER_PORTRAIT = "assets/characters/portraits/placeholder.webp";
 function buildNodeMarkup(characterId, index) {
     const character = CHARACTERS_DATA.find((c) => c.id === characterId);
     const hasRealSprite = !!character.sprite;
-    const spritePath = hasRealSprite ? character.sprite : PLACEHOLDER_PORTRAIT;
+    const spritePath = hasRealSprite ? getCharacterThumbSprite(character) : PLACEHOLDER_PORTRAIT;
     const wins = getTransferProgress(characterId);
     const unlocked = isTransferNodeUnlocked(index);
     const completed = isTransferNodeCompleted(characterId);
