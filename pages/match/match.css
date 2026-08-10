@@ -129,17 +129,7 @@ body.prematch-active #match-screen{
 }
 
 .prematch-narrative{
-    width:100%;
-    max-width:340px;
-    padding:10px 14px;
-    background:#0d1424;
-    border:1px solid #2c3a5c;
-    border-radius:12px;
-    font-style:italic;
-    font-size:12px;
-    color:#c3cbe0;
-    line-height:1.4;
-    flex-shrink:0;
+    display:none;
 }
 
 /* Fondo fijo de campo (mismo campo-5v5.png y degradado que F5/F11) —
