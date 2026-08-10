@@ -202,26 +202,23 @@ body{
 }
 
 /* Se superpone en la zona blanca/suelo de la imagen, debajo de la
-   puerta — top:69.4% medido contra el punto donde termina realmente el
-   marco/neón de la puerta en el PNG (misma fila absoluta que antes,
-   ~1217 de 1754 tras el recorte del suelo — antes era 66% de 1844),
-   con margen extra para que la puerta quede completa y despejada.
+   puerta — top:67.8% medido contra el punto donde termina realmente el
+   marco/neón de la puerta en el PNG (fila ~1189 de 1754, con un margen
+   ajustado casi al mínimo para dejarle más alto real a los 5 elementos
+   que apila: banner, bienvenida, pity, invocar y tienda de puntos).
    overflow:hidden como red de seguridad. */
 .gacha-content{
     position:absolute;
-    top:69.4%;
+    top:68.1%;
     left:0;
     right:0;
     bottom:0;
     z-index:2;
     overflow:hidden;
-    /* padding-bottom despeja el hueco del .points-shop-btn fijo (que
-       ahora flota fuera de este flujo, ver arriba), para que los
-       botones de invocar no queden tapados detrás. */
-    padding:4px 20px 52px;
+    padding:5px 20px 6px;
     display:flex;
     flex-direction:column;
-    gap:3px;
+    gap:4px;
 }
 
 /* Banner único de reclutamiento */
@@ -417,7 +414,7 @@ body{
 
 .pull-btn-x10{
     border:2px solid #eab308;
-    padding-bottom:11px;
+    padding-bottom:9px;
     background:linear-gradient(160deg, rgba(255,255,255,0.97) 0%, rgba(254,249,195,0.92) 100%);
 }
 
@@ -462,26 +459,20 @@ body{
 }
 
 /* Botón de acceso a la Tienda de Puntos, debajo de los botones de
-   invocar */
-
-/* Fuera del flujo de .gacha-content (ver comentario en index.html):
-   anclado directamente al borde inferior real de la pantalla, así
-   nunca compite por espacio con el resto de botones dentro de la
-   franja de suelo de la imagen — que varía de alto según el
-   dispositivo — ni puede quedar parcialmente tapado. */
+   invocar — dentro del flujo normal de .gacha-content, mismo sistema
+   de coordenadas (% de la imagen) que el resto de la franja de suelo,
+   en vez de position:fixed independiente: mezclar dos sistemas de
+   posicionamiento distintos (fijo a la pantalla vs. % de la imagen)
+   dio problemas reales en dispositivos concretos (scroll inesperado,
+   solape con los botones de invocar) que no se podían reproducir en
+   las pruebas — más simple y predecible que todo se apile junto. */
 .points-shop-btn{
-    position:fixed;
-    left:50%;
-    bottom:14px;
-    transform:translateX(-50%);
-    width:calc(100% - 40px);
-    max-width:440px;
-    z-index:10;
+    flex-shrink:0;
     display:flex;
     align-items:center;
     justify-content:space-between;
     gap:10px;
-    padding:11px 16px;
+    padding:8px 16px;
     border-radius:12px;
     border:1px solid #2c3a5c;
     background:#0d1424;
@@ -489,7 +480,6 @@ body{
     font-size:13px;
     font-weight:700;
     cursor:pointer;
-    box-shadow:0 4px 14px rgba(3,8,20,0.5);
 }
 
 .points-shop-btn-count{
