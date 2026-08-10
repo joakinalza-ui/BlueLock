@@ -30,14 +30,19 @@ body{
 
 /* assets/backgrounds/gacha-fondo.webp ENTERA como fondo del frame:
    aspect-ratio mantiene siempre la misma proporción que el PNG
-   (853×1844); width/height:auto + max-width/max-height:100% hacen que
-   el frame se encoja por lo que haga falta sin recortar ni deformar la
-   imagen — mismo patrón que "Jugar". Header y contenido se posicionan
-   dentro en % medidos sobre el propio PNG. */
+   (853×1754 — recorte pequeño y conservador del suelo vacío bajo la
+   puerta, ~90px, para compensar el hueco lateral que queda en un
+   iPhone 13 real incluso siendo su proporción casi idéntica a la
+   original 853×1844, probablemente por la barra de estado/chrome del
+   navegador restando algo de alto útil); width/height:auto +
+   max-width/max-height:100% hacen que el frame se encoja por lo que
+   haga falta sin deformar la imagen — mismo patrón que "Jugar".
+   Header y contenido se posicionan dentro en % medidos sobre el
+   propio PNG (ver .gacha-content). */
 #gacha-bg-frame{
     position:relative;
-    width:min(100%, calc(100dvh * 853 / 1844));
-    aspect-ratio:853/1844;
+    width:min(100%, calc(100dvh * 853 / 1754));
+    aspect-ratio:853/1754;
     background-image:url("../../assets/backgrounds/gacha-fondo.webp");
     background-size:100% 100%;
     background-repeat:no-repeat;
@@ -56,7 +61,7 @@ body{
     content:"";
     position:absolute;
     top:0; left:0; right:0;
-    height:11%;
+    height:11.6%;
     background:linear-gradient(180deg,
         rgba(204,213,239,1) 0%,
         rgba(204,213,239,1) 71%,
@@ -197,13 +202,14 @@ body{
 }
 
 /* Se superpone en la zona blanca/suelo de la imagen, debajo de la
-   puerta — top:66% medido contra el punto donde termina realmente el
-   marco/neón de la puerta en el PNG (fila ~1190 de 1844 ≈ 64.5%), con
-   margen extra para que la puerta quede completa y despejada.
+   puerta — top:69.4% medido contra el punto donde termina realmente el
+   marco/neón de la puerta en el PNG (misma fila absoluta que antes,
+   ~1217 de 1754 tras el recorte del suelo — antes era 66% de 1844),
+   con margen extra para que la puerta quede completa y despejada.
    overflow:hidden como red de seguridad. */
 .gacha-content{
     position:absolute;
-    top:66%;
+    top:69.4%;
     left:0;
     right:0;
     bottom:0;
