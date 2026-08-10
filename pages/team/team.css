@@ -257,16 +257,26 @@ body{
 
 /* Quinteto Principal */
 
+/* 3 por fila en vez de 5 — cartas casi el doble de anchas (mejor
+   legibilidad de la foto/nombre), la 5ª titular queda centrada sola en
+   la segunda fila en vez de forzar una columna extra apretada. */
 .quinteto-grid{
-    display:grid;
-    grid-template-columns:repeat(5, 1fr);
-    gap:8px;
+    display:flex;
+    flex-wrap:wrap;
+    justify-content:center;
+    gap:10px;
+}
+
+.quinteto-grid .quinteto-slot,
+.quinteto-grid .player-card{
+    flex:0 0 calc((100% - 20px) / 3);
+    max-width:calc((100% - 20px) / 3);
 }
 
 .quinteto-slot{
     position:relative;
     aspect-ratio:3/4;
-    border-radius:10px;
+    border-radius:14px;
     background:#0a0f1c;
     border:2px dashed #2c3a5c;
     display:flex;
@@ -275,7 +285,7 @@ body{
 }
 
 .quinteto-slot-placeholder{
-    font-size:10px;
+    font-size:12px;
     color:#5b6685;
     text-align:center;
     padding:4px;
@@ -345,6 +355,28 @@ body{
 .quinteto-grid .player-card{
     aspect-ratio:3/4;
     cursor:pointer;
+    border-radius:14px;
+    border-width:2px;
+}
+
+.quinteto-grid .player-card-position{
+    font-size:11px;
+    padding:3px 7px;
+}
+
+.quinteto-grid .player-card-stars{
+    font-size:11px;
+    padding:6px 7px 0;
+}
+
+.quinteto-grid .player-card-name{
+    font-size:13px;
+    padding:3px 7px;
+}
+
+.quinteto-grid .player-card-level{
+    font-size:11px;
+    padding:0 7px 7px;
 }
 
 .player-card-thumb{
