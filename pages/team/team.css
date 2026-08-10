@@ -359,9 +359,11 @@ body{
     border-width:2px;
 }
 
+/* Mismo tamaño que .player-card-awakening (el badge de Despertar, al
+   otro lado de la foto) — antes era claramente más grande. */
 .quinteto-grid .player-card-position{
-    font-size:11px;
-    padding:3px 7px;
+    font-size:10px;
+    padding:1px 6px;
 }
 
 .quinteto-grid .player-card-stars{
@@ -369,9 +371,13 @@ body{
     padding:6px 7px 0;
 }
 
+/* Más compacto que antes: el nombre ya no se come tanto alto de la
+   tarjeta, así la foto (flex-shrink:0 en el nombre, ver arriba) recupera
+   ese espacio. */
 .quinteto-grid .player-card-name{
-    font-size:13px;
-    padding:3px 7px;
+    font-size:11px;
+    line-height:1.15;
+    padding:2px 7px;
 }
 
 .quinteto-grid .player-card-level{
