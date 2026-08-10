@@ -6,24 +6,41 @@
 
 html, body{
     height:100%;
+    overflow:hidden;
 }
 
 body{
-    min-height:100vh;
     background:#070b14;
     color:#fff;
     font-family:sans-serif;
 }
 
+/* La ficha nunca hace scroll: #player-viewport ocupa exactamente el
+   alto del dispositivo y centra dentro a #player-screen, que mantiene
+   su alto natural (el que necesite el contenido). Si ese alto no cabe
+   (personaje con pasiva única, tecnica equipada, pantalla pequeña...),
+   player.js mide el desbordamiento y aplica un transform:scale() que
+   encoge la ficha entera lo justo para que quepa entera — mismo
+   patrón que ya usa el sprite del personaje al escalar por alturaCm. */
+#player-viewport{
+    height:100vh;
+    height:100dvh;
+    overflow:hidden;
+    display:flex;
+    justify-content:center;
+    align-items:flex-start;
+}
+
 #player-screen{
     position:relative;
     max-width:480px;
-    margin:0 auto;
-    min-height:100vh;
+    width:100%;
+    flex-shrink:0;
     padding-bottom:24px;
     background:
         radial-gradient(circle at 50% 0%, rgba(127,168,255,0.1), transparent 55%),
         #070b14;
+    transform-origin:top center;
 }
 
 /* Header */

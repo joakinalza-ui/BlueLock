@@ -177,8 +177,25 @@ function initTabs() {
             document.querySelectorAll(".player-tab-panel").forEach((panel) => {
                 panel.hidden = panel.dataset.tabPanel !== tab.dataset.tab;
             });
+            fitPlayerScreenToViewport();
         });
     });
+}
+
+// La ficha no hace scroll nunca (ver comentario en player.css sobre
+// #player-viewport/#player-screen): si el contenido natural no cabe en
+// el alto disponible, se encoge entero con transform:scale() desde
+// arriba — el ancho vuelve a quedar centrado solo porque el origen es
+// "top center". reset a scale(1) primero para medir el alto SIN
+// encoger (si no, un encogido previo falsearía la medida siguiente).
+function fitPlayerScreenToViewport() {
+    const viewport = document.getElementById("player-viewport");
+    const screen = document.getElementById("player-screen");
+    screen.style.transform = "";
+    const available = viewport.clientHeight;
+    const needed = screen.scrollHeight;
+    const scale = needed > available ? available / needed : 1;
+    screen.style.transform = scale < 1 ? `scale(${scale})` : "";
 }
 
 // El botón contextual (Cambiar jugador / Añadir al Quinteto) refleja
@@ -226,4 +243,6 @@ document.addEventListener("DOMContentLoaded", () => {
     initTabs();
     initActionButton();
     initBackButton();
+    fitPlayerScreenToViewport();
+    window.addEventListener("resize", fitPlayerScreenToViewport);
 });
