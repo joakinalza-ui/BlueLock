@@ -237,19 +237,17 @@ function applyMatchStartPassiveEffects(myStats, lineup) {
 // potencia de la Supertécnica de CUALQUIER compañero de ese elemento
 // cuando la usa de verdad (ver resolvePlayerChoice), así que se
 // calcula aparte como un mapa por elemento y se consulta ahí en cada
-// Command Battle. Mismo criterio de desbloqueo por hueco que el resto
-// de pasivas propias (getGenericAbilityLevel), pero la CANTIDAD escala
-// con el nivel real del personaje que la lleva (+25 base, +5 por
-// nivel), no con el nivel del hueco — fórmula propia de esta pasiva,
-// confirmada aparte. Si varios personajes de la alineación llevan el
-// aura del mismo elemento, sus bonus se SUMAN.
+// Command Battle. A diferencia del resto de pasivas propias, esta NO
+// pasa por el desbloqueo por hueco (getGenericAbilityLevel) — está
+// activa desde el Nivel 1 del propio personaje, con +25 de base y +5
+// por cada nivel adicional (Nv.1 = +25, Nv.2 = +30...). Si varios
+// personajes de la alineación llevan el aura del mismo elemento, sus
+// bonus se SUMAN.
 function computeElementTechniqueBonus(lineup) {
     const bonus = { Bosque: 0, Fuego: 0, "Montaña": 0, Aire: 0 };
     lineup.forEach((character) => {
         const characterLevel = getCharacterLevel(character.id);
-        (character.passives || []).forEach((passive, index) => {
-            const level = getGenericAbilityLevel(characterLevel, index);
-            if (level < 1) return;
+        (character.passives || []).forEach((passive) => {
             (passive.effects || []).forEach((effect) => {
                 if (effect.kind !== "elementTechniqueAura") return;
                 bonus[effect.element] = (bonus[effect.element] || 0) + effect.baseAmount + effect.perLevelAmount * (characterLevel - 1);

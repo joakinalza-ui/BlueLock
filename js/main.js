@@ -1647,6 +1647,15 @@ function buildLeveledPassiveRowMarkup(slot, level, multiplier, characterLevel) {
     `;
 }
 
+// Las pasivas "Mejora Supertécnicas [Elemento]" (aura) no pasan por el
+// desbloqueo por hueco como el resto — están activas desde el Nivel 1
+// del propio personaje (ver computeElementTechniqueBonus en
+// match-engine.js), así que ni se bloquean ni escalan con el nivel del
+// hueco: su "nivel" mostrado es directamente el nivel del personaje.
+function isElementAuraSlot(slot) {
+    return !!(slot.effects && slot.effects[0] && slot.effects[0].kind === "elementTechniqueAura");
+}
+
 function buildPassivesListMarkup(character) {
     // Pasivas normales PROPIAS del personaje (character.passives) — o,
     // si TODAVÍA no tiene ninguna definida (la mayoría, de momento),
@@ -1658,6 +1667,9 @@ function buildPassivesListMarkup(character) {
     const characterLevel = getCharacterLevel(character.id);
     const slots = (character.passives && character.passives.length) ? character.passives : GENERIC_ABILITY_SLOTS;
     const ownRows = slots.map((slot, index) => {
+        if (isElementAuraSlot(slot)) {
+            return buildLeveledPassiveRowMarkup(slot, characterLevel, 1, characterLevel);
+        }
         const level = getGenericAbilityLevel(characterLevel, index);
         return buildLeveledPassiveRowMarkup(slot, level, getOwnPassiveLevelMultiplier(level), characterLevel);
     }).join("");
