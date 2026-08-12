@@ -1590,15 +1590,27 @@ function getOwnPassiveLevelMultiplier(level) {
 // uniquePassive.effects) con el bonus YA CALCULADO al multiplicador
 // actual — "Tiro +140" en vez de "+100 Tiro, sube un 20% por nivel",
 // para que se lea el número final de un vistazo en vez de la fórmula.
-// requiresTeammateId (p.ej. Hermanos Wanima) antepone esa condición.
-function buildPassiveEffectDescription(effects, multiplier) {
+// requiresTeammateId (p.ej. Hermanos Wanima) antepone esa condición;
+// requiresTeamCount (Sinergia de Equipo) antepone la condición de
+// equipo. characterLevel solo lo necesita el aura elemental (su
+// cantidad escala con el nivel del PERSONAJE, no con multiplier, que
+// es el multiplicador por nivel del HUECO que usa todo lo demás).
+function buildPassiveEffectDescription(effects, multiplier, characterLevel) {
     const parts = effects.map((effect) => {
+        if (effect.kind === "elementTechniqueAura") {
+            const amount = Math.round(effect.baseAmount + effect.perLevelAmount * (characterLevel - 1));
+            return `los compañeros con Supertécnica de ${effect.element} ganan +${amount} de potencia al usarla`;
+        }
         const amount = Math.round(effect.baseAmount * multiplier);
         const statLabels = effect.stats.map((key) => PLAYER_DETAIL_STAT_LABELS[key]).join(" y ");
         if (effect.requiresTeammateId) {
             const teammate = CHARACTERS_DATA.find((c) => c.id === effect.requiresTeammateId);
             const teammateName = teammate ? teammate.name : "su compañero";
             return `si ${teammateName} también juega, ${statLabels} +${amount}`;
+        }
+        if (effect.requiresTeamCount) {
+            const { equipoOriginal, min } = effect.requiresTeamCount;
+            return `si ${min}+ jugadores del Equipo ${equipoOriginal} están en tu alineación, ${statLabels} +${amount} a todo el equipo`;
         }
         return `${statLabels} +${amount}`;
     });
@@ -1611,7 +1623,7 @@ function buildPassiveEffectDescription(effects, multiplier) {
 // `effects` (pasiva real, no el placeholder "Próximamente") la
 // descripción se calcula con buildPassiveEffectDescription en vez de
 // usar el texto fijo guardado.
-function buildLeveledPassiveRowMarkup(slot, level, multiplier) {
+function buildLeveledPassiveRowMarkup(slot, level, multiplier, characterLevel) {
     if (level < 1) {
         return `
             <div class="pd-passive-row is-locked">
@@ -1623,7 +1635,7 @@ function buildLeveledPassiveRowMarkup(slot, level, multiplier) {
             </div>
         `;
     }
-    const description = slot.effects ? buildPassiveEffectDescription(slot.effects, multiplier) : slot.description;
+    const description = slot.effects ? buildPassiveEffectDescription(slot.effects, multiplier, characterLevel) : slot.description;
     return `
         <div class="pd-passive-row">
             <span class="pd-passive-icon">${slot.icon}</span>
@@ -1647,7 +1659,7 @@ function buildPassivesListMarkup(character) {
     const slots = (character.passives && character.passives.length) ? character.passives : GENERIC_ABILITY_SLOTS;
     const ownRows = slots.map((slot, index) => {
         const level = getGenericAbilityLevel(characterLevel, index);
-        return buildLeveledPassiveRowMarkup(slot, level, getOwnPassiveLevelMultiplier(level));
+        return buildLeveledPassiveRowMarkup(slot, level, getOwnPassiveLevelMultiplier(level), characterLevel);
     }).join("");
 
     // La Habilidad Única está bloqueada del todo en Despertar 0; desde
