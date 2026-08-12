@@ -239,18 +239,20 @@ function applyMatchStartPassiveEffects(myStats, lineup) {
 // calcula aparte como un mapa por elemento y se consulta ahí en cada
 // Command Battle. A diferencia del resto de pasivas propias, esta NO
 // pasa por el desbloqueo por hueco (getGenericAbilityLevel) — está
-// activa desde el Nivel 1 del propio personaje, con +25 de base y +5
-// por cada nivel adicional (Nv.1 = +25, Nv.2 = +30...). Si varios
-// personajes de la alineación llevan el aura del mismo elemento, sus
-// bonus se SUMAN.
+// activa desde el Nivel 1 del propio personaje, pero SÍ tiene su
+// propio nivel 1-10 (getElementAuraLevel, en main.js: sube cada 20
+// niveles de personaje) del que escala +25 de base, +5 por cada nivel
+// del aura (Nv.1 = +25, Nv.2 = +30... Nv.10 = +70 como mucho). Si
+// varios personajes de la alineación llevan el aura del mismo
+// elemento, sus bonus se SUMAN.
 function computeElementTechniqueBonus(lineup) {
     const bonus = { Bosque: 0, Fuego: 0, "Montaña": 0, Aire: 0 };
     lineup.forEach((character) => {
-        const characterLevel = getCharacterLevel(character.id);
+        const auraLevel = getElementAuraLevel(getCharacterLevel(character.id));
         (character.passives || []).forEach((passive) => {
             (passive.effects || []).forEach((effect) => {
                 if (effect.kind !== "elementTechniqueAura") return;
-                bonus[effect.element] = (bonus[effect.element] || 0) + effect.baseAmount + effect.perLevelAmount * (characterLevel - 1);
+                bonus[effect.element] = (bonus[effect.element] || 0) + effect.baseAmount + effect.perLevelAmount * (auraLevel - 1);
             });
         });
     });

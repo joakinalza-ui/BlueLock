@@ -1577,6 +1577,19 @@ function getGenericAbilityLevel(characterLevel, slotIndex) {
     return Math.min(GENERIC_ABILITY_MAX_LEVEL, level);
 }
 
+// Nivel PROPIO de las pasivas "Mejora Supertécnicas [Elemento]" —
+// independiente del sistema de huecos de arriba (nunca bloqueada, ya
+// activa en Nv.1 de personaje) pero con el mismo tope de 10 niveles:
+// empieza en Nv.1 y sube un nivel cada 20 niveles de personaje (Nv.20
+// de personaje → Nv.2 del aura, Nv.40 → Nv.3...) hasta Nv.10 (a partir
+// de Nv.180 de personaje). El bonus final es +25 en Nv.1, +5 más por
+// cada nivel del aura (Nv.10 = +70 como mucho).
+const ELEMENT_AURA_MAX_LEVEL = 10;
+const ELEMENT_AURA_LEVELS_PER_STEP = 20;
+function getElementAuraLevel(characterLevel) {
+    return Math.min(ELEMENT_AURA_MAX_LEVEL, Math.floor(characterLevel / ELEMENT_AURA_LEVELS_PER_STEP) + 1);
+}
+
 // A diferencia de la Pasiva Única (que escala un +10%/nivel de
 // Despertar), las pasivas normales propias escalan un +20% de su
 // bonus base por cada nivel de personaje por encima del primero
@@ -1592,13 +1605,15 @@ function getOwnPassiveLevelMultiplier(level) {
 // para que se lea el número final de un vistazo en vez de la fórmula.
 // requiresTeammateId (p.ej. Hermanos Wanima) antepone esa condición;
 // requiresTeamCount (Sinergia de Equipo) antepone la condición de
-// equipo. characterLevel solo lo necesita el aura elemental (su
-// cantidad escala con el nivel del PERSONAJE, no con multiplier, que
-// es el multiplicador por nivel del HUECO que usa todo lo demás).
+// equipo. characterLevel solo lo necesita el aura elemental, para
+// calcular su propio nivel 1-10 (getElementAuraLevel) — no pasa por
+// multiplier, que es el multiplicador por nivel del HUECO que usa todo
+// lo demás.
 function buildPassiveEffectDescription(effects, multiplier, characterLevel) {
     const parts = effects.map((effect) => {
         if (effect.kind === "elementTechniqueAura") {
-            const amount = Math.round(effect.baseAmount + effect.perLevelAmount * (characterLevel - 1));
+            const auraLevel = getElementAuraLevel(characterLevel);
+            const amount = Math.round(effect.baseAmount + effect.perLevelAmount * (auraLevel - 1));
             return `los compañeros con Supertécnica de ${effect.element} ganan +${amount} de potencia al usarla`;
         }
         const amount = Math.round(effect.baseAmount * multiplier);
@@ -1648,10 +1663,10 @@ function buildLeveledPassiveRowMarkup(slot, level, multiplier, characterLevel) {
 }
 
 // Las pasivas "Mejora Supertécnicas [Elemento]" (aura) no pasan por el
-// desbloqueo por hueco como el resto — están activas desde el Nivel 1
-// del propio personaje (ver computeElementTechniqueBonus en
-// match-engine.js), así que ni se bloquean ni escalan con el nivel del
-// hueco: su "nivel" mostrado es directamente el nivel del personaje.
+// desbloqueo por hueco como el resto — nunca se bloquean, ya activas
+// en Nv.1 de personaje — pero SÍ tienen su propio nivel 1-10
+// (getElementAuraLevel, sube cada 20 niveles de personaje) que se
+// muestra igual que el resto de pasivas.
 function isElementAuraSlot(slot) {
     return !!(slot.effects && slot.effects[0] && slot.effects[0].kind === "elementTechniqueAura");
 }
@@ -1668,7 +1683,7 @@ function buildPassivesListMarkup(character) {
     const slots = (character.passives && character.passives.length) ? character.passives : GENERIC_ABILITY_SLOTS;
     const ownRows = slots.map((slot, index) => {
         if (isElementAuraSlot(slot)) {
-            return buildLeveledPassiveRowMarkup(slot, characterLevel, 1, characterLevel);
+            return buildLeveledPassiveRowMarkup(slot, getElementAuraLevel(characterLevel), 1, characterLevel);
         }
         const level = getGenericAbilityLevel(characterLevel, index);
         return buildLeveledPassiveRowMarkup(slot, level, getOwnPassiveLevelMultiplier(level), characterLevel);
