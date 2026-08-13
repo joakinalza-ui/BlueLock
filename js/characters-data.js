@@ -55,20 +55,20 @@ const CHARACTERS_DATA = [
         "passives": [
             {
                 "id": "kisaburo-hijikata-passive-0",
-                "name": "Sinergia de Equipo V: Parada",
-                "icon": "🤝",
+                "name": "Mejora de Parada +100",
+                "icon": "🧤",
                 "unlockLevel": 10,
                 "effects": [
-                    { "stats": ["parada"], "baseAmount": 100, "trigger": "matchStart", "requiresTeamCount": { "equipoOriginal": "V", "min": 3 } }
+                    { "stats": ["parada"], "baseAmount": 100, "trigger": "matchStart" }
                 ]
             },
             {
                 "id": "kisaburo-hijikata-passive-1",
-                "name": "Mejora Supertécnicas Fuego",
-                "icon": "🔥",
+                "name": "Sinergia de Equipo V: Parada",
+                "icon": "🤝",
                 "unlockLevel": 20,
                 "effects": [
-                    { "kind": "elementTechniqueAura", "element": "Fuego", "baseAmount": 25, "perLevelAmount": 5, "trigger": "matchStart" }
+                    { "stats": ["parada"], "baseAmount": 100, "trigger": "matchStart", "requiresTeamCount": { "equipoOriginal": "V", "min": 3 } }
                 ]
             }
         ],
@@ -112,20 +112,20 @@ const CHARACTERS_DATA = [
         "passives": [
             {
                 "id": "wataru-kuon-passive-0",
-                "name": "Sinergia de Equipo Z: Defensa",
-                "icon": "🤝",
+                "name": "Mejora de Defensa +100",
+                "icon": "🛡️",
                 "unlockLevel": 10,
                 "effects": [
-                    { "stats": ["defensa"], "baseAmount": 100, "trigger": "matchStart", "requiresTeamCount": { "equipoOriginal": "Z", "min": 3 } }
+                    { "stats": ["defensa"], "baseAmount": 100, "trigger": "matchStart" }
                 ]
             },
             {
                 "id": "wataru-kuon-passive-1",
-                "name": "Mejora Supertécnicas Bosque",
-                "icon": "🌳",
+                "name": "Mejora de Técnica +75",
+                "icon": "🧠",
                 "unlockLevel": 20,
                 "effects": [
-                    { "kind": "elementTechniqueAura", "element": "Bosque", "baseAmount": 25, "perLevelAmount": 5, "trigger": "matchStart" }
+                    { "stats": ["tecnica"], "baseAmount": 75, "trigger": "matchStart" }
                 ]
             }
         ],
@@ -169,20 +169,20 @@ const CHARACTERS_DATA = [
         "passives": [
             {
                 "id": "retsu-nerima-passive-0",
-                "name": "Sinergia de Equipo V: Defensa",
-                "icon": "🤝",
+                "name": "Mejora de Defensa +100",
+                "icon": "🛡️",
                 "unlockLevel": 10,
                 "effects": [
-                    { "stats": ["defensa"], "baseAmount": 100, "trigger": "matchStart", "requiresTeamCount": { "equipoOriginal": "V", "min": 3 } }
+                    { "stats": ["defensa"], "baseAmount": 100, "trigger": "matchStart" }
                 ]
             },
             {
                 "id": "retsu-nerima-passive-1",
-                "name": "Mejora Supertécnicas Montaña",
-                "icon": "⛰️",
+                "name": "Mejora de Técnica +75",
+                "icon": "🧠",
                 "unlockLevel": 20,
                 "effects": [
-                    { "kind": "elementTechniqueAura", "element": "Montaña", "baseAmount": 25, "perLevelAmount": 5, "trigger": "matchStart" }
+                    { "stats": ["tecnica"], "baseAmount": 75, "trigger": "matchStart" }
                 ]
             }
         ],
@@ -226,20 +226,20 @@ const CHARACTERS_DATA = [
         "passives": [
             {
                 "id": "kei-shishiya-passive-0",
-                "name": "Sinergia de Equipo W: Defensa",
-                "icon": "🤝",
+                "name": "Mejora de Defensa +100",
+                "icon": "🛡️",
                 "unlockLevel": 10,
                 "effects": [
-                    { "stats": ["defensa"], "baseAmount": 100, "trigger": "matchStart", "requiresTeamCount": { "equipoOriginal": "W", "min": 3 } }
+                    { "stats": ["defensa"], "baseAmount": 100, "trigger": "matchStart" }
                 ]
             },
             {
                 "id": "kei-shishiya-passive-1",
-                "name": "Mejora Supertécnicas Montaña",
-                "icon": "⛰️",
+                "name": "Sinergia de Equipo W: Defensa",
+                "icon": "🤝",
                 "unlockLevel": 20,
                 "effects": [
-                    { "kind": "elementTechniqueAura", "element": "Montaña", "baseAmount": 25, "perLevelAmount": 5, "trigger": "matchStart" }
+                    { "stats": ["defensa"], "baseAmount": 100, "trigger": "matchStart", "requiresTeamCount": { "equipoOriginal": "W", "min": 3 } }
                 ]
             }
         ],
@@ -283,20 +283,20 @@ const CHARACTERS_DATA = [
         "passives": [
             {
                 "id": "tsukoteru-eiyu-passive-0",
-                "name": "Sinergia de Equipo X: Defensa",
-                "icon": "🤝",
+                "name": "Mejora de Defensa +100",
+                "icon": "🛡️",
                 "unlockLevel": 10,
                 "effects": [
-                    { "stats": ["defensa"], "baseAmount": 100, "trigger": "matchStart", "requiresTeamCount": { "equipoOriginal": "X", "min": 3 } }
+                    { "stats": ["defensa"], "baseAmount": 100, "trigger": "matchStart" }
                 ]
             },
             {
                 "id": "tsukoteru-eiyu-passive-1",
-                "name": "Mejora Supertécnicas Montaña",
-                "icon": "⛰️",
+                "name": "Sinergia de Equipo X: Defensa",
+                "icon": "🤝",
                 "unlockLevel": 20,
                 "effects": [
-                    { "kind": "elementTechniqueAura", "element": "Montaña", "baseAmount": 25, "perLevelAmount": 5, "trigger": "matchStart" }
+                    { "stats": ["defensa"], "baseAmount": 100, "trigger": "matchStart", "requiresTeamCount": { "equipoOriginal": "X", "min": 3 } }
                 ]
             }
         ],
@@ -340,20 +340,20 @@ const CHARACTERS_DATA = [
         "passives": [
             {
                 "id": "yudai-imamura-passive-0",
-                "name": "Sinergia de Equipo Z: Técnica",
-                "icon": "🤝",
+                "name": "Mejora de Técnica +100",
+                "icon": "🧠",
                 "unlockLevel": 10,
                 "effects": [
-                    { "stats": ["tecnica"], "baseAmount": 100, "trigger": "matchStart", "requiresTeamCount": { "equipoOriginal": "Z", "min": 3 } }
+                    { "stats": ["tecnica"], "baseAmount": 100, "trigger": "matchStart" }
                 ]
             },
             {
                 "id": "yudai-imamura-passive-1",
-                "name": "Mejora Supertécnicas Aire",
-                "icon": "🌪️",
+                "name": "Mejora de Tiro +75",
+                "icon": "⚽",
                 "unlockLevel": 20,
                 "effects": [
-                    { "kind": "elementTechniqueAura", "element": "Aire", "baseAmount": 25, "perLevelAmount": 5, "trigger": "matchStart" }
+                    { "stats": ["tiro"], "baseAmount": 75, "trigger": "matchStart" }
                 ]
             }
         ],
@@ -397,20 +397,20 @@ const CHARACTERS_DATA = [
         "passives": [
             {
                 "id": "asahi-naruhaya-passive-0",
-                "name": "Sinergia de Equipo Z: Técnica",
-                "icon": "🤝",
+                "name": "Mejora de Técnica +100",
+                "icon": "🧠",
                 "unlockLevel": 10,
                 "effects": [
-                    { "stats": ["tecnica"], "baseAmount": 100, "trigger": "matchStart", "requiresTeamCount": { "equipoOriginal": "Z", "min": 3 } }
+                    { "stats": ["tecnica"], "baseAmount": 100, "trigger": "matchStart" }
                 ]
             },
             {
                 "id": "asahi-naruhaya-passive-1",
-                "name": "Mejora Supertécnicas Bosque",
-                "icon": "🌳",
+                "name": "Mejora de Tiro +75",
+                "icon": "⚽",
                 "unlockLevel": 20,
                 "effects": [
-                    { "kind": "elementTechniqueAura", "element": "Bosque", "baseAmount": 25, "perLevelAmount": 5, "trigger": "matchStart" }
+                    { "stats": ["tiro"], "baseAmount": 75, "trigger": "matchStart" }
                 ]
             }
         ],
@@ -454,20 +454,20 @@ const CHARACTERS_DATA = [
         "passives": [
             {
                 "id": "masumi-atatame-passive-0",
-                "name": "Sinergia de Equipo V: Técnica",
-                "icon": "🤝",
+                "name": "Mejora de Técnica +100",
+                "icon": "🧠",
                 "unlockLevel": 10,
                 "effects": [
-                    { "stats": ["tecnica"], "baseAmount": 100, "trigger": "matchStart", "requiresTeamCount": { "equipoOriginal": "V", "min": 3 } }
+                    { "stats": ["tecnica"], "baseAmount": 100, "trigger": "matchStart" }
                 ]
             },
             {
                 "id": "masumi-atatame-passive-1",
-                "name": "Mejora Supertécnicas Montaña",
-                "icon": "⛰️",
+                "name": "Mejora de Tiro +75",
+                "icon": "⚽",
                 "unlockLevel": 20,
                 "effects": [
-                    { "kind": "elementTechniqueAura", "element": "Montaña", "baseAmount": 25, "perLevelAmount": 5, "trigger": "matchStart" }
+                    { "stats": ["tiro"], "baseAmount": 75, "trigger": "matchStart" }
                 ]
             }
         ],
@@ -511,20 +511,20 @@ const CHARACTERS_DATA = [
         "passives": [
             {
                 "id": "haato-meiji-passive-0",
-                "name": "Sinergia de Equipo X: Técnica",
-                "icon": "🤝",
+                "name": "Mejora de Técnica +100",
+                "icon": "🧠",
                 "unlockLevel": 10,
                 "effects": [
-                    { "stats": ["tecnica"], "baseAmount": 100, "trigger": "matchStart", "requiresTeamCount": { "equipoOriginal": "X", "min": 3 } }
+                    { "stats": ["tecnica"], "baseAmount": 100, "trigger": "matchStart" }
                 ]
             },
             {
                 "id": "haato-meiji-passive-1",
-                "name": "Mejora Supertécnicas Montaña",
-                "icon": "⛰️",
+                "name": "Sinergia de Equipo X: Técnica",
+                "icon": "🤝",
                 "unlockLevel": 20,
                 "effects": [
-                    { "kind": "elementTechniqueAura", "element": "Montaña", "baseAmount": 25, "perLevelAmount": 5, "trigger": "matchStart" }
+                    { "stats": ["tecnica"], "baseAmount": 100, "trigger": "matchStart", "requiresTeamCount": { "equipoOriginal": "X", "min": 3 } }
                 ]
             }
         ],
@@ -568,20 +568,20 @@ const CHARACTERS_DATA = [
         "passives": [
             {
                 "id": "yusei-amazora-passive-0",
-                "name": "Sinergia de Equipo W: Tiro",
-                "icon": "🤝",
+                "name": "Mejora de Tiro +100",
+                "icon": "⚽",
                 "unlockLevel": 10,
                 "effects": [
-                    { "stats": ["tiro"], "baseAmount": 100, "trigger": "matchStart", "requiresTeamCount": { "equipoOriginal": "W", "min": 3 } }
+                    { "stats": ["tiro"], "baseAmount": 100, "trigger": "matchStart" }
                 ]
             },
             {
                 "id": "yusei-amazora-passive-1",
-                "name": "Mejora Supertécnicas Aire",
-                "icon": "🌪️",
+                "name": "Sinergia de Equipo W: Tiro",
+                "icon": "🤝",
                 "unlockLevel": 20,
                 "effects": [
-                    { "kind": "elementTechniqueAura", "element": "Aire", "baseAmount": 25, "perLevelAmount": 5, "trigger": "matchStart" }
+                    { "stats": ["tiro"], "baseAmount": 100, "trigger": "matchStart", "requiresTeamCount": { "equipoOriginal": "W", "min": 3 } }
                 ]
             }
         ],
@@ -625,20 +625,20 @@ const CHARACTERS_DATA = [
         "passives": [
             {
                 "id": "rian-sanga-passive-0",
-                "name": "Sinergia de Equipo X: Tiro",
-                "icon": "🤝",
+                "name": "Mejora de Tiro +100",
+                "icon": "⚽",
                 "unlockLevel": 10,
                 "effects": [
-                    { "stats": ["tiro"], "baseAmount": 100, "trigger": "matchStart", "requiresTeamCount": { "equipoOriginal": "X", "min": 3 } }
+                    { "stats": ["tiro"], "baseAmount": 100, "trigger": "matchStart" }
                 ]
             },
             {
                 "id": "rian-sanga-passive-1",
-                "name": "Mejora Supertécnicas Montaña",
-                "icon": "⛰️",
+                "name": "Mejora de Técnica +75",
+                "icon": "🧠",
                 "unlockLevel": 20,
                 "effects": [
-                    { "kind": "elementTechniqueAura", "element": "Montaña", "baseAmount": 25, "perLevelAmount": 5, "trigger": "matchStart" }
+                    { "stats": ["tecnica"], "baseAmount": 75, "trigger": "matchStart" }
                 ]
             }
         ],
@@ -1081,11 +1081,11 @@ const CHARACTERS_DATA = [
         "passives": [
             {
                 "id": "rin-itoshi-passive-0",
-                "name": "Mejora de Tiro +75",
+                "name": "Mejora de Tiro +100",
                 "icon": "⚽",
                 "unlockLevel": 10,
                 "effects": [
-                    { "stats": ["tiro"], "baseAmount": 75, "trigger": "matchStart" }
+                    { "stats": ["tiro"], "baseAmount": 100, "trigger": "matchStart" }
                 ]
             },
             {
@@ -1366,20 +1366,20 @@ const CHARACTERS_DATA = [
         "passives": [
             {
                 "id": "kira-ryosuke-passive-0",
-                "name": "Mejora de Tiro +75",
-                "icon": "⚽",
+                "name": "Mejora Supertécnicas Aire",
+                "icon": "🌪️",
                 "unlockLevel": 10,
                 "effects": [
-                    { "stats": ["tiro"], "baseAmount": 75, "trigger": "matchStart" }
+                    { "kind": "elementTechniqueAura", "element": "Aire", "baseAmount": 25, "perLevelAmount": 5, "trigger": "matchStart" }
                 ]
             },
             {
                 "id": "kira-ryosuke-passive-1",
-                "name": "Mejora Supertécnicas Aire",
-                "icon": "🌪️",
+                "name": "Mejora de Técnica +75",
+                "icon": "🧠",
                 "unlockLevel": 20,
                 "effects": [
-                    { "kind": "elementTechniqueAura", "element": "Aire", "baseAmount": 25, "perLevelAmount": 5, "trigger": "matchStart" }
+                    { "stats": ["tecnica"], "baseAmount": 75, "trigger": "matchStart" }
                 ]
             }
         ],
@@ -1432,11 +1432,11 @@ const CHARACTERS_DATA = [
             },
             {
                 "id": "gagamaru-gin-passive-1",
-                "name": "Mejora Supertécnicas Montaña",
-                "icon": "⛰️",
+                "name": "Mejora de Técnica +75",
+                "icon": "🧠",
                 "unlockLevel": 20,
                 "effects": [
-                    { "kind": "elementTechniqueAura", "element": "Montaña", "baseAmount": 25, "perLevelAmount": 5, "trigger": "matchStart" }
+                    { "stats": ["tecnica"], "baseAmount": 75, "trigger": "matchStart" }
                 ]
             }
         ],
@@ -1480,20 +1480,20 @@ const CHARACTERS_DATA = [
         "passives": [
             {
                 "id": "jingo-raichi-passive-0",
-                "name": "Sinergia de Equipo Z: Defensa",
-                "icon": "🤝",
+                "name": "Mejora Supertécnicas Fuego",
+                "icon": "🔥",
                 "unlockLevel": 10,
                 "effects": [
-                    { "stats": ["defensa"], "baseAmount": 100, "trigger": "matchStart", "requiresTeamCount": { "equipoOriginal": "Z", "min": 3 } }
+                    { "kind": "elementTechniqueAura", "element": "Fuego", "baseAmount": 25, "perLevelAmount": 5, "trigger": "matchStart" }
                 ]
             },
             {
                 "id": "jingo-raichi-passive-1",
-                "name": "Mejora Supertécnicas Fuego",
-                "icon": "🔥",
+                "name": "Mejora de Técnica +75",
+                "icon": "🧠",
                 "unlockLevel": 20,
                 "effects": [
-                    { "kind": "elementTechniqueAura", "element": "Fuego", "baseAmount": 25, "perLevelAmount": 5, "trigger": "matchStart" }
+                    { "stats": ["tecnica"], "baseAmount": 75, "trigger": "matchStart" }
                 ]
             }
         ],
@@ -1547,11 +1547,11 @@ const CHARACTERS_DATA = [
             },
             {
                 "id": "gurimu-igarashi-passive-1",
-                "name": "Mejora Supertécnicas Fuego",
-                "icon": "🔥",
+                "name": "Mejora de Técnica +75",
+                "icon": "🧠",
                 "unlockLevel": 20,
                 "effects": [
-                    { "kind": "elementTechniqueAura", "element": "Fuego", "baseAmount": 25, "perLevelAmount": 5, "trigger": "matchStart" }
+                    { "stats": ["tecnica"], "baseAmount": 75, "trigger": "matchStart" }
                 ]
             }
         ],
@@ -1725,20 +1725,20 @@ const CHARACTERS_DATA = [
         "passives": [
             {
                 "id": "hibiki-ookawa-passive-0",
-                "name": "Sinergia de Equipo Y: Tiro",
-                "icon": "🤝",
+                "name": "Mejora Supertécnicas Aire",
+                "icon": "🌪️",
                 "unlockLevel": 10,
                 "effects": [
-                    { "stats": ["tiro"], "baseAmount": 100, "trigger": "matchStart", "requiresTeamCount": { "equipoOriginal": "Y", "min": 3 } }
+                    { "kind": "elementTechniqueAura", "element": "Aire", "baseAmount": 25, "perLevelAmount": 5, "trigger": "matchStart" }
                 ]
             },
             {
                 "id": "hibiki-ookawa-passive-1",
-                "name": "Mejora Supertécnicas Aire",
-                "icon": "🌪️",
+                "name": "Mejora de Técnica +75",
+                "icon": "🧠",
                 "unlockLevel": 20,
                 "effects": [
-                    { "kind": "elementTechniqueAura", "element": "Aire", "baseAmount": 25, "perLevelAmount": 5, "trigger": "matchStart" }
+                    { "stats": ["tecnica"], "baseAmount": 75, "trigger": "matchStart" }
                 ]
             }
         ],
@@ -1792,11 +1792,11 @@ const CHARACTERS_DATA = [
             },
             {
                 "id": "iemon-naoyuki-passive-1",
-                "name": "Mejora Supertécnicas Fuego",
-                "icon": "🔥",
+                "name": "Mejora de Defensa +75",
+                "icon": "🛡️",
                 "unlockLevel": 20,
                 "effects": [
-                    { "kind": "elementTechniqueAura", "element": "Fuego", "baseAmount": 25, "perLevelAmount": 5, "trigger": "matchStart" }
+                    { "stats": ["defensa"], "baseAmount": 75, "trigger": "matchStart" }
                 ]
             }
         ],
@@ -1841,20 +1841,20 @@ const CHARACTERS_DATA = [
         "passives": [
             {
                 "id": "sota-nemoto-passive-0",
-                "name": "Sinergia de Equipo V: Defensa",
-                "icon": "🤝",
+                "name": "Mejora de Defensa +100",
+                "icon": "🛡️",
                 "unlockLevel": 10,
                 "effects": [
-                    { "stats": ["defensa"], "baseAmount": 100, "trigger": "matchStart", "requiresTeamCount": { "equipoOriginal": "V", "min": 3 } }
+                    { "stats": ["defensa"], "baseAmount": 100, "trigger": "matchStart" }
                 ]
             },
             {
                 "id": "sota-nemoto-passive-1",
-                "name": "Mejora Supertécnicas Montaña",
-                "icon": "⛰️",
+                "name": "Mejora de Técnica +75",
+                "icon": "🧠",
                 "unlockLevel": 20,
                 "effects": [
-                    { "kind": "elementTechniqueAura", "element": "Montaña", "baseAmount": 25, "perLevelAmount": 5, "trigger": "matchStart" }
+                    { "stats": ["tecnica"], "baseAmount": 75, "trigger": "matchStart" }
                 ]
             }
         ],
@@ -1898,20 +1898,20 @@ const CHARACTERS_DATA = [
         "passives": [
             {
                 "id": "rikiya-hohai-passive-0",
-                "name": "Sinergia de Equipo V: Tiro",
-                "icon": "🤝",
+                "name": "Mejora de Tiro +100",
+                "icon": "⚽",
                 "unlockLevel": 10,
                 "effects": [
-                    { "stats": ["tiro"], "baseAmount": 100, "trigger": "matchStart", "requiresTeamCount": { "equipoOriginal": "V", "min": 3 } }
+                    { "stats": ["tiro"], "baseAmount": 100, "trigger": "matchStart" }
                 ]
             },
             {
                 "id": "rikiya-hohai-passive-1",
-                "name": "Mejora Supertécnicas Aire",
-                "icon": "🌪️",
+                "name": "Mejora de Técnica +75",
+                "icon": "🧠",
                 "unlockLevel": 20,
                 "effects": [
-                    { "kind": "elementTechniqueAura", "element": "Aire", "baseAmount": 25, "perLevelAmount": 5, "trigger": "matchStart" }
+                    { "stats": ["tecnica"], "baseAmount": 75, "trigger": "matchStart" }
                 ]
             }
         ],
@@ -1955,20 +1955,20 @@ const CHARACTERS_DATA = [
         "passives": [
             {
                 "id": "hirakazu-midorikawa-passive-0",
-                "name": "Sinergia de Equipo V: Defensa",
-                "icon": "🤝",
+                "name": "Mejora de Defensa +100",
+                "icon": "🛡️",
                 "unlockLevel": 10,
                 "effects": [
-                    { "stats": ["defensa"], "baseAmount": 100, "trigger": "matchStart", "requiresTeamCount": { "equipoOriginal": "V", "min": 3 } }
+                    { "stats": ["defensa"], "baseAmount": 100, "trigger": "matchStart" }
                 ]
             },
             {
                 "id": "hirakazu-midorikawa-passive-1",
-                "name": "Mejora Supertécnicas Bosque",
-                "icon": "🌳",
+                "name": "Mejora de Técnica +75",
+                "icon": "🧠",
                 "unlockLevel": 20,
                 "effects": [
-                    { "kind": "elementTechniqueAura", "element": "Bosque", "baseAmount": 25, "perLevelAmount": 5, "trigger": "matchStart" }
+                    { "stats": ["tecnica"], "baseAmount": 75, "trigger": "matchStart" }
                 ]
             }
         ],
@@ -2012,20 +2012,20 @@ const CHARACTERS_DATA = [
         "passives": [
             {
                 "id": "shuhei-ebina-passive-0",
-                "name": "Sinergia de Equipo V: Tiro",
-                "icon": "🤝",
+                "name": "Mejora de Tiro +100",
+                "icon": "⚽",
                 "unlockLevel": 10,
                 "effects": [
-                    { "stats": ["tiro"], "baseAmount": 100, "trigger": "matchStart", "requiresTeamCount": { "equipoOriginal": "V", "min": 3 } }
+                    { "stats": ["tiro"], "baseAmount": 100, "trigger": "matchStart" }
                 ]
             },
             {
                 "id": "shuhei-ebina-passive-1",
-                "name": "Mejora Supertécnicas Montaña",
-                "icon": "⛰️",
+                "name": "Mejora de Técnica +75",
+                "icon": "🧠",
                 "unlockLevel": 20,
                 "effects": [
-                    { "kind": "elementTechniqueAura", "element": "Montaña", "baseAmount": 25, "perLevelAmount": 5, "trigger": "matchStart" }
+                    { "stats": ["tecnica"], "baseAmount": 75, "trigger": "matchStart" }
                 ]
             }
         ],
@@ -2069,20 +2069,20 @@ const CHARACTERS_DATA = [
         "passives": [
             {
                 "id": "kanji-torikai-passive-0",
-                "name": "Sinergia de Equipo V: Técnica",
-                "icon": "🤝",
+                "name": "Mejora de Técnica +100",
+                "icon": "🧠",
                 "unlockLevel": 10,
                 "effects": [
-                    { "stats": ["tecnica"], "baseAmount": 100, "trigger": "matchStart", "requiresTeamCount": { "equipoOriginal": "V", "min": 3 } }
+                    { "stats": ["tecnica"], "baseAmount": 100, "trigger": "matchStart" }
                 ]
             },
             {
                 "id": "kanji-torikai-passive-1",
-                "name": "Mejora Supertécnicas Bosque",
-                "icon": "🌳",
+                "name": "Mejora de Tiro +75",
+                "icon": "⚽",
                 "unlockLevel": 20,
                 "effects": [
-                    { "kind": "elementTechniqueAura", "element": "Bosque", "baseAmount": 25, "perLevelAmount": 5, "trigger": "matchStart" }
+                    { "stats": ["tiro"], "baseAmount": 75, "trigger": "matchStart" }
                 ]
             }
         ],
@@ -2126,20 +2126,20 @@ const CHARACTERS_DATA = [
         "passives": [
             {
                 "id": "koki-mera-passive-0",
-                "name": "Sinergia de Equipo W: Defensa",
-                "icon": "🤝",
+                "name": "Mejora de Defensa +100",
+                "icon": "🛡️",
                 "unlockLevel": 10,
                 "effects": [
-                    { "stats": ["defensa"], "baseAmount": 100, "trigger": "matchStart", "requiresTeamCount": { "equipoOriginal": "W", "min": 3 } }
+                    { "stats": ["defensa"], "baseAmount": 100, "trigger": "matchStart" }
                 ]
             },
             {
                 "id": "koki-mera-passive-1",
-                "name": "Mejora Supertécnicas Fuego",
-                "icon": "🔥",
+                "name": "Mejora de Técnica +75",
+                "icon": "🧠",
                 "unlockLevel": 20,
                 "effects": [
-                    { "kind": "elementTechniqueAura", "element": "Fuego", "baseAmount": 25, "perLevelAmount": 5, "trigger": "matchStart" }
+                    { "stats": ["tecnica"], "baseAmount": 75, "trigger": "matchStart" }
                 ]
             }
         ],
@@ -2183,20 +2183,20 @@ const CHARACTERS_DATA = [
         "passives": [
             {
                 "id": "kai-tokita-passive-0",
-                "name": "Sinergia de Equipo W: Defensa",
-                "icon": "🤝",
+                "name": "Mejora de Defensa +100",
+                "icon": "🛡️",
                 "unlockLevel": 10,
                 "effects": [
-                    { "stats": ["defensa"], "baseAmount": 100, "trigger": "matchStart", "requiresTeamCount": { "equipoOriginal": "W", "min": 3 } }
+                    { "stats": ["defensa"], "baseAmount": 100, "trigger": "matchStart" }
                 ]
             },
             {
                 "id": "kai-tokita-passive-1",
-                "name": "Mejora Supertécnicas Fuego",
-                "icon": "🔥",
+                "name": "Mejora de Técnica +75",
+                "icon": "🧠",
                 "unlockLevel": 20,
                 "effects": [
-                    { "kind": "elementTechniqueAura", "element": "Fuego", "baseAmount": 25, "perLevelAmount": 5, "trigger": "matchStart" }
+                    { "stats": ["tecnica"], "baseAmount": 75, "trigger": "matchStart" }
                 ]
             }
         ],
@@ -2240,20 +2240,20 @@ const CHARACTERS_DATA = [
         "passives": [
             {
                 "id": "yujin-koshinaka-passive-0",
-                "name": "Sinergia de Equipo W: Defensa",
-                "icon": "🤝",
+                "name": "Mejora de Defensa +100",
+                "icon": "🛡️",
                 "unlockLevel": 10,
                 "effects": [
-                    { "stats": ["defensa"], "baseAmount": 100, "trigger": "matchStart", "requiresTeamCount": { "equipoOriginal": "W", "min": 3 } }
+                    { "stats": ["defensa"], "baseAmount": 100, "trigger": "matchStart" }
                 ]
             },
             {
                 "id": "yujin-koshinaka-passive-1",
-                "name": "Mejora Supertécnicas Bosque",
-                "icon": "🌳",
+                "name": "Mejora de Técnica +75",
+                "icon": "🧠",
                 "unlockLevel": 20,
                 "effects": [
-                    { "kind": "elementTechniqueAura", "element": "Bosque", "baseAmount": 25, "perLevelAmount": 5, "trigger": "matchStart" }
+                    { "stats": ["tecnica"], "baseAmount": 75, "trigger": "matchStart" }
                 ]
             }
         ],
@@ -2297,20 +2297,20 @@ const CHARACTERS_DATA = [
         "passives": [
             {
                 "id": "takuma-isezaki-passive-0",
-                "name": "Sinergia de Equipo W: Técnica",
-                "icon": "🤝",
+                "name": "Mejora de Técnica +100",
+                "icon": "🧠",
                 "unlockLevel": 10,
                 "effects": [
-                    { "stats": ["tecnica"], "baseAmount": 100, "trigger": "matchStart", "requiresTeamCount": { "equipoOriginal": "W", "min": 3 } }
+                    { "stats": ["tecnica"], "baseAmount": 100, "trigger": "matchStart" }
                 ]
             },
             {
                 "id": "takuma-isezaki-passive-1",
-                "name": "Mejora Supertécnicas Montaña",
-                "icon": "⛰️",
+                "name": "Sinergia de Equipo W: Técnica",
+                "icon": "🤝",
                 "unlockLevel": 20,
                 "effects": [
-                    { "kind": "elementTechniqueAura", "element": "Montaña", "baseAmount": 25, "perLevelAmount": 5, "trigger": "matchStart" }
+                    { "stats": ["tecnica"], "baseAmount": 100, "trigger": "matchStart", "requiresTeamCount": { "equipoOriginal": "W", "min": 3 } }
                 ]
             }
         ],
@@ -2354,20 +2354,20 @@ const CHARACTERS_DATA = [
         "passives": [
             {
                 "id": "noboru-jigen-passive-0",
-                "name": "Sinergia de Equipo W: Técnica",
-                "icon": "🤝",
+                "name": "Mejora de Técnica +100",
+                "icon": "🧠",
                 "unlockLevel": 10,
                 "effects": [
-                    { "stats": ["tecnica"], "baseAmount": 100, "trigger": "matchStart", "requiresTeamCount": { "equipoOriginal": "W", "min": 3 } }
+                    { "stats": ["tecnica"], "baseAmount": 100, "trigger": "matchStart" }
                 ]
             },
             {
                 "id": "noboru-jigen-passive-1",
-                "name": "Mejora Supertécnicas Aire",
-                "icon": "🌪️",
+                "name": "Mejora de Tiro +75",
+                "icon": "⚽",
                 "unlockLevel": 20,
                 "effects": [
-                    { "kind": "elementTechniqueAura", "element": "Aire", "baseAmount": 25, "perLevelAmount": 5, "trigger": "matchStart" }
+                    { "stats": ["tiro"], "baseAmount": 75, "trigger": "matchStart" }
                 ]
             }
         ],
@@ -2411,20 +2411,20 @@ const CHARACTERS_DATA = [
         "passives": [
             {
                 "id": "hiromu-munakata-passive-0",
-                "name": "Sinergia de Equipo W: Técnica",
-                "icon": "🤝",
+                "name": "Mejora de Técnica +100",
+                "icon": "🧠",
                 "unlockLevel": 10,
                 "effects": [
-                    { "stats": ["tecnica"], "baseAmount": 100, "trigger": "matchStart", "requiresTeamCount": { "equipoOriginal": "W", "min": 3 } }
+                    { "stats": ["tecnica"], "baseAmount": 100, "trigger": "matchStart" }
                 ]
             },
             {
                 "id": "hiromu-munakata-passive-1",
-                "name": "Mejora Supertécnicas Fuego",
-                "icon": "🔥",
+                "name": "Mejora de Tiro +75",
+                "icon": "⚽",
                 "unlockLevel": 20,
                 "effects": [
-                    { "kind": "elementTechniqueAura", "element": "Fuego", "baseAmount": 25, "perLevelAmount": 5, "trigger": "matchStart" }
+                    { "stats": ["tiro"], "baseAmount": 75, "trigger": "matchStart" }
                 ]
             }
         ],
@@ -2468,20 +2468,20 @@ const CHARACTERS_DATA = [
         "passives": [
             {
                 "id": "yawara-banku-passive-0",
-                "name": "Sinergia de Equipo X: Defensa",
-                "icon": "🤝",
+                "name": "Mejora de Defensa +100",
+                "icon": "🛡️",
                 "unlockLevel": 10,
                 "effects": [
-                    { "stats": ["defensa"], "baseAmount": 100, "trigger": "matchStart", "requiresTeamCount": { "equipoOriginal": "X", "min": 3 } }
+                    { "stats": ["defensa"], "baseAmount": 100, "trigger": "matchStart" }
                 ]
             },
             {
                 "id": "yawara-banku-passive-1",
-                "name": "Mejora Supertécnicas Fuego",
-                "icon": "🔥",
+                "name": "Mejora de Técnica +75",
+                "icon": "🧠",
                 "unlockLevel": 20,
                 "effects": [
-                    { "kind": "elementTechniqueAura", "element": "Fuego", "baseAmount": 25, "perLevelAmount": 5, "trigger": "matchStart" }
+                    { "stats": ["tecnica"], "baseAmount": 75, "trigger": "matchStart" }
                 ]
             }
         ],
@@ -2525,20 +2525,20 @@ const CHARACTERS_DATA = [
         "passives": [
             {
                 "id": "daiya-morinaga-passive-0",
-                "name": "Sinergia de Equipo X: Defensa",
-                "icon": "🤝",
+                "name": "Mejora de Defensa +100",
+                "icon": "🛡️",
                 "unlockLevel": 10,
                 "effects": [
-                    { "stats": ["defensa"], "baseAmount": 100, "trigger": "matchStart", "requiresTeamCount": { "equipoOriginal": "X", "min": 3 } }
+                    { "stats": ["defensa"], "baseAmount": 100, "trigger": "matchStart" }
                 ]
             },
             {
                 "id": "daiya-morinaga-passive-1",
-                "name": "Mejora Supertécnicas Aire",
-                "icon": "🌪️",
+                "name": "Mejora de Técnica +75",
+                "icon": "🧠",
                 "unlockLevel": 20,
                 "effects": [
-                    { "kind": "elementTechniqueAura", "element": "Aire", "baseAmount": 25, "perLevelAmount": 5, "trigger": "matchStart" }
+                    { "stats": ["tecnica"], "baseAmount": 75, "trigger": "matchStart" }
                 ]
             }
         ],
@@ -2582,20 +2582,20 @@ const CHARACTERS_DATA = [
         "passives": [
             {
                 "id": "chihiro-ezaki-passive-0",
-                "name": "Sinergia de Equipo X: Defensa",
-                "icon": "🤝",
+                "name": "Mejora de Defensa +100",
+                "icon": "🛡️",
                 "unlockLevel": 10,
                 "effects": [
-                    { "stats": ["defensa"], "baseAmount": 100, "trigger": "matchStart", "requiresTeamCount": { "equipoOriginal": "X", "min": 3 } }
+                    { "stats": ["defensa"], "baseAmount": 100, "trigger": "matchStart" }
                 ]
             },
             {
                 "id": "chihiro-ezaki-passive-1",
-                "name": "Mejora Supertécnicas Bosque",
-                "icon": "🌳",
+                "name": "Mejora de Técnica +75",
+                "icon": "🧠",
                 "unlockLevel": 20,
                 "effects": [
-                    { "kind": "elementTechniqueAura", "element": "Bosque", "baseAmount": 25, "perLevelAmount": 5, "trigger": "matchStart" }
+                    { "stats": ["tecnica"], "baseAmount": 75, "trigger": "matchStart" }
                 ]
             }
         ],
@@ -2639,20 +2639,20 @@ const CHARACTERS_DATA = [
         "passives": [
             {
                 "id": "kosei-otsuka-passive-0",
-                "name": "Sinergia de Equipo X: Técnica",
-                "icon": "🤝",
+                "name": "Mejora de Técnica +100",
+                "icon": "🧠",
                 "unlockLevel": 10,
                 "effects": [
-                    { "stats": ["tecnica"], "baseAmount": 100, "trigger": "matchStart", "requiresTeamCount": { "equipoOriginal": "X", "min": 3 } }
+                    { "stats": ["tecnica"], "baseAmount": 100, "trigger": "matchStart" }
                 ]
             },
             {
                 "id": "kosei-otsuka-passive-1",
-                "name": "Mejora Supertécnicas Fuego",
-                "icon": "🔥",
+                "name": "Mejora de Tiro +75",
+                "icon": "⚽",
                 "unlockLevel": 20,
                 "effects": [
-                    { "kind": "elementTechniqueAura", "element": "Fuego", "baseAmount": 25, "perLevelAmount": 5, "trigger": "matchStart" }
+                    { "stats": ["tiro"], "baseAmount": 75, "trigger": "matchStart" }
                 ]
             }
         ],
@@ -2696,20 +2696,20 @@ const CHARACTERS_DATA = [
         "passives": [
             {
                 "id": "buruto-kora-passive-0",
-                "name": "Sinergia de Equipo X: Técnica",
-                "icon": "🤝",
+                "name": "Mejora de Técnica +100",
+                "icon": "🧠",
                 "unlockLevel": 10,
                 "effects": [
-                    { "stats": ["tecnica"], "baseAmount": 100, "trigger": "matchStart", "requiresTeamCount": { "equipoOriginal": "X", "min": 3 } }
+                    { "stats": ["tecnica"], "baseAmount": 100, "trigger": "matchStart" }
                 ]
             },
             {
                 "id": "buruto-kora-passive-1",
-                "name": "Mejora Supertécnicas Aire",
-                "icon": "🌪️",
+                "name": "Mejora de Tiro +75",
+                "icon": "⚽",
                 "unlockLevel": 20,
                 "effects": [
-                    { "kind": "elementTechniqueAura", "element": "Aire", "baseAmount": 25, "perLevelAmount": 5, "trigger": "matchStart" }
+                    { "stats": ["tiro"], "baseAmount": 75, "trigger": "matchStart" }
                 ]
             }
         ],
@@ -2754,20 +2754,20 @@ const CHARACTERS_DATA = [
         "passives": [
             {
                 "id": "soshi-kagura-passive-0",
-                "name": "Sinergia de Equipo Y: Técnica",
-                "icon": "🤝",
+                "name": "Mejora de Técnica +100",
+                "icon": "🧠",
                 "unlockLevel": 10,
                 "effects": [
-                    { "stats": ["tecnica"], "baseAmount": 100, "trigger": "matchStart", "requiresTeamCount": { "equipoOriginal": "Y", "min": 3 } }
+                    { "stats": ["tecnica"], "baseAmount": 100, "trigger": "matchStart" }
                 ]
             },
             {
                 "id": "soshi-kagura-passive-1",
-                "name": "Mejora Supertécnicas Fuego",
-                "icon": "🔥",
+                "name": "Mejora de Tiro +75",
+                "icon": "⚽",
                 "unlockLevel": 20,
                 "effects": [
-                    { "kind": "elementTechniqueAura", "element": "Fuego", "baseAmount": 25, "perLevelAmount": 5, "trigger": "matchStart" }
+                    { "stats": ["tiro"], "baseAmount": 75, "trigger": "matchStart" }
                 ]
             }
         ],
@@ -2811,20 +2811,20 @@ const CHARACTERS_DATA = [
         "passives": [
             {
                 "id": "fuma-rokkaku-passive-0",
-                "name": "Sinergia de Equipo Y: Técnica",
-                "icon": "🤝",
+                "name": "Mejora de Técnica +100",
+                "icon": "🧠",
                 "unlockLevel": 10,
                 "effects": [
-                    { "stats": ["tecnica"], "baseAmount": 100, "trigger": "matchStart", "requiresTeamCount": { "equipoOriginal": "Y", "min": 3 } }
+                    { "stats": ["tecnica"], "baseAmount": 100, "trigger": "matchStart" }
                 ]
             },
             {
                 "id": "fuma-rokkaku-passive-1",
-                "name": "Mejora Supertécnicas Bosque",
-                "icon": "🌳",
+                "name": "Mejora de Tiro +75",
+                "icon": "⚽",
                 "unlockLevel": 20,
                 "effects": [
-                    { "kind": "elementTechniqueAura", "element": "Bosque", "baseAmount": 25, "perLevelAmount": 5, "trigger": "matchStart" }
+                    { "stats": ["tiro"], "baseAmount": 75, "trigger": "matchStart" }
                 ]
             }
         ],
@@ -2869,20 +2869,20 @@ const CHARACTERS_DATA = [
         "passives": [
             {
                 "id": "burai-daido-passive-0",
-                "name": "Sinergia de Equipo X: Tiro",
-                "icon": "🤝",
+                "name": "Mejora de Tiro +100",
+                "icon": "⚽",
                 "unlockLevel": 10,
                 "effects": [
-                    { "stats": ["tiro"], "baseAmount": 100, "trigger": "matchStart", "requiresTeamCount": { "equipoOriginal": "X", "min": 3 } }
+                    { "stats": ["tiro"], "baseAmount": 100, "trigger": "matchStart" }
                 ]
             },
             {
                 "id": "burai-daido-passive-1",
-                "name": "Mejora Supertécnicas Fuego",
-                "icon": "🔥",
+                "name": "Mejora de Técnica +75",
+                "icon": "🧠",
                 "unlockLevel": 20,
                 "effects": [
-                    { "kind": "elementTechniqueAura", "element": "Fuego", "baseAmount": 25, "perLevelAmount": 5, "trigger": "matchStart" }
+                    { "stats": ["tecnica"], "baseAmount": 75, "trigger": "matchStart" }
                 ]
             }
         ],
@@ -2926,20 +2926,20 @@ const CHARACTERS_DATA = [
         "passives": [
             {
                 "id": "mareto-takeyama-passive-0",
-                "name": "Sinergia de Equipo Y: Defensa",
-                "icon": "🤝",
+                "name": "Mejora de Defensa +100",
+                "icon": "🛡️",
                 "unlockLevel": 10,
                 "effects": [
-                    { "stats": ["defensa"], "baseAmount": 100, "trigger": "matchStart", "requiresTeamCount": { "equipoOriginal": "Y", "min": 3 } }
+                    { "stats": ["defensa"], "baseAmount": 100, "trigger": "matchStart" }
                 ]
             },
             {
                 "id": "mareto-takeyama-passive-1",
-                "name": "Mejora Supertécnicas Aire",
-                "icon": "🌪️",
+                "name": "Sinergia de Equipo Y: Defensa",
+                "icon": "🤝",
                 "unlockLevel": 20,
                 "effects": [
-                    { "kind": "elementTechniqueAura", "element": "Aire", "baseAmount": 25, "perLevelAmount": 5, "trigger": "matchStart" }
+                    { "stats": ["defensa"], "baseAmount": 100, "trigger": "matchStart", "requiresTeamCount": { "equipoOriginal": "Y", "min": 3 } }
                 ]
             }
         ],
@@ -2983,20 +2983,20 @@ const CHARACTERS_DATA = [
         "passives": [
             {
                 "id": "hyuga-koshiba-passive-0",
-                "name": "Sinergia de Equipo Y: Tiro",
-                "icon": "🤝",
+                "name": "Mejora de Tiro +100",
+                "icon": "⚽",
                 "unlockLevel": 10,
                 "effects": [
-                    { "stats": ["tiro"], "baseAmount": 100, "trigger": "matchStart", "requiresTeamCount": { "equipoOriginal": "Y", "min": 3 } }
+                    { "stats": ["tiro"], "baseAmount": 100, "trigger": "matchStart" }
                 ]
             },
             {
                 "id": "hyuga-koshiba-passive-1",
-                "name": "Mejora Supertécnicas Montaña",
-                "icon": "⛰️",
+                "name": "Sinergia de Equipo Y: Tiro",
+                "icon": "🤝",
                 "unlockLevel": 20,
                 "effects": [
-                    { "kind": "elementTechniqueAura", "element": "Montaña", "baseAmount": 25, "perLevelAmount": 5, "trigger": "matchStart" }
+                    { "stats": ["tiro"], "baseAmount": 100, "trigger": "matchStart", "requiresTeamCount": { "equipoOriginal": "Y", "min": 3 } }
                 ]
             }
         ],
@@ -3041,20 +3041,20 @@ const CHARACTERS_DATA = [
         "passives": [
             {
                 "id": "raito-fuwa-passive-0",
-                "name": "Sinergia de Equipo W: Parada",
-                "icon": "🤝",
+                "name": "Mejora de Parada +100",
+                "icon": "🧤",
                 "unlockLevel": 10,
                 "effects": [
-                    { "stats": ["parada"], "baseAmount": 100, "trigger": "matchStart", "requiresTeamCount": { "equipoOriginal": "W", "min": 3 } }
+                    { "stats": ["parada"], "baseAmount": 100, "trigger": "matchStart" }
                 ]
             },
             {
                 "id": "raito-fuwa-passive-1",
-                "name": "Mejora Supertécnicas Fuego",
-                "icon": "🔥",
+                "name": "Sinergia de Equipo W: Parada",
+                "icon": "🤝",
                 "unlockLevel": 20,
                 "effects": [
-                    { "kind": "elementTechniqueAura", "element": "Fuego", "baseAmount": 25, "perLevelAmount": 5, "trigger": "matchStart" }
+                    { "stats": ["parada"], "baseAmount": 100, "trigger": "matchStart", "requiresTeamCount": { "equipoOriginal": "W", "min": 3 } }
                 ]
             }
         ],
@@ -3098,20 +3098,20 @@ const CHARACTERS_DATA = [
         "passives": [
             {
                 "id": "yuza-dokomo-passive-0",
-                "name": "Sinergia de Equipo X: Parada",
-                "icon": "🤝",
+                "name": "Mejora de Parada +100",
+                "icon": "🧤",
                 "unlockLevel": 10,
                 "effects": [
-                    { "stats": ["parada"], "baseAmount": 100, "trigger": "matchStart", "requiresTeamCount": { "equipoOriginal": "X", "min": 3 } }
+                    { "stats": ["parada"], "baseAmount": 100, "trigger": "matchStart" }
                 ]
             },
             {
                 "id": "yuza-dokomo-passive-1",
-                "name": "Mejora Supertécnicas Bosque",
-                "icon": "🌳",
+                "name": "Sinergia de Equipo X: Parada",
+                "icon": "🤝",
                 "unlockLevel": 20,
                 "effects": [
-                    { "kind": "elementTechniqueAura", "element": "Bosque", "baseAmount": 25, "perLevelAmount": 5, "trigger": "matchStart" }
+                    { "stats": ["parada"], "baseAmount": 100, "trigger": "matchStart", "requiresTeamCount": { "equipoOriginal": "X", "min": 3 } }
                 ]
             }
         ],
@@ -3155,20 +3155,20 @@ const CHARACTERS_DATA = [
         "passives": [
             {
                 "id": "juraki-ito-passive-0",
-                "name": "Sinergia de Equipo Y: Parada",
-                "icon": "🤝",
+                "name": "Mejora de Parada +100",
+                "icon": "🧤",
                 "unlockLevel": 10,
                 "effects": [
-                    { "stats": ["parada"], "baseAmount": 100, "trigger": "matchStart", "requiresTeamCount": { "equipoOriginal": "Y", "min": 3 } }
+                    { "stats": ["parada"], "baseAmount": 100, "trigger": "matchStart" }
                 ]
             },
             {
                 "id": "juraki-ito-passive-1",
-                "name": "Mejora Supertécnicas Montaña",
-                "icon": "⛰️",
+                "name": "Sinergia de Equipo Y: Parada",
+                "icon": "🤝",
                 "unlockLevel": 20,
                 "effects": [
-                    { "kind": "elementTechniqueAura", "element": "Montaña", "baseAmount": 25, "perLevelAmount": 5, "trigger": "matchStart" }
+                    { "stats": ["parada"], "baseAmount": 100, "trigger": "matchStart", "requiresTeamCount": { "equipoOriginal": "Y", "min": 3 } }
                 ]
             }
         ],
@@ -3213,20 +3213,20 @@ const CHARACTERS_DATA = [
         "passives": [
             {
                 "id": "ashime-suzuki-passive-0",
-                "name": "Sinergia de Equipo Y: Tiro",
-                "icon": "🤝",
+                "name": "Mejora de Tiro +100",
+                "icon": "⚽",
                 "unlockLevel": 10,
                 "effects": [
-                    { "stats": ["tiro"], "baseAmount": 100, "trigger": "matchStart", "requiresTeamCount": { "equipoOriginal": "Y", "min": 3 } }
+                    { "stats": ["tiro"], "baseAmount": 100, "trigger": "matchStart" }
                 ]
             },
             {
                 "id": "ashime-suzuki-passive-1",
-                "name": "Mejora Supertécnicas Aire",
-                "icon": "🌪️",
+                "name": "Mejora de Técnica +75",
+                "icon": "🧠",
                 "unlockLevel": 20,
                 "effects": [
-                    { "kind": "elementTechniqueAura", "element": "Aire", "baseAmount": 25, "perLevelAmount": 5, "trigger": "matchStart" }
+                    { "stats": ["tecnica"], "baseAmount": 75, "trigger": "matchStart" }
                 ]
             }
         ],
@@ -3270,20 +3270,20 @@ const CHARACTERS_DATA = [
         "passives": [
             {
                 "id": "tobio-madoka-passive-0",
-                "name": "Sinergia de Equipo Y: Defensa",
-                "icon": "🤝",
+                "name": "Mejora de Defensa +100",
+                "icon": "🛡️",
                 "unlockLevel": 10,
                 "effects": [
-                    { "stats": ["defensa"], "baseAmount": 100, "trigger": "matchStart", "requiresTeamCount": { "equipoOriginal": "Y", "min": 3 } }
+                    { "stats": ["defensa"], "baseAmount": 100, "trigger": "matchStart" }
                 ]
             },
             {
                 "id": "tobio-madoka-passive-1",
-                "name": "Mejora Supertécnicas Aire",
-                "icon": "🌪️",
+                "name": "Mejora de Técnica +75",
+                "icon": "🧠",
                 "unlockLevel": 20,
                 "effects": [
-                    { "kind": "elementTechniqueAura", "element": "Aire", "baseAmount": 25, "perLevelAmount": 5, "trigger": "matchStart" }
+                    { "stats": ["tecnica"], "baseAmount": 75, "trigger": "matchStart" }
                 ]
             }
         ],
@@ -3327,20 +3327,20 @@ const CHARACTERS_DATA = [
         "passives": [
             {
                 "id": "shinichi-konan-passive-0",
-                "name": "Sinergia de Equipo Y: Defensa",
-                "icon": "🤝",
+                "name": "Mejora de Defensa +100",
+                "icon": "🛡️",
                 "unlockLevel": 10,
                 "effects": [
-                    { "stats": ["defensa"], "baseAmount": 100, "trigger": "matchStart", "requiresTeamCount": { "equipoOriginal": "Y", "min": 3 } }
+                    { "stats": ["defensa"], "baseAmount": 100, "trigger": "matchStart" }
                 ]
             },
             {
                 "id": "shinichi-konan-passive-1",
-                "name": "Mejora Supertécnicas Bosque",
-                "icon": "🌳",
+                "name": "Mejora de Técnica +75",
+                "icon": "🧠",
                 "unlockLevel": 20,
                 "effects": [
-                    { "kind": "elementTechniqueAura", "element": "Bosque", "baseAmount": 25, "perLevelAmount": 5, "trigger": "matchStart" }
+                    { "stats": ["tecnica"], "baseAmount": 75, "trigger": "matchStart" }
                 ]
             }
         ],
@@ -3384,20 +3384,20 @@ const CHARACTERS_DATA = [
         "passives": [
             {
                 "id": "iori-sato-passive-0",
-                "name": "Sinergia de Equipo Y: Defensa",
-                "icon": "🤝",
+                "name": "Mejora de Defensa +100",
+                "icon": "🛡️",
                 "unlockLevel": 10,
                 "effects": [
-                    { "stats": ["defensa"], "baseAmount": 100, "trigger": "matchStart", "requiresTeamCount": { "equipoOriginal": "Y", "min": 3 } }
+                    { "stats": ["defensa"], "baseAmount": 100, "trigger": "matchStart" }
                 ]
             },
             {
                 "id": "iori-sato-passive-1",
-                "name": "Mejora Supertécnicas Fuego",
-                "icon": "🔥",
+                "name": "Mejora de Técnica +75",
+                "icon": "🧠",
                 "unlockLevel": 20,
                 "effects": [
-                    { "kind": "elementTechniqueAura", "element": "Fuego", "baseAmount": 25, "perLevelAmount": 5, "trigger": "matchStart" }
+                    { "stats": ["tecnica"], "baseAmount": 75, "trigger": "matchStart" }
                 ]
             }
         ],
