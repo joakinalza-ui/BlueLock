@@ -50,7 +50,7 @@ const CHARACTERS_DATA = [
                 "id": "kisaburo-hijikata-tech-1",
                 "name": "Técnica Básica de Bloqueo",
                 "type": "bloqueo",
-                "element": "Montaña",
+                "element": "Aire",
                 "cost": 30
             }
         ],
@@ -109,7 +109,7 @@ const CHARACTERS_DATA = [
                 "id": "wataru-kuon-tech-1",
                 "name": "Técnica Básica de Pase",
                 "type": "pase",
-                "element": "Fuego",
+                "element": "Bosque",
                 "cost": 30
             }
         ],
@@ -168,7 +168,7 @@ const CHARACTERS_DATA = [
                 "id": "retsu-nerima-tech-1",
                 "name": "Técnica Básica de Pase",
                 "type": "pase",
-                "element": "Bosque",
+                "element": "Montaña",
                 "cost": 30
             }
         ],
@@ -227,7 +227,7 @@ const CHARACTERS_DATA = [
                 "id": "kei-shishiya-tech-1",
                 "name": "Técnica Básica de Pase",
                 "type": "pase",
-                "element": "Aire",
+                "element": "Montaña",
                 "cost": 30
             }
         ],
@@ -345,7 +345,7 @@ const CHARACTERS_DATA = [
                 "id": "yudai-imamura-tech-1",
                 "name": "Técnica Básica de Regate",
                 "type": "regate",
-                "element": "Fuego",
+                "element": "Aire",
                 "cost": 30
             }
         ],
@@ -463,7 +463,7 @@ const CHARACTERS_DATA = [
                 "id": "masumi-atatame-tech-1",
                 "name": "Técnica Básica de Regate",
                 "type": "regate",
-                "element": "Aire",
+                "element": "Fuego",
                 "cost": 30
             }
         ],
@@ -581,7 +581,7 @@ const CHARACTERS_DATA = [
                 "id": "yusei-amazora-tech-1",
                 "name": "Técnica Básica de Regate",
                 "type": "regate",
-                "element": "Fuego",
+                "element": "Aire",
                 "cost": 30
             }
         ],
@@ -640,7 +640,7 @@ const CHARACTERS_DATA = [
                 "id": "rian-sanga-tech-1",
                 "name": "Técnica Básica de Regate",
                 "type": "regate",
-                "element": "Bosque",
+                "element": "Montaña",
                 "cost": 30
             }
         ],
@@ -699,7 +699,7 @@ const CHARACTERS_DATA = [
                 "id": "isagi-yoichi-tech-1",
                 "name": "Técnica Básica de Regate",
                 "type": "regate",
-                "element": "Aire",
+                "element": "Bosque",
                 "cost": 30
             }
         ],
@@ -758,7 +758,7 @@ const CHARACTERS_DATA = [
                 "id": "bachira-meguru-tech-1",
                 "name": "Técnica Básica de Regate",
                 "type": "regate",
-                "element": "Montaña",
+                "element": "Aire",
                 "cost": 30
             }
         ],
@@ -817,7 +817,7 @@ const CHARACTERS_DATA = [
                 "id": "chigiri-hyoma-tech-1",
                 "name": "Técnica Básica de Pase",
                 "type": "pase",
-                "element": "Fuego",
+                "element": "Aire",
                 "cost": 30
             }
         ],
@@ -935,7 +935,7 @@ const CHARACTERS_DATA = [
                 "id": "nagi-seishiro-tech-1",
                 "name": "Técnica Básica de Regate",
                 "type": "regate",
-                "element": "Aire",
+                "element": "Bosque",
                 "cost": 30
             }
         ],
@@ -994,7 +994,7 @@ const CHARACTERS_DATA = [
                 "id": "reo-mikage-tech-1",
                 "name": "Técnica Básica de Regate",
                 "type": "regate",
-                "element": "Montaña",
+                "element": "Bosque",
                 "cost": 30
             }
         ],
@@ -1053,7 +1053,7 @@ const CHARACTERS_DATA = [
                 "id": "aryu-jyubei-tech-1",
                 "name": "Técnica Básica de Pase",
                 "type": "pase",
-                "element": "Fuego",
+                "element": "Aire",
                 "cost": 30
             }
         ],
@@ -1171,7 +1171,7 @@ const CHARACTERS_DATA = [
                 "id": "shoei-barou-tech-1",
                 "name": "Técnica Básica de Regate",
                 "type": "regate",
-                "element": "Aire",
+                "element": "Fuego",
                 "cost": 30
             }
         ],
@@ -1230,7 +1230,7 @@ const CHARACTERS_DATA = [
                 "id": "zantetsu-tsurugi-tech-1",
                 "name": "Técnica Básica de Pase",
                 "type": "pase",
-                "element": "Montaña",
+                "element": "Aire",
                 "cost": 30
             }
         ],
@@ -1289,7 +1289,7 @@ const CHARACTERS_DATA = [
                 "id": "ikki-niko-tech-1",
                 "name": "Técnica Básica de Regate",
                 "type": "regate",
-                "element": "Fuego",
+                "element": "Aire",
                 "cost": 30
             }
         ],
@@ -1348,7 +1348,7 @@ const CHARACTERS_DATA = [
                 "id": "aoshi-tokimitsu-tech-1",
                 "name": "Técnica Básica de Regate",
                 "type": "regate",
-                "element": "Bosque",
+                "element": "Montaña",
                 "cost": 30
             }
         ],
@@ -1585,7 +1585,7 @@ const CHARACTERS_DATA = [
                 "id": "gurimu-igarashi-tech-1",
                 "name": "Técnica Básica de Pase",
                 "type": "pase",
-                "element": "Bosque",
+                "element": "Fuego",
                 "cost": 30
             }
         ],
@@ -1644,7 +1644,7 @@ const CHARACTERS_DATA = [
                 "id": "keisuke-wanima-tech-1",
                 "name": "Técnica Básica de Regate",
                 "type": "regate",
-                "element": "Aire",
+                "element": "Bosque",
                 "cost": 30
             }
         ],
@@ -1778,7 +1778,7 @@ const CHARACTERS_DATA = [
                 "id": "hibiki-ookawa-tech-1",
                 "name": "Técnica Básica de Regate",
                 "type": "regate",
-                "element": "Fuego",
+                "element": "Aire",
                 "cost": 30
             }
         ],
@@ -1838,7 +1838,7 @@ const CHARACTERS_DATA = [
                 "id": "iemon-naoyuki-tech-1",
                 "name": "Técnica Básica de Bloqueo",
                 "type": "bloqueo",
-                "element": "Bosque",
+                "element": "Fuego",
                 "cost": 30
             }
         ],
@@ -1898,7 +1898,7 @@ const CHARACTERS_DATA = [
                 "id": "sota-nemoto-tech-1",
                 "name": "Técnica Básica de Pase",
                 "type": "pase",
-                "element": "Aire",
+                "element": "Montaña",
                 "cost": 30
             }
         ],
@@ -1957,7 +1957,7 @@ const CHARACTERS_DATA = [
                 "id": "rikiya-hohai-tech-1",
                 "name": "Técnica Básica de Regate",
                 "type": "regate",
-                "element": "Montaña",
+                "element": "Aire",
                 "cost": 30
             }
         ],
@@ -2016,7 +2016,7 @@ const CHARACTERS_DATA = [
                 "id": "hirakazu-midorikawa-tech-1",
                 "name": "Técnica Básica de Pase",
                 "type": "pase",
-                "element": "Fuego",
+                "element": "Bosque",
                 "cost": 30
             }
         ],
@@ -2075,7 +2075,7 @@ const CHARACTERS_DATA = [
                 "id": "shuhei-ebina-tech-1",
                 "name": "Técnica Básica de Regate",
                 "type": "regate",
-                "element": "Bosque",
+                "element": "Montaña",
                 "cost": 30
             }
         ],
@@ -2134,7 +2134,7 @@ const CHARACTERS_DATA = [
                 "id": "kanji-torikai-tech-1",
                 "name": "Técnica Básica de Regate",
                 "type": "regate",
-                "element": "Aire",
+                "element": "Fuego",
                 "cost": 30
             }
         ],
@@ -2193,7 +2193,7 @@ const CHARACTERS_DATA = [
                 "id": "koki-mera-tech-1",
                 "name": "Técnica Básica de Pase",
                 "type": "pase",
-                "element": "Montaña",
+                "element": "Fuego",
                 "cost": 30
             }
         ],
@@ -2370,7 +2370,7 @@ const CHARACTERS_DATA = [
                 "id": "takuma-isezaki-tech-1",
                 "name": "Técnica Básica de Regate",
                 "type": "regate",
-                "element": "Aire",
+                "element": "Montaña",
                 "cost": 30
             }
         ],
@@ -2429,7 +2429,7 @@ const CHARACTERS_DATA = [
                 "id": "noboru-jigen-tech-1",
                 "name": "Técnica Básica de Regate",
                 "type": "regate",
-                "element": "Montaña",
+                "element": "Aire",
                 "cost": 30
             }
         ],
@@ -2547,7 +2547,7 @@ const CHARACTERS_DATA = [
                 "id": "yawara-banku-tech-1",
                 "name": "Técnica Básica de Pase",
                 "type": "pase",
-                "element": "Bosque",
+                "element": "Aire",
                 "cost": 30
             }
         ],
@@ -2665,7 +2665,7 @@ const CHARACTERS_DATA = [
                 "id": "chihiro-ezaki-tech-1",
                 "name": "Técnica Básica de Pase",
                 "type": "pase",
-                "element": "Montaña",
+                "element": "Bosque",
                 "cost": 30
             }
         ],
@@ -2783,7 +2783,7 @@ const CHARACTERS_DATA = [
                 "id": "buruto-kora-tech-1",
                 "name": "Técnica Básica de Regate",
                 "type": "regate",
-                "element": "Bosque",
+                "element": "Aire",
                 "cost": 30
             }
         ],
@@ -2843,7 +2843,7 @@ const CHARACTERS_DATA = [
                 "id": "soshi-kagura-tech-1",
                 "name": "Técnica Básica de Regate",
                 "type": "regate",
-                "element": "Aire",
+                "element": "Fuego",
                 "cost": 30
             }
         ],
@@ -2902,7 +2902,7 @@ const CHARACTERS_DATA = [
                 "id": "fuma-rokkaku-tech-1",
                 "name": "Técnica Básica de Regate",
                 "type": "regate",
-                "element": "Montaña",
+                "element": "Bosque",
                 "cost": 30
             }
         ],
@@ -2962,7 +2962,7 @@ const CHARACTERS_DATA = [
                 "id": "burai-daido-tech-1",
                 "name": "Técnica Básica de Regate",
                 "type": "regate",
-                "element": "Fuego",
+                "element": "Montaña",
                 "cost": 30
             }
         ],
@@ -3021,7 +3021,7 @@ const CHARACTERS_DATA = [
                 "id": "mareto-takeyama-tech-1",
                 "name": "Técnica Básica de Pase",
                 "type": "pase",
-                "element": "Bosque",
+                "element": "Aire",
                 "cost": 30
             }
         ],
@@ -3080,7 +3080,7 @@ const CHARACTERS_DATA = [
                 "id": "hyuga-koshiba-tech-1",
                 "name": "Técnica Básica de Regate",
                 "type": "regate",
-                "element": "Aire",
+                "element": "Montaña",
                 "cost": 30
             }
         ],
@@ -3140,7 +3140,7 @@ const CHARACTERS_DATA = [
                 "id": "raito-fuwa-tech-1",
                 "name": "Técnica Básica de Bloqueo",
                 "type": "bloqueo",
-                "element": "Montaña",
+                "element": "Fuego",
                 "cost": 30
             }
         ],
@@ -3199,7 +3199,7 @@ const CHARACTERS_DATA = [
                 "id": "yuza-dokomo-tech-1",
                 "name": "Técnica Básica de Bloqueo",
                 "type": "bloqueo",
-                "element": "Fuego",
+                "element": "Bosque",
                 "cost": 30
             }
         ],
@@ -3258,7 +3258,7 @@ const CHARACTERS_DATA = [
                 "id": "juraki-ito-tech-1",
                 "name": "Técnica Básica de Bloqueo",
                 "type": "bloqueo",
-                "element": "Bosque",
+                "element": "Montaña",
                 "cost": 30
             }
         ],
@@ -3377,7 +3377,7 @@ const CHARACTERS_DATA = [
                 "id": "tobio-madoka-tech-1",
                 "name": "Técnica Básica de Pase",
                 "type": "pase",
-                "element": "Montaña",
+                "element": "Bosque",
                 "cost": 30
             }
         ],
@@ -3436,7 +3436,7 @@ const CHARACTERS_DATA = [
                 "id": "shinichi-konan-tech-1",
                 "name": "Técnica Básica de Pase",
                 "type": "pase",
-                "element": "Fuego",
+                "element": "Bosque",
                 "cost": 30
             }
         ],
@@ -3495,7 +3495,7 @@ const CHARACTERS_DATA = [
                 "id": "iori-sato-tech-1",
                 "name": "Técnica Básica de Pase",
                 "type": "pase",
-                "element": "Bosque",
+                "element": "Fuego",
                 "cost": 30
             }
         ],
