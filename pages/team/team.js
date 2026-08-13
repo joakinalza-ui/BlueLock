@@ -371,12 +371,30 @@ function initQuintetoEdit() {
     confirmBtn.addEventListener("click", () => exitEditMode(true));
 }
 
+// El orden de la Colección (Nombre/Nivel/Rareza) se recuerda entre
+// sesiones -- el resto de filtros (búsqueda, puesto, equipo) sí se
+// reinician al volver a entrar, solo el orden persiste porque es el
+// que se deja fijo una vez elegido.
+const COLLECTION_SORT_KEY = "bl_collection_sort";
+
+function getSavedCollectionSort() {
+    return localStorage.getItem(COLLECTION_SORT_KEY) || "name";
+}
+
+function setSavedCollectionSort(value) {
+    localStorage.setItem(COLLECTION_SORT_KEY, value);
+}
+
 function initFilters() {
+    const sortEl = document.getElementById("collection-sort");
+    if (sortEl) sortEl.value = getSavedCollectionSort();
+
     ["collection-search", "collection-position-filter", "collection-team-filter", "collection-sort"].forEach((id) => {
         const el = document.getElementById(id);
         if (!el) return;
         el.addEventListener("input", renderCollectionGrid);
         el.addEventListener("change", () => {
+            if (id === "collection-sort") setSavedCollectionSort(el.value);
             renderCollectionGrid();
             alignAllThumbs();
         });
