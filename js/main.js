@@ -1489,6 +1489,33 @@ const PLAYER_DETAIL_ELEMENT_ICONS = {
     Aire: "💨",
 };
 
+// Escala FIJA para las 4 barras (no el máximo de esa stat en concreto
+// para ESTE personaje) — así el ancho representa el poder real de la
+// stat, comparable entre personajes de distinta rareza/nivel, en vez
+// de verse casi llena siempre. Compartida entre la Ficha del Jugador
+// (pages/player/) y la vista previa rápida (mantener pulsada una
+// carta — ver openPlayerPreview).
+const STAT_BAR_MAX = 2000;
+
+// Las 4 barras de stat (Tiro/Técnica/Defensa/Parada) al nivel actual
+// del personaje — misma markup (clases .pd-stat-*) en la Ficha
+// completa y en la vista previa rápida, así solo hay una definición de
+// CSS que mantener en cada hoja de estilos que la usa.
+function buildStatBarsMarkup(character) {
+    const stats = getCharacterStatsAtLevel(character);
+    return Object.keys(PLAYER_DETAIL_STAT_LABELS).map((key) => {
+        const value = stats[key] || 0;
+        const pct = Math.max(0, Math.min(100, (value / STAT_BAR_MAX) * 100));
+        return `
+            <div class="pd-stat-row">
+                <span class="pd-stat-label">${PLAYER_DETAIL_STAT_LABELS[key]}</span>
+                <div class="pd-stat-track"><div class="pd-stat-fill" style="width:${pct}%"></div></div>
+                <span class="pd-stat-value">${value}</span>
+            </div>
+        `;
+    }).join("");
+}
+
 // Técnicas: cada personaje trae 2 fijas (character.techniques, no se
 // pueden quitar) más un hueco libre por personaje donde se puede
 // equipar CUALQUIER técnica fija de CUALQUIER personaje ya
@@ -1825,6 +1852,128 @@ function consumePlayerDetailReturnContext() {
     } catch (e) {
         return null;
     }
+}
+
+// --- Vista previa rápida (mantener pulsada una carta) ---
+//
+// Complementa a la Ficha completa (navigateToPlayerDetail, pantalla
+// entera) con un popup ligero de solo lectura -- stats y pasivas, sin
+// Técnicas ni acciones -- para ver un personaje sin salir de la
+// pantalla donde está su carta (F5/F11, tanto en el campo como en el
+// selector de huecos, y Jugadores). Requiere que la hoja de estilos de
+// la página que la use defina .player-preview-* y también las clases
+// .pd-stat-*/.pd-passive-* (mismas que pages/player/player.css) que
+// buildStatBarsMarkup/buildPassivesListMarkup ya generan.
+function buildPlayerPreviewMarkup(character) {
+    const elementIcon = PLAYER_DETAIL_ELEMENT_ICONS[character.element] || "";
+    const teamLabel = character.equipoOriginal ? `Equipo ${character.equipoOriginal}` : "Sin equipo";
+    return `
+        <button class="player-preview-close" type="button" aria-label="Cerrar">×</button>
+        <div class="player-preview-header">
+            <span class="player-preview-position" data-position="${character.position}">${character.position}</span>
+            <div class="player-preview-heading">
+                <span class="player-preview-name">${character.name} ${"★".repeat(character.rarity)}</span>
+                <span class="player-preview-sub">Nv. ${getCharacterLevel(character.id)} · ${elementIcon} ${character.element} · ${teamLabel}</span>
+            </div>
+        </div>
+        <div class="pd-stats">${buildStatBarsMarkup(character)}</div>
+        <p class="player-preview-section-title">Habilidades Pasivas</p>
+        <div class="pd-passive-list">${buildPassivesListMarkup(character)}</div>
+    `;
+}
+
+function ensurePlayerPreviewOverlay() {
+    let overlay = document.getElementById("player-preview-overlay");
+    if (overlay) return overlay;
+
+    overlay = document.createElement("div");
+    overlay.id = "player-preview-overlay";
+    overlay.className = "player-preview-overlay";
+    overlay.hidden = true;
+    overlay.innerHTML = '<div class="player-preview-modal" id="player-preview-modal"></div>';
+    document.body.appendChild(overlay);
+
+    overlay.addEventListener("click", (event) => {
+        if (event.target === overlay || event.target.closest(".player-preview-close")) closePlayerPreview();
+    });
+
+    return overlay;
+}
+
+function openPlayerPreview(character) {
+    const overlay = ensurePlayerPreviewOverlay();
+    document.getElementById("player-preview-modal").innerHTML = buildPlayerPreviewMarkup(character);
+    overlay.hidden = false;
+}
+
+function closePlayerPreview() {
+    const overlay = document.getElementById("player-preview-overlay");
+    if (overlay) overlay.hidden = true;
+}
+
+// Mantener pulsada una carta (dedo o ratón, sin moverlo) abre la vista
+// previa de ESE personaje y cancela el click normal de la carta que le
+// seguiría (cambiar de jugador, añadir al Quinteto...) -- por eso hay
+// que llamar a esta función ANTES de añadir el listener de click propio
+// de la carta: los listeners sobre el MISMO elemento se disparan en
+// orden de registro (da igual fase captura/burbuja), así que este,
+// registrado primero, ve el click antes y lo detiene con
+// stopImmediatePropagation si veníamos de una pulsación larga.
+const LONG_PRESS_DURATION_MS = 450;
+const LONG_PRESS_MOVE_TOLERANCE_PX = 12;
+
+function attachLongPressPreview(element, character) {
+    let timer = null;
+    let startX = 0;
+    let startY = 0;
+    let firedLongPress = false;
+
+    function clear() {
+        if (timer) {
+            clearTimeout(timer);
+            timer = null;
+        }
+    }
+
+    function start(x, y) {
+        startX = x;
+        startY = y;
+        firedLongPress = false;
+        clear();
+        timer = setTimeout(() => {
+            timer = null;
+            firedLongPress = true;
+            openPlayerPreview(character);
+        }, LONG_PRESS_DURATION_MS);
+    }
+
+    function move(x, y) {
+        if (!timer) return;
+        if (Math.abs(x - startX) > LONG_PRESS_MOVE_TOLERANCE_PX || Math.abs(y - startY) > LONG_PRESS_MOVE_TOLERANCE_PX) clear();
+    }
+
+    element.addEventListener("touchstart", (event) => {
+        const touch = event.touches[0];
+        start(touch.clientX, touch.clientY);
+    }, { passive: true });
+    element.addEventListener("touchmove", (event) => {
+        const touch = event.touches[0];
+        move(touch.clientX, touch.clientY);
+    }, { passive: true });
+    element.addEventListener("touchend", clear);
+    element.addEventListener("touchcancel", clear);
+
+    element.addEventListener("mousedown", (event) => start(event.clientX, event.clientY));
+    element.addEventListener("mousemove", (event) => move(event.clientX, event.clientY));
+    element.addEventListener("mouseup", clear);
+    element.addEventListener("mouseleave", clear);
+
+    element.addEventListener("click", (event) => {
+        if (!firedLongPress) return;
+        firedLongPress = false;
+        event.preventDefault();
+        event.stopImmediatePropagation();
+    });
 }
 
 // Formaciones 5v5: notación DEF-MED-DEL para los 4 jugadores de campo,

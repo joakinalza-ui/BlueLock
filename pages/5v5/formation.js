@@ -142,6 +142,7 @@ function renderFormation() {
             card.type = "button";
             card.className = "player-card";
             card.innerHTML = buildPlayerCardMarkup(character, position);
+            attachLongPressPreview(card, character);
             card.addEventListener("click", () => {
                 navigateToPlayerDetail(character.id, {
                     actionLabel: "Cambiar jugador",
@@ -239,6 +240,7 @@ function renderSlotPickerList(slotIndex) {
         card.type = "button";
         card.className = "player-card";
         card.innerHTML = buildPlayerCardMarkup(character);
+        attachLongPressPreview(card, character);
         card.addEventListener("click", () => {
             setQuintetoSlot(slotIndex, character.id);
             overlay.hidden = true;

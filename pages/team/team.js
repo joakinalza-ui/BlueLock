@@ -76,6 +76,7 @@ function renderQuintetoGrid() {
         card.innerHTML = buildPlayerCardMarkup(character)
             + (editMode ? '<span class="edit-pencil">✎</span>' : "")
             + (isPending ? '<span class="pending-badge">Nuevo</span>' : "");
+        attachLongPressPreview(card, character);
         card.addEventListener("click", () => {
             navigateToPlayerDetail(character.id, editMode ? {
                 actionLabel: "Cambiar jugador",
@@ -146,6 +147,7 @@ function renderCollectionGrid() {
         card.className = "player-card";
         card.setAttribute("data-character-id", character.id);
         card.innerHTML = buildPlayerCardMarkup(character);
+        attachLongPressPreview(card, character);
         const canAddToQuinteto = !editMode && !isInQuinteto(character.id);
         card.addEventListener("click", () => {
             navigateToPlayerDetail(character.id, canAddToQuinteto ? {

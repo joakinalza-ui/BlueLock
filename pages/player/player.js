@@ -28,26 +28,8 @@ function renderHero() {
         : "Equipo: Sin asignar";
 }
 
-// Escala FIJA para las 4 barras (no el máximo de esa stat en concreto
-// para ESTE personaje) — así el ancho representa el poder real de la
-// stat, comparable entre personajes de distinta rareza/nivel, en vez
-// de verse casi llena siempre.
-const STAT_BAR_MAX = 2000;
-
 function renderStats() {
-    const stats = getCharacterStatsAtLevel(character);
-    const container = document.getElementById("player-stats");
-    container.innerHTML = Object.keys(PLAYER_DETAIL_STAT_LABELS).map((key) => {
-        const value = stats[key] || 0;
-        const pct = Math.max(0, Math.min(100, (value / STAT_BAR_MAX) * 100));
-        return `
-            <div class="pd-stat-row">
-                <span class="pd-stat-label">${PLAYER_DETAIL_STAT_LABELS[key]}</span>
-                <div class="pd-stat-track"><div class="pd-stat-fill" style="width:${pct}%"></div></div>
-                <span class="pd-stat-value">${value}</span>
-            </div>
-        `;
-    }).join("");
+    document.getElementById("player-stats").innerHTML = buildStatBarsMarkup(character);
 }
 
 function renderPassives() {
