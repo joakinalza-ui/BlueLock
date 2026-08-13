@@ -36,7 +36,8 @@ function runAutoStep() {
     if (!autoMode || isMatchOver(state)) return;
 
     if (state.currentOwner === "rival") {
-        const outcome = resolveDefenseChoice(state, decideAutoDefenseChoice());
+        const useTechnique = decideAutoUseDefenseTechnique(state);
+        const outcome = resolveDefenseChoice(state, decideAutoDefenseChoice(), useTechnique);
         addLog(describeDefenseOutcome(outcome));
     } else {
         const action = decideAutoAttackAction(state);
@@ -138,8 +139,9 @@ function describeDefenseOutcome(outcome) {
     const predictedLabel = DEFENSE_LABELS[outcome.defenseChoice];
     const actualLabel = ACTION_LABELS[outcome.rivalAction];
     const hitLabel = outcome.predictionCorrect ? "✅ predijiste bien" : "❌ predicción fallida";
+    const techLabel = outcome.technique ? ` + ${outcome.technique.name}` : "";
     const scoreLine = `(${outcome.result.myResult} vs ${outcome.result.rivalResult})`;
-    const detail = `Rival intenta ${actualLabel}, elegiste ${predictedLabel} — ${hitLabel} ${scoreLine}`;
+    const detail = `Rival intenta ${actualLabel}, elegiste ${predictedLabel}${techLabel} — ${hitLabel} ${scoreLine}`;
 
     if (outcome.outcome === "rivalGoal") return `¡GOL RIVAL! ${detail}`;
     if (outcome.outcome === "blocked") return `¡Bloqueado! ${detail}`;
@@ -188,8 +190,8 @@ function renderMyTurnActions(container) {
     });
 }
 
-function handleDefenseChoice(defenseChoice) {
-    const outcome = resolveDefenseChoice(state, defenseChoice);
+function handleDefenseChoice(defenseChoice, useTechnique) {
+    const outcome = resolveDefenseChoice(state, defenseChoice, useTechnique);
     addLog(describeDefenseOutcome(outcome));
     renderHeader();
     renderActions();
@@ -198,15 +200,34 @@ function handleDefenseChoice(defenseChoice) {
 // Posesión rival: el jugador predice, SIN saber qué va a intentar el
 // rival, entre 3 acciones defensivas (una por cada acción rival
 // posible). El rival ya tiene su acción decidida internamente, pero no
-// se revela hasta resolver la elección.
+// se revela hasta resolver la elección. Igual que al atacar, si el
+// puesto que le toca defender a esta zona tiene una Técnica Básica
+// defensiva disponible ("Bloqueo" o "Parada", según si el balón está en
+// la Zona 1 — decideRivalAction siempre tira ahí, nunca al azar) se
+// ofrece un botón extra por cada predicción para gastar PE en ella.
 function renderRivalTurn(container) {
     const promptLine = document.createElement("p");
     promptLine.className = "match-waiting";
     promptLine.textContent = "Posesión rival — elige tu predicción defensiva:";
     container.appendChild(promptLine);
 
+    const peLine = document.createElement("p");
+    peLine.className = "match-pe";
+    peLine.textContent = `PE: ${state.pe} / ${state.peMax}`;
+    container.appendChild(peLine);
+
+    const facingShot = state.zone === FIELD_ZONE_MINE_GOAL;
+    const myDefendingPosition = facingShot ? "POR" : getDefendingPositionForZone(state.zone, "me");
+    const technique = getPositionalDefenseTechnique(state.lineup, myDefendingPosition, facingShot ? "parada" : "bloqueo", state.pe);
+
     Object.keys(DEFENSE_LABELS).forEach((choice) => {
-        container.appendChild(buildActionButton(DEFENSE_LABELS[choice], () => handleDefenseChoice(choice)));
+        container.appendChild(buildActionButton(DEFENSE_LABELS[choice], () => handleDefenseChoice(choice, false)));
+        if (technique) {
+            container.appendChild(buildActionButton(
+                `${DEFENSE_LABELS[choice]} + ${technique.name} (-${technique.cost} PE)`,
+                () => handleDefenseChoice(choice, true)
+            ));
+        }
     });
 }
 

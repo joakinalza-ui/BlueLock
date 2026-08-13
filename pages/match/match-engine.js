@@ -71,6 +71,23 @@ function getPositionalDefenseStat(lineup, position, statKey, getStatsFn, fallbac
     return total / candidates.length;
 }
 
+// Técnica Básica defensiva ("bloqueo" o "parada", según defienda un
+// Tiro a puerta o no — ver resolveDefenseChoice) del primer jugador de
+// ESE puesto en la alineación, si le llega el PE disponible. A
+// diferencia de getAvailableTechnique (mi jugador activo al atacar,
+// incluye el hueco equipado desde otro personaje), aquí solo se miran
+// las 2 Técnicas Básicas FIJAS del defensor posicional — no hay
+// "jugador activo" único al defender (getPositionalDefenseStat ya
+// promedia entre varios si hay más de uno en ese puesto).
+function getPositionalDefenseTechnique(lineup, position, actionType, peAvailable) {
+    const candidate = lineup.find((c) => c.position === position);
+    if (!candidate) return null;
+    const technique = (candidate.techniques || []).find((t) => t.type === actionType);
+    if (!technique) return null;
+    if (technique.cost > peAvailable) return null;
+    return technique;
+}
+
 // Orden ofensivo de puestos, usado por el PASE para decidir si el
 // balón avanza (más ofensivo) o retrocede (más defensivo) una zona.
 const POSITION_OFFENSIVE_RANK = { POR: 0, DEF: 1, MED: 2, DEL: 3 };
@@ -565,11 +582,16 @@ function resolvePlayerChoice(state, action, useTechnique) {
 // defensivo; fallarlo da -15%. Reutiliza resolveCommandBattle poniendo
 // mi lado defensivo en "myStat" (así "won" ya significa "defendí
 // bien") y el bonus/penalización de predicción como penaltyMultiplier.
+// useTechnique: true para gastar PE en la Técnica Básica defensiva
+// ("Bloqueo" o "Parada", según el puesto que le toque a esta zona) del
+// jugador de ese puesto, si tiene una y me llega el PE — mismo +25% que
+// ya daba usar una Técnica al atacar (antes esto nunca pasaba: defender
+// siempre iba sin bonus de Técnica, aunque el personaje tuviera una).
 // El reloj NO avanza mientras el rival encadena Regate/Pase exitosos
 // dentro de la misma posesión — solo salta (ver advanceMatchMinute)
 // cuando esta termina (gol rival, interceptado o bloqueado), justo
 // antes de que empiece mi posesión.
-function resolveDefenseChoice(state, defenseChoice) {
+function resolveDefenseChoice(state, defenseChoice, useTechnique) {
     const rivalAction = decideRivalAction(state);
     const predictionCorrect = DEFENSE_MATCH[defenseChoice] === rivalAction;
 
@@ -581,6 +603,13 @@ function resolveDefenseChoice(state, defenseChoice) {
     const myDefendingPosition = facingShot ? "POR" : getDefendingPositionForZone(state.zone, "me");
     const myDefenseStatKey = facingShot ? "parada" : "defensa";
     const defenseStat = getPositionalDefenseStat(state.lineup, myDefendingPosition, myDefenseStatKey, getCharacterStatsAtLevel, state.myStats);
+
+    let technique = null;
+    if (useTechnique) {
+        technique = getPositionalDefenseTechnique(state.lineup, myDefendingPosition, facingShot ? "parada" : "bloqueo", state.pe);
+        if (technique) state.pe -= technique.cost;
+    }
+    const techniqueBonus = technique ? TECHNIQUE_BONUS_PERCENT : 0;
 
     const attackStat = rivalAction === "tiro" ? state.rivalStats.tiro : state.rivalStats.tecnica;
     // El rival no elige/paga una Técnica concreta como yo (no tiene PE
@@ -595,7 +624,7 @@ function resolveDefenseChoice(state, defenseChoice) {
         rivalStat: attackStat + rivalAuraBonus,
         myElement: state.activePlayer ? state.activePlayer.element : null,
         rivalElement: state.character.element,
-        techniqueBonus: 0,
+        techniqueBonus,
         penaltyMultiplier: predictionCorrect ? 1 + DEFENSE_BONUS_PERCENT : 1 - DEFENSE_BONUS_PERCENT,
     });
 
@@ -632,7 +661,7 @@ function resolveDefenseChoice(state, defenseChoice) {
         // — ahora ataco yo en dirección contraria desde ahí.
     }
 
-    return { defenseChoice, rivalAction, predictionCorrect, outcome, result, possessionEnded };
+    return { defenseChoice, rivalAction, predictionCorrect, technique, outcome, result, possessionEnded };
 }
 
 // --- Modo AUTO: decide por el jugador con la misma lógica de zonas
@@ -683,6 +712,32 @@ function decideAutoUseTechnique(state, action) {
 function decideAutoDefenseChoice() {
     const options = ["entrada", "interceptacion", "bloqueo"];
     return options[Math.floor(Math.random() * options.length)];
+}
+
+// Igual que wouldWinWithoutTechnique pero para mi lado defensivo: si mi
+// stat (con la ventaja elemental que le toque) ya gana sin gastar PE,
+// no hace falta usar la Técnica defensiva. facingShot se puede saber de
+// antemano (decideRivalAction siempre da "tiro" con el balón en la
+// Zona 1, nunca al azar en ese caso), igual que ya sabe la UI manual.
+function wouldDefendWithoutTechnique(state) {
+    const facingShot = state.zone === FIELD_ZONE_MINE_GOAL;
+    const myDefendingPosition = facingShot ? "POR" : getDefendingPositionForZone(state.zone, "me");
+    const myDefenseStatKey = facingShot ? "parada" : "defensa";
+    const defenseStat = getPositionalDefenseStat(state.lineup, myDefendingPosition, myDefenseStatKey, getCharacterStatsAtLevel, state.myStats);
+    const attackStat = facingShot ? state.rivalStats.tiro : state.rivalStats.tecnica;
+    const rivalAuraBonus = state.rivalElementTechniqueBonus ? (state.rivalElementTechniqueBonus[state.character.element] || 0) : 0;
+    const myElement = state.activePlayer ? state.activePlayer.element : null;
+    const elementalMultiplier = doesElementBeat(myElement, state.character.element) ? 1.15 : 1;
+    return defenseStat * elementalMultiplier >= attackStat + rivalAuraBonus;
+}
+
+// Solo gasta PE en Técnica defensiva si sin ella se perdería el duelo
+// (mismo criterio que decideAutoUseTechnique para atacar).
+function decideAutoUseDefenseTechnique(state) {
+    if (wouldDefendWithoutTechnique(state)) return false;
+    const facingShot = state.zone === FIELD_ZONE_MINE_GOAL;
+    const myDefendingPosition = facingShot ? "POR" : getDefendingPositionForZone(state.zone, "me");
+    return !!getPositionalDefenseTechnique(state.lineup, myDefendingPosition, facingShot ? "parada" : "bloqueo", state.pe);
 }
 
 function isMatchOver(state) {
