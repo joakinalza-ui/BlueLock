@@ -78,11 +78,11 @@ function renderQuintetoGrid() {
             + (isPending ? '<span class="pending-badge">Nuevo</span>' : "");
         attachLongPressPreview(card, character);
         card.addEventListener("click", () => {
-            navigateToPlayerDetail(character.id, editMode ? {
-                actionLabel: "Cambiar jugador",
-                actionType: "slotPicker",
-                slotIndex,
-            } : null, { editMode, pendingQuinteto });
+            if (editMode) {
+                openSlotPicker(slotIndex);
+            } else {
+                navigateToPlayerDetail(character.id, null, { editMode, pendingQuinteto });
+            }
         });
         grid.appendChild(card);
     });

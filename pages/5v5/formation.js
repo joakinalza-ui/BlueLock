@@ -143,14 +143,7 @@ function renderFormation() {
             card.className = "player-card";
             card.innerHTML = buildPlayerCardMarkup(character, position);
             attachLongPressPreview(card, character);
-            card.addEventListener("click", () => {
-                navigateToPlayerDetail(character.id, {
-                    actionLabel: "Cambiar jugador",
-                    actionType: "slotPicker",
-                    slotIndex: index,
-                    position,
-                });
-            });
+            card.addEventListener("click", () => openSlotPicker(index, position));
             row.appendChild(card);
         });
     });
