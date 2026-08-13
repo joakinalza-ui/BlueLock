@@ -64,11 +64,36 @@ function getDefendingPositionForZone(zone, defendingSide) {
 // partido. Se usa tanto para resolver la Command Battle de verdad como
 // para la estimación del modo AUTO — misma cifra en los dos sitios, a
 // propósito.
-function getPositionalDefenseStat(lineup, position, statKey, getStatsFn, fallbackStats) {
+// passiveBonus (opcional): cuánto suman las Pasivas de equipo (Sinergia,
+// Mejora individual) a ESE stat en concreto -- ver computePassiveBonusMap
+// más abajo. Sin esto, un defensor/portero de un puesto real en la
+// alineación se queda con su stat en bruto (getStatsFn = getCharacterStatsAtLevel
+// o el equivalente del rival) sin pasar nunca por las pasivas del
+// equipo, aunque esas mismas pasivas SÍ suban su stat de ataque
+// (fallbackStats, la media ya calculada con pasivas incluidas, solo se
+// usa si no hay nadie de ese puesto en la alineación). Por eso antes
+// atacar "sacaba mucho" y defender "sacaba poco": el ataque siempre
+// pasaba por las pasivas, la defensa nunca.
+function getPositionalDefenseStat(lineup, position, statKey, getStatsFn, fallbackStats, passiveBonus) {
     const candidates = lineup.filter((c) => c.position === position);
     if (!candidates.length) return fallbackStats[statKey];
     const total = candidates.reduce((sum, c) => sum + getStatsFn(c)[statKey], 0);
-    return total / candidates.length;
+    const bonus = (passiveBonus && passiveBonus[statKey]) || 0;
+    return (total / candidates.length) + bonus;
+}
+
+// Diferencia, stat por stat, entre las stats de un equipo ANTES y
+// DESPUÉS de aplicarle applyMatchStartPassiveEffects -- el bonus PURO
+// que aporta el equipo (Sinergia, Mejora individual), para poder
+// sumárselo también a la stat defensiva concreta de un puesto (ver
+// getPositionalDefenseStat arriba), que si no se calcula en bruto y
+// nunca pasa por las pasivas.
+function computePassiveBonusMap(baseStats, boostedStats) {
+    const bonus = {};
+    Object.keys(boostedStats).forEach((key) => {
+        bonus[key] = boostedStats[key] - (baseStats[key] || 0);
+    });
+    return bonus;
 }
 
 // Técnica Básica defensiva ("bloqueo" o "parada", según defienda un
@@ -317,7 +342,9 @@ function createMatchState(character, matchNumber) {
     const mode = getTransferMatchMode(matchNumber);
     const lineup = getMyLineupCharacters(mode);
     const myStats = getMyAverageStats(lineup);
+    const myBaseStats = { ...myStats };
     applyMatchStartPassiveEffects(myStats, lineup, (c) => getCharacterLevel(c.id), (c) => getCharacterAwakening(c.id));
+    const myPassiveBonus = computePassiveBonusMap(myBaseStats, myStats);
     const elementTechniqueBonus = computeElementTechniqueBonus(lineup, (c) => getCharacterLevel(c.id));
     const activePlayer = getInitialActivePlayer(lineup);
     // El rival del Mapa de Fichajes tiene nivel/Despertar FIJOS por
@@ -329,10 +356,12 @@ function createMatchState(character, matchNumber) {
     // — con el MISMO nivel/Despertar fijo del nodo para todos, nunca mi
     // progreso real de esos personajes.
     const rivalStats = getTransferRivalStatsAtLevel(character, matchNumber);
+    const rivalBaseStats = { ...rivalStats };
     const rivalLineup = getTransferRivalLineup(character, mode);
     const getRivalLevel = () => getTransferRivalLevel(character.id, matchNumber);
     const getRivalAwakening = () => getTransferRivalAwakening(character.id);
     applyMatchStartPassiveEffects(rivalStats, rivalLineup, getRivalLevel, getRivalAwakening);
+    const rivalPassiveBonus = computePassiveBonusMap(rivalBaseStats, rivalStats);
     const rivalElementTechniqueBonus = computeElementTechniqueBonus(rivalLineup, getRivalLevel);
 
     return {
@@ -352,8 +381,10 @@ function createMatchState(character, matchNumber) {
         pe: MATCH_PE_START,
         peMax: MATCH_PE_START,
         myStats,
+        myPassiveBonus,
         elementTechniqueBonus,
         rivalStats,
+        rivalPassiveBonus,
         rivalElementTechniqueBonus,
         activePlayer,
         isOver: false,
@@ -375,15 +406,19 @@ function createChallengeMatchState(mapKey, matchNumber) {
     const lineupIds = getChallengeLineup(mapKey).filter(Boolean);
     const lineup = lineupIds.map((id) => CHARACTERS_DATA.find((c) => c.id === id)).filter(Boolean);
     const myStats = getMyAverageStats(lineup);
+    const myBaseStats = { ...myStats };
     applyMatchStartPassiveEffects(myStats, lineup, (c) => getCharacterLevel(c.id), (c) => getCharacterAwakening(c.id));
+    const myPassiveBonus = computePassiveBonusMap(myBaseStats, myStats);
     const elementTechniqueBonus = computeElementTechniqueBonus(lineup, (c) => getCharacterLevel(c.id));
     const activePlayer = getInitialActivePlayer(lineup);
 
     const rival = getChallengeRivalStatsForMatch(mapKey, matchNumber);
     const rivalStats = rival.stats;
+    const rivalBaseStats = { ...rivalStats };
     const getRivalLevel = () => rival.level;
     const getRivalAwakening = () => rival.awakening;
     applyMatchStartPassiveEffects(rivalStats, rival.lineup, getRivalLevel, getRivalAwakening);
+    const rivalPassiveBonus = computePassiveBonusMap(rivalBaseStats, rivalStats);
     const rivalElementTechniqueBonus = computeElementTechniqueBonus(rival.lineup, getRivalLevel);
 
     return {
@@ -403,8 +438,10 @@ function createChallengeMatchState(mapKey, matchNumber) {
         pe: MATCH_PE_START,
         peMax: MATCH_PE_START,
         myStats,
+        myPassiveBonus,
         elementTechniqueBonus,
         rivalStats,
+        rivalPassiveBonus,
         rivalElementTechniqueBonus,
         activePlayer,
         isOver: false,
@@ -422,14 +459,18 @@ function createStoryMatchState(chapterKey, matchNumber) {
     const rival = getStoryRivalStatsForMatch(chapterKey, matchNumber);
     const lineup = getMyLineupCharacters(rival.mode);
     const myStats = getMyAverageStats(lineup);
+    const myBaseStats = { ...myStats };
     applyMatchStartPassiveEffects(myStats, lineup, (c) => getCharacterLevel(c.id), (c) => getCharacterAwakening(c.id));
+    const myPassiveBonus = computePassiveBonusMap(myBaseStats, myStats);
     const elementTechniqueBonus = computeElementTechniqueBonus(lineup, (c) => getCharacterLevel(c.id));
     const activePlayer = getInitialActivePlayer(lineup);
 
     const rivalStats = rival.stats;
+    const rivalBaseStats = { ...rivalStats };
     const getRivalLevel = () => rival.level;
     const getRivalAwakening = () => rival.awakening;
     applyMatchStartPassiveEffects(rivalStats, rival.lineup, getRivalLevel, getRivalAwakening);
+    const rivalPassiveBonus = computePassiveBonusMap(rivalBaseStats, rivalStats);
     const rivalElementTechniqueBonus = computeElementTechniqueBonus(rival.lineup, getRivalLevel);
 
     return {
@@ -448,8 +489,10 @@ function createStoryMatchState(chapterKey, matchNumber) {
         pe: MATCH_PE_START,
         peMax: MATCH_PE_START,
         myStats,
+        myPassiveBonus,
         elementTechniqueBonus,
         rivalStats,
+        rivalPassiveBonus,
         rivalElementTechniqueBonus,
         activePlayer,
         isOver: false,
@@ -506,7 +549,7 @@ function resolvePlayerChoice(state, action, useTechnique) {
         // solo entra en juego en un Tiro con el balón en su propia
         // área, ver más abajo).
         const defendingPosition = getDefendingPositionForZone(state.zone, "rival");
-        const rivalDefenseStat = getPositionalDefenseStat(state.rivalLineup, defendingPosition, "defensa", state.getRivalCharacterStats, state.rivalStats);
+        const rivalDefenseStat = getPositionalDefenseStat(state.rivalLineup, defendingPosition, "defensa", state.getRivalCharacterStats, state.rivalStats, state.rivalPassiveBonus);
 
         result = resolveCommandBattle({
             myStat: state.myStats.tecnica + auraBonus,
@@ -545,7 +588,7 @@ function resolvePlayerChoice(state, action, useTechnique) {
         const onTime = state.zone === FIELD_ZONE_RIVAL_GOAL;
         const defendingPosition = onTime ? "POR" : getDefendingPositionForZone(state.zone, "rival");
         const defenseStatKey = onTime ? "parada" : "defensa";
-        const rivalDefenseStat = getPositionalDefenseStat(state.rivalLineup, defendingPosition, defenseStatKey, state.getRivalCharacterStats, state.rivalStats);
+        const rivalDefenseStat = getPositionalDefenseStat(state.rivalLineup, defendingPosition, defenseStatKey, state.getRivalCharacterStats, state.rivalStats, state.rivalPassiveBonus);
 
         result = resolveCommandBattle({
             myStat: state.myStats.tiro + auraBonus,
@@ -602,7 +645,7 @@ function resolveDefenseChoice(state, defenseChoice, useTechnique) {
     const facingShot = rivalAction === "tiro";
     const myDefendingPosition = facingShot ? "POR" : getDefendingPositionForZone(state.zone, "me");
     const myDefenseStatKey = facingShot ? "parada" : "defensa";
-    const defenseStat = getPositionalDefenseStat(state.lineup, myDefendingPosition, myDefenseStatKey, getCharacterStatsAtLevel, state.myStats);
+    const defenseStat = getPositionalDefenseStat(state.lineup, myDefendingPosition, myDefenseStatKey, getCharacterStatsAtLevel, state.myStats, state.myPassiveBonus);
 
     let technique = null;
     if (useTechnique) {
@@ -688,7 +731,7 @@ function wouldWinWithoutTechnique(state, action) {
     const myStat = action === "tiro" ? state.myStats.tiro : state.myStats.tecnica;
     const defendingPosition = (action === "tiro" && onTime) ? "POR" : getDefendingPositionForZone(state.zone, "rival");
     const defenseStatKey = (action === "tiro" && onTime) ? "parada" : "defensa";
-    const rivalStat = getPositionalDefenseStat(state.rivalLineup, defendingPosition, defenseStatKey, state.getRivalCharacterStats, state.rivalStats);
+    const rivalStat = getPositionalDefenseStat(state.rivalLineup, defendingPosition, defenseStatKey, state.getRivalCharacterStats, state.rivalStats, state.rivalPassiveBonus);
     const myElement = state.activePlayer ? state.activePlayer.element : null;
     const elementalMultiplier = doesElementBeat(myElement, state.character.element) ? 1.15 : 1;
     const reliabilityMultiplier = action === "pase" ? 1.05 : 1;
@@ -723,7 +766,7 @@ function wouldDefendWithoutTechnique(state) {
     const facingShot = state.zone === FIELD_ZONE_MINE_GOAL;
     const myDefendingPosition = facingShot ? "POR" : getDefendingPositionForZone(state.zone, "me");
     const myDefenseStatKey = facingShot ? "parada" : "defensa";
-    const defenseStat = getPositionalDefenseStat(state.lineup, myDefendingPosition, myDefenseStatKey, getCharacterStatsAtLevel, state.myStats);
+    const defenseStat = getPositionalDefenseStat(state.lineup, myDefendingPosition, myDefenseStatKey, getCharacterStatsAtLevel, state.myStats, state.myPassiveBonus);
     const attackStat = facingShot ? state.rivalStats.tiro : state.rivalStats.tecnica;
     const rivalAuraBonus = state.rivalElementTechniqueBonus ? (state.rivalElementTechniqueBonus[state.character.element] || 0) : 0;
     const myElement = state.activePlayer ? state.activePlayer.element : null;
