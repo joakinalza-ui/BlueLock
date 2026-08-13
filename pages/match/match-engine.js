@@ -444,11 +444,16 @@ function resolvePlayerChoice(state, action, useTechnique) {
         if (technique) state.pe -= technique.cost;
     }
     const techniqueBonus = technique ? TECHNIQUE_BONUS_PERCENT : 0;
-    // Aura "Mejora Supertécnicas [Elemento]": solo cuenta cuando la
-    // Supertécnica se usa de verdad (technique truthy — PE pagado), y
-    // según el elemento del jugador activo que la usa, no del que lleva
-    // la pasiva (ver computeElementTechniqueBonus, ya sumado por equipo).
-    const auraBonus = technique && state.activePlayer ? (state.elementTechniqueBonus[state.activePlayer.element] || 0) : 0;
+    // Cada Técnica tiene su PROPIO elemento (characters-data.js), que no
+    // tiene por qué coincidir con el del jugador que la lleva. Si se usa
+    // de verdad (technique truthy — PE pagado), ese elemento manda tanto
+    // para la ventaja elemental (doesElementBeat, abajo) como para el
+    // aura "Mejora Supertécnicas [Elemento]" (solo cuenta cuando hay
+    // Técnica real de por medio, ver computeElementTechniqueBonus, ya
+    // sumado por equipo). Sin Técnica, se usa el elemento propio del
+    // jugador (acción básica, sin nada equipado de por medio).
+    const activeElement = technique ? technique.element : (state.activePlayer ? state.activePlayer.element : null);
+    const auraBonus = technique ? (state.elementTechniqueBonus[technique.element] || 0) : 0;
 
     let result;
     let outcome; // "advance" | "goal" | "turnover" | "miss"
@@ -464,7 +469,7 @@ function resolvePlayerChoice(state, action, useTechnique) {
         result = resolveCommandBattle({
             myStat: state.myStats.tecnica + auraBonus,
             rivalStat: rivalDefenseStat,
-            myElement: state.activePlayer ? state.activePlayer.element : null,
+            myElement: activeElement,
             rivalElement: state.character.element,
             techniqueBonus,
             penaltyMultiplier: 1,
@@ -503,7 +508,7 @@ function resolvePlayerChoice(state, action, useTechnique) {
         result = resolveCommandBattle({
             myStat: state.myStats.tiro + auraBonus,
             rivalStat: rivalDefenseStat,
-            myElement: state.activePlayer ? state.activePlayer.element : null,
+            myElement: activeElement,
             rivalElement: state.character.element,
             techniqueBonus,
             penaltyMultiplier: onTime ? 1 : EARLY_SHOT_PENALTY,

@@ -344,6 +344,15 @@ body{
     color:#c3cbe0;
 }
 
+.pd-technique-element-icon{
+    flex-shrink:0;
+    font-size:14px;
+}
+
+.pd-technique-name{
+    flex:1;
+}
+
 .pd-technique-fixed-tag{
     flex-shrink:0;
     font-size:9px;

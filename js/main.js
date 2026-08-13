@@ -1542,6 +1542,7 @@ function findTechniqueById(techniqueId) {
 function buildTechniqueListMarkup(character) {
     const fixedRows = (character.techniques || []).map((technique) => `
         <div class="pd-technique-row is-fixed">
+            <span class="pd-technique-element-icon">${PLAYER_DETAIL_ELEMENT_ICONS[technique.element] || ""}</span>
             <span class="pd-technique-name">${technique.name}</span>
             <span class="pd-technique-fixed-tag">Fija</span>
         </div>
@@ -1552,6 +1553,7 @@ function buildTechniqueListMarkup(character) {
     const freeSlotRow = equipped
         ? `
             <button type="button" class="pd-technique-row pd-technique-slot is-filled" data-technique-slot="free">
+                <span class="pd-technique-element-icon">${PLAYER_DETAIL_ELEMENT_ICONS[equipped.technique.element] || ""}</span>
                 <span class="pd-technique-name">${equipped.technique.name}</span>
                 <span class="pd-technique-source">de ${equipped.sourceCharacter.name}</span>
             </button>
