@@ -732,13 +732,16 @@ function getTransferMatchMode(matchNumber) {
 // dependen en absoluto del progreso del jugador. El nivel sube de
 // forma lineal entre partido 1 y el 11 (TRANSFER_NODE_MATCHES) de ese
 // nodo; el Despertar se queda fijo durante todo el nodo.
+// Subido (antes 5-78 de nivel, Despertar 1-6 — muy por debajo de
+// LEVEL_MAX=200 y AWAKENING_MAX=10, dejaba el mapa entero fácil de
+// sobra) para que el último nodo llegue cerca del tope de verdad.
 const TRANSFER_RIVAL_DATA = {
-    "sota-nemoto": { levelStart: 5, levelEnd: 13, awakening: 1 },
-    "soshi-kagura": { levelStart: 13, levelEnd: 26, awakening: 2 },
-    "burai-daido": { levelStart: 26, levelEnd: 39, awakening: 3 },
-    "raito-fuwa": { levelStart: 39, levelEnd: 52, awakening: 4 },
-    "gurimu-igarashi": { levelStart: 52, levelEnd: 65, awakening: 5 },
-    "iemon-naoyuki": { levelStart: 65, levelEnd: 78, awakening: 6 },
+    "sota-nemoto": { levelStart: 10, levelEnd: 25, awakening: 2 },
+    "soshi-kagura": { levelStart: 25, levelEnd: 45, awakening: 3 },
+    "burai-daido": { levelStart: 45, levelEnd: 70, awakening: 5 },
+    "raito-fuwa": { levelStart: 70, levelEnd: 100, awakening: 6 },
+    "gurimu-igarashi": { levelStart: 100, levelEnd: 140, awakening: 8 },
+    "iemon-naoyuki": { levelStart: 140, levelEnd: 180, awakening: 10 },
 };
 
 function getTransferRivalLevel(characterId, matchNumber) {
