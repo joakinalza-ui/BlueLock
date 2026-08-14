@@ -1494,8 +1494,12 @@ const PLAYER_DETAIL_ELEMENT_ICONS = {
 // stat, comparable entre personajes de distinta rareza/nivel, en vez
 // de verse casi llena siempre. Compartida entre la Ficha del Jugador
 // (pages/player/) y la vista previa rápida (mantener pulsada una
-// carta — ver openPlayerPreview).
-const STAT_BAR_MAX = 2000;
+// carta — ver openPlayerPreview). Subido de 2000 a 2800 tras subir el
+// bono de Despertar a +8%/nivel: el stat más alto del roster (1300,
+// Isagi/Rin/Barou) a Nv.200 + Despertar 10 + Equipamiento ya superaba
+// los 2000 (2540), dejando la barra pegada al 100% para los personajes
+// más fuertes en vez de diferenciarlos.
+const STAT_BAR_MAX = 2800;
 
 // Las 4 barras de stat (Tiro/Técnica/Defensa/Parada) al nivel actual
 // del personaje — misma markup (clases .pd-stat-*) en la Ficha
