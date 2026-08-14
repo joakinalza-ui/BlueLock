@@ -565,9 +565,9 @@ function sumStats(stats) {
 // despertar 0).
 const AWAKENING_MAX = 10;
 
-// Cada nivel de Despertar sube +4% de stats, plano — los 10 niveles
-// completos suman +40% en total (el máximo).
-const AWAKENING_STAT_BONUS_PER_LEVEL = 0.04;
+// Cada nivel de Despertar sube +8% de stats, plano — los 10 niveles
+// completos suman +80% en total (el máximo).
+const AWAKENING_STAT_BONUS_PER_LEVEL = 0.08;
 
 function getAwakeningStatBonus(awakeningLevel) {
     const level = Math.max(0, Math.min(AWAKENING_MAX, awakeningLevel));
