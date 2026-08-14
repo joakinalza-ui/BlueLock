@@ -663,7 +663,7 @@ function buildPrematchCardMarkup(character, fixedLevel, fixedAwakening, slotPosi
     const position = slotPosition || character.position;
     return `
         <span class="player-card-thumb">
-            <img src="${resolveAssetPath(spritePath)}" alt="${character.name}" data-real-sprite="${hasRealSprite}">
+            <img src="${resolveAssetPath(spritePath)}" alt="${character.name}" data-real-sprite="${hasRealSprite}" draggable="false">
             ${buildAwakeningBadgeMarkup(character.id, fixedAwakening)}
             <span class="player-card-position" data-position="${position}">${position}</span>
         </span>
@@ -690,6 +690,7 @@ function buildEditablePlayerCard(character, slotIndex, slotPosition, editConfig)
     card.type = "button";
     card.className = "player-card is-editable";
     card.innerHTML = buildPrematchCardMarkup(character, undefined, undefined, slotPosition) + '<span class="edit-pencil">✎</span>';
+    attachLongPressPreview(card, character);
     card.addEventListener("click", () => openPrematchSlotPicker(slotIndex, slotPosition, editConfig));
     return card;
 }
@@ -892,6 +893,7 @@ function renderPrematchSlotPickerList() {
         card.type = "button";
         card.className = "player-card";
         card.innerHTML = buildPrematchCardMarkup(character);
+        attachLongPressPreview(card, character);
         card.addEventListener("click", () => {
             editConfig.setSlot(slotIndex, character.id);
             overlay.hidden = true;

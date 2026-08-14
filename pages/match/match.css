@@ -685,6 +685,27 @@ body.prematch-active #match-screen{
     font-family:sans-serif;
     text-align:left;
     padding:0;
+    /* Sin esto, mantener pulsada la carta (para el long-press que abre
+       la Ficha) disparaba el menú nativo del navegador (Compartir/
+       Guardar imagen/Copiar en iOS, selección de texto) por encima. */
+    -webkit-touch-callout:none;
+    -webkit-user-select:none;
+    user-select:none;
+}
+
+.player-card *{
+    -webkit-touch-callout:none;
+    -webkit-user-select:none;
+    user-select:none;
+}
+
+.player-card img{
+    /* Sin esto, iOS "levantaba" la foto de la carta como si se
+       fuera a arrastrar al mantener pulsado -- solo la carta entera
+       debe reaccionar a la pulsación larga, no la imagen suelta. */
+    -webkit-user-drag:none;
+    user-drag:none;
+    pointer-events:none;
 }
 
 .player-card-thumb{
