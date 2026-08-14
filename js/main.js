@@ -2240,9 +2240,14 @@ const TRAINING_CAP_HOURS = 24;
 // una tanda, solo se detiene la racha de esa tanda). Tope duro de
 // TRAINING_RATE_MAX/hora en total: una vez alcanzado, más victorias ya
 // no siguen subiéndolo (pero sí siguen contando para el resultado de
-// la tanda).
+// la tanda). TRAINING_RATE_MAX se quedó desincronizado en algún ajuste
+// anterior (200, por DEBAJO del propio TRAINING_BASE_RATE_PER_HOUR de
+// 1500) — cualquier victoria de Auto-run hacía que maxBonus saliera
+// negativo y el ritmo se desplomara de 1500 a 200/hora de golpe, para
+// siempre. Corregido a un tope que sí deja margen de verdad por encima
+// de la base.
 const TRAINING_RATE_BONUS_KEY = "bl_training_rate_bonus";
-const TRAINING_RATE_MAX = 200;
+const TRAINING_RATE_MAX = TRAINING_BASE_RATE_PER_HOUR + 1000;
 
 function getTrainingRateBonus() {
     return parseInt(localStorage.getItem(TRAINING_RATE_BONUS_KEY), 10) || 0;
@@ -2254,8 +2259,16 @@ function addTrainingRateBonus(amount) {
     localStorage.setItem(TRAINING_RATE_BONUS_KEY, String(newBonus));
 }
 
+// El ritmo también sube con el nivel base del equipo (getQuintetoBaseLevel,
+// el mismo que ya usa el Equipamiento) — sin esto, el coste de subir de
+// nivel (getLevelUpCost = nivel×10, cada vez más caro) se alejaba cada
+// vez más de un ritmo de generación FIJO, y cuanto más avanzado ibas
+// más lento se sentía. +15/hora por cada nivel del equipo mantiene el
+// ritmo de subida más parejo de principio a fin.
+const TRAINING_RATE_PER_TEAM_LEVEL = 15;
+
 function getTrainingRatePerHour() {
-    return TRAINING_BASE_RATE_PER_HOUR + getTrainingRateBonus();
+    return TRAINING_BASE_RATE_PER_HOUR + getQuintetoBaseLevel() * TRAINING_RATE_PER_TEAM_LEVEL + getTrainingRateBonus();
 }
 
 // El tope de acumulación son 24h de producción al ritmo ACTUAL (si el
