@@ -364,6 +364,15 @@ body{
     user-select:none;
 }
 
+.player-card img{
+    /* Sin esto, iOS "levantaba" la foto de la carta como si se
+       fuera a arrastrar al mantener pulsado -- solo la carta entera
+       debe reaccionar a la pulsación larga, no la imagen suelta. */
+    -webkit-user-drag:none;
+    user-drag:none;
+    pointer-events:none;
+}
+
 /* Sin aspect-ratio fijo: si se fuerza una altura de tarjeta concreta,
    la foto (aspect-ratio:1/1) se encoge para dejarle sitio al nombre y
    dejar de ser cuadrada, recortando la cara según lo alto que le

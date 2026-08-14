@@ -22,7 +22,7 @@ function buildPlayerCardMarkup(character, slotPosition) {
     const position = slotPosition || character.position;
     return `
         <span class="player-card-thumb">
-            <img src="${resolveAssetPath(spritePath)}" alt="${character.name}" data-real-sprite="${hasRealSprite}">
+            <img src="${resolveAssetPath(spritePath)}" alt="${character.name}" data-real-sprite="${hasRealSprite}" draggable="false">
             ${buildAwakeningBadgeMarkup(character.id)}
             <span class="player-card-position" data-position="${position}">${position}</span>
         </span>

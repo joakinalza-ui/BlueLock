@@ -27,7 +27,7 @@ function buildPlayerCardMarkup(character) {
         : "";
     return `
         <span class="player-card-thumb">
-            <img src="${resolveAssetPath(spritePath)}" alt="${character.name}" data-real-sprite="${hasRealSprite}">
+            <img src="${resolveAssetPath(spritePath)}" alt="${character.name}" data-real-sprite="${hasRealSprite}" draggable="false">
             ${buildAwakeningBadgeMarkup(character.id)}
             <span class="player-card-position" data-position="${character.position}">${character.position}</span>
         </span>
@@ -296,7 +296,7 @@ function renderSlotPickerPage() {
         row.className = "swap-modal-slot";
         row.innerHTML = `
             <span class="swap-modal-slot-thumb">
-                <img src="${resolveAssetPath(spritePath)}" alt="${character.name}" data-real-sprite="${hasRealSprite}">
+                <img src="${resolveAssetPath(spritePath)}" alt="${character.name}" data-real-sprite="${hasRealSprite}" draggable="false">
             </span>
             <span class="swap-modal-slot-name">${character.name}</span>
             <span class="swap-modal-slot-level">Nv. ${getCharacterLevel(character.id)}</span>

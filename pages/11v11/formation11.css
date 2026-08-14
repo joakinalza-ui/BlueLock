@@ -284,6 +284,15 @@ body{
     user-select:none;
 }
 
+.player-card img{
+    /* Sin esto, iOS "levantaba" la foto de la carta como si se
+       fuera a arrastrar al mantener pulsado -- solo la carta entera
+       debe reaccionar a la pulsación larga, no la imagen suelta. */
+    -webkit-user-drag:none;
+    user-drag:none;
+    pointer-events:none;
+}
+
 .pitch-row.is-compact .player-card,
 .pitch-row.is-compact .pitch-slot-empty{
     width:var(--card-width-compact, 64px);

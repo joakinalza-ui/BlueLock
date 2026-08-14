@@ -1854,7 +1854,7 @@ function consumePlayerDetailReturnContext() {
     }
 }
 
-// --- Mantener pulsada una carta 3s -> abre la Ficha completa ---
+// --- Mantener pulsada una carta 1s -> abre la Ficha completa ---
 //
 // Solo para VER (stats + Habilidades Pasivas) sin tocar nada -- por eso
 // navega a la Ficha con actionMeta=null (sin botón de acción
@@ -1862,15 +1862,8 @@ function consumePlayerDetailReturnContext() {
 // intacto y sigue haciendo lo que le toque a cada sitio (abrir el
 // selector de hueco en una carta ya puesta, añadir al Quinteto desde la
 // Colección...). Esto solo intercepta el click que seguiría a una
-// pulsación larga para que no dispare TAMBIÉN la acción normal. Los 3s
-// (bastante más que un long-press típico de UI, ~450ms) son a
-// propósito, para que sea inequívocamente intencional y no salte por
-// accidente al tocar la carta con normalidad.
-const LONG_PRESS_DURATION_MS = 3000;
-// Con una espera tan larga (3s) el dedo se mueve solo por temblor
-// natural bastante más que en un long-press corto típico (~500ms) — un
-// margen pequeño (12px) cancelaba la pulsación por accidente antes de
-// llegar a los 3s.
+// pulsación larga para que no dispare TAMBIÉN la acción normal.
+const LONG_PRESS_DURATION_MS = 1000;
 const LONG_PRESS_MOVE_TOLERANCE_PX = 28;
 
 function attachLongPressPreview(element, character) {
