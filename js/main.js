@@ -1658,7 +1658,7 @@ function buildPassiveEffectDescription(effects, multiplier, characterLevel, slot
             const { equipoOriginal, min } = effect.requiresTeamCount;
             return `si ${min}+ jugadores del Equipo ${equipoOriginal} están en tu alineación, ${statLabels} +${amount} a todo el equipo`;
         }
-        return `${statLabels} +${amount}`;
+        return `${statLabels} +${amount} a todo el equipo`;
     });
     return `Al empezar el partido: ${parts.join(", ")}.`;
 }

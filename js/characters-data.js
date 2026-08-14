@@ -70,7 +70,7 @@ const CHARACTERS_DATA = [
                 "icon": "🤝",
                 "unlockLevel": 20,
                 "effects": [
-                    { "stats": ["parada"], "baseAmount": 100, "trigger": "matchStart", "requiresTeamCount": { "equipoOriginal": "V", "min": 3 } }
+                    { "stats": ["parada"], "baseAmount": 150, "trigger": "matchStart", "requiresTeamCount": { "equipoOriginal": "V", "min": 3 } }
                 ]
             }
         ],
@@ -247,7 +247,7 @@ const CHARACTERS_DATA = [
                 "icon": "🤝",
                 "unlockLevel": 20,
                 "effects": [
-                    { "stats": ["defensa"], "baseAmount": 100, "trigger": "matchStart", "requiresTeamCount": { "equipoOriginal": "W", "min": 3 } }
+                    { "stats": ["defensa"], "baseAmount": 150, "trigger": "matchStart", "requiresTeamCount": { "equipoOriginal": "W", "min": 3 } }
                 ]
             }
         ],
@@ -306,7 +306,7 @@ const CHARACTERS_DATA = [
                 "icon": "🤝",
                 "unlockLevel": 20,
                 "effects": [
-                    { "stats": ["defensa"], "baseAmount": 100, "trigger": "matchStart", "requiresTeamCount": { "equipoOriginal": "X", "min": 3 } }
+                    { "stats": ["defensa"], "baseAmount": 150, "trigger": "matchStart", "requiresTeamCount": { "equipoOriginal": "X", "min": 3 } }
                 ]
             }
         ],
@@ -542,7 +542,7 @@ const CHARACTERS_DATA = [
                 "icon": "🤝",
                 "unlockLevel": 20,
                 "effects": [
-                    { "stats": ["tecnica"], "baseAmount": 100, "trigger": "matchStart", "requiresTeamCount": { "equipoOriginal": "X", "min": 3 } }
+                    { "stats": ["tecnica"], "baseAmount": 150, "trigger": "matchStart", "requiresTeamCount": { "equipoOriginal": "X", "min": 3 } }
                 ]
             }
         ],
@@ -601,7 +601,7 @@ const CHARACTERS_DATA = [
                 "icon": "🤝",
                 "unlockLevel": 20,
                 "effects": [
-                    { "stats": ["tiro"], "baseAmount": 100, "trigger": "matchStart", "requiresTeamCount": { "equipoOriginal": "W", "min": 3 } }
+                    { "stats": ["tiro"], "baseAmount": 150, "trigger": "matchStart", "requiresTeamCount": { "equipoOriginal": "W", "min": 3 } }
                 ]
             }
         ],
@@ -769,7 +769,7 @@ const CHARACTERS_DATA = [
                 "icon": "🤝",
                 "unlockLevel": 10,
                 "effects": [
-                    { "stats": ["tecnica"], "baseAmount": 160, "trigger": "matchStart", "requiresTeamCount": { "equipoOriginal": "Z", "min": 3 } }
+                    { "stats": ["tecnica"], "baseAmount": 240, "trigger": "matchStart", "requiresTeamCount": { "equipoOriginal": "Z", "min": 3 } }
                 ]
             },
             {
@@ -828,7 +828,7 @@ const CHARACTERS_DATA = [
                 "icon": "🤝",
                 "unlockLevel": 10,
                 "effects": [
-                    { "stats": ["defensa"], "baseAmount": 160, "trigger": "matchStart", "requiresTeamCount": { "equipoOriginal": "Z", "min": 3 } }
+                    { "stats": ["defensa"], "baseAmount": 240, "trigger": "matchStart", "requiresTeamCount": { "equipoOriginal": "Z", "min": 3 } }
                 ]
             },
             {
@@ -887,7 +887,7 @@ const CHARACTERS_DATA = [
                 "icon": "🤝",
                 "unlockLevel": 10,
                 "effects": [
-                    { "stats": ["tiro"], "baseAmount": 160, "trigger": "matchStart", "requiresTeamCount": { "equipoOriginal": "Z", "min": 3 } }
+                    { "stats": ["tiro"], "baseAmount": 240, "trigger": "matchStart", "requiresTeamCount": { "equipoOriginal": "Z", "min": 3 } }
                 ]
             },
             {
@@ -946,7 +946,7 @@ const CHARACTERS_DATA = [
                 "icon": "🤝",
                 "unlockLevel": 10,
                 "effects": [
-                    { "stats": ["tiro"], "baseAmount": 160, "trigger": "matchStart", "requiresTeamCount": { "equipoOriginal": "V", "min": 3 } }
+                    { "stats": ["tiro"], "baseAmount": 240, "trigger": "matchStart", "requiresTeamCount": { "equipoOriginal": "V", "min": 3 } }
                 ]
             },
             {
@@ -1005,7 +1005,7 @@ const CHARACTERS_DATA = [
                 "icon": "🤝",
                 "unlockLevel": 10,
                 "effects": [
-                    { "stats": ["tecnica"], "baseAmount": 160, "trigger": "matchStart", "requiresTeamCount": { "equipoOriginal": "V", "min": 3 } }
+                    { "stats": ["tecnica"], "baseAmount": 240, "trigger": "matchStart", "requiresTeamCount": { "equipoOriginal": "V", "min": 3 } }
                 ]
             },
             {
@@ -1182,7 +1182,7 @@ const CHARACTERS_DATA = [
                 "icon": "🤝",
                 "unlockLevel": 10,
                 "effects": [
-                    { "stats": ["tiro"], "baseAmount": 160, "trigger": "matchStart", "requiresTeamCount": { "equipoOriginal": "X", "min": 3 } }
+                    { "stats": ["tiro"], "baseAmount": 240, "trigger": "matchStart", "requiresTeamCount": { "equipoOriginal": "X", "min": 3 } }
                 ]
             },
             {
@@ -1241,7 +1241,7 @@ const CHARACTERS_DATA = [
                 "icon": "🤝",
                 "unlockLevel": 10,
                 "effects": [
-                    { "stats": ["defensa"], "baseAmount": 160, "trigger": "matchStart", "requiresTeamCount": { "equipoOriginal": "V", "min": 3 } }
+                    { "stats": ["defensa"], "baseAmount": 240, "trigger": "matchStart", "requiresTeamCount": { "equipoOriginal": "V", "min": 3 } }
                 ]
             },
             {
@@ -1300,7 +1300,7 @@ const CHARACTERS_DATA = [
                 "icon": "🤝",
                 "unlockLevel": 10,
                 "effects": [
-                    { "stats": ["tecnica"], "baseAmount": 160, "trigger": "matchStart", "requiresTeamCount": { "equipoOriginal": "Y", "min": 3 } }
+                    { "stats": ["tecnica"], "baseAmount": 240, "trigger": "matchStart", "requiresTeamCount": { "equipoOriginal": "Y", "min": 3 } }
                 ]
             },
             {
@@ -1477,7 +1477,7 @@ const CHARACTERS_DATA = [
                 "icon": "🤝",
                 "unlockLevel": 10,
                 "effects": [
-                    { "stats": ["tiro"], "baseAmount": 130, "trigger": "matchStart", "requiresTeamCount": { "equipoOriginal": "Z", "min": 3 } }
+                    { "stats": ["tiro"], "baseAmount": 195, "trigger": "matchStart", "requiresTeamCount": { "equipoOriginal": "Z", "min": 3 } }
                 ]
             },
             {
@@ -1596,7 +1596,7 @@ const CHARACTERS_DATA = [
                 "icon": "🤝",
                 "unlockLevel": 10,
                 "effects": [
-                    { "stats": ["defensa"], "baseAmount": 130, "trigger": "matchStart", "requiresTeamCount": { "equipoOriginal": "Z", "min": 3 } }
+                    { "stats": ["defensa"], "baseAmount": 195, "trigger": "matchStart", "requiresTeamCount": { "equipoOriginal": "Z", "min": 3 } }
                 ]
             },
             {
@@ -1849,7 +1849,7 @@ const CHARACTERS_DATA = [
                 "icon": "🤝",
                 "unlockLevel": 10,
                 "effects": [
-                    { "stats": ["parada"], "baseAmount": 130, "trigger": "matchStart", "requiresTeamCount": { "equipoOriginal": "Z", "min": 3 } }
+                    { "stats": ["parada"], "baseAmount": 195, "trigger": "matchStart", "requiresTeamCount": { "equipoOriginal": "Z", "min": 3 } }
                 ]
             },
             {
@@ -2390,7 +2390,7 @@ const CHARACTERS_DATA = [
                 "icon": "🤝",
                 "unlockLevel": 20,
                 "effects": [
-                    { "stats": ["tecnica"], "baseAmount": 100, "trigger": "matchStart", "requiresTeamCount": { "equipoOriginal": "W", "min": 3 } }
+                    { "stats": ["tecnica"], "baseAmount": 150, "trigger": "matchStart", "requiresTeamCount": { "equipoOriginal": "W", "min": 3 } }
                 ]
             }
         ],
@@ -3041,7 +3041,7 @@ const CHARACTERS_DATA = [
                 "icon": "🤝",
                 "unlockLevel": 20,
                 "effects": [
-                    { "stats": ["defensa"], "baseAmount": 100, "trigger": "matchStart", "requiresTeamCount": { "equipoOriginal": "Y", "min": 3 } }
+                    { "stats": ["defensa"], "baseAmount": 150, "trigger": "matchStart", "requiresTeamCount": { "equipoOriginal": "Y", "min": 3 } }
                 ]
             }
         ],
@@ -3100,7 +3100,7 @@ const CHARACTERS_DATA = [
                 "icon": "🤝",
                 "unlockLevel": 20,
                 "effects": [
-                    { "stats": ["tiro"], "baseAmount": 100, "trigger": "matchStart", "requiresTeamCount": { "equipoOriginal": "Y", "min": 3 } }
+                    { "stats": ["tiro"], "baseAmount": 150, "trigger": "matchStart", "requiresTeamCount": { "equipoOriginal": "Y", "min": 3 } }
                 ]
             }
         ],
@@ -3160,7 +3160,7 @@ const CHARACTERS_DATA = [
                 "icon": "🤝",
                 "unlockLevel": 20,
                 "effects": [
-                    { "stats": ["parada"], "baseAmount": 100, "trigger": "matchStart", "requiresTeamCount": { "equipoOriginal": "W", "min": 3 } }
+                    { "stats": ["parada"], "baseAmount": 150, "trigger": "matchStart", "requiresTeamCount": { "equipoOriginal": "W", "min": 3 } }
                 ]
             }
         ],
@@ -3219,7 +3219,7 @@ const CHARACTERS_DATA = [
                 "icon": "🤝",
                 "unlockLevel": 20,
                 "effects": [
-                    { "stats": ["parada"], "baseAmount": 100, "trigger": "matchStart", "requiresTeamCount": { "equipoOriginal": "X", "min": 3 } }
+                    { "stats": ["parada"], "baseAmount": 150, "trigger": "matchStart", "requiresTeamCount": { "equipoOriginal": "X", "min": 3 } }
                 ]
             }
         ],
@@ -3278,7 +3278,7 @@ const CHARACTERS_DATA = [
                 "icon": "🤝",
                 "unlockLevel": 20,
                 "effects": [
-                    { "stats": ["parada"], "baseAmount": 100, "trigger": "matchStart", "requiresTeamCount": { "equipoOriginal": "Y", "min": 3 } }
+                    { "stats": ["parada"], "baseAmount": 150, "trigger": "matchStart", "requiresTeamCount": { "equipoOriginal": "Y", "min": 3 } }
                 ]
             }
         ],
