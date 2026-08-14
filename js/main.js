@@ -1663,6 +1663,22 @@ function buildPassiveEffectDescription(effects, multiplier, characterLevel, slot
     return `Al empezar el partido: ${parts.join(", ")}.`;
 }
 
+// El nombre guardado en los datos ("Mejora de Técnica +100") lleva la
+// cantidad BASE (multiplicador ×1, nivel 1 del hueco) — sin esto, el
+// título se quedaba fijo en ese número aunque la descripción de abajo
+// (buildPassiveEffectDescription) ya mostrara la cantidad real, más
+// alta, en cuanto la habilidad subía de nivel (p.ej. título "+100" con
+// descripción "+140" al mismo tiempo). Si el nombre termina en
+// "+<número>" (pasa con las Mejoras individuales; Sinergia y Aura no
+// llevan número en el nombre, así que se quedan tal cual) se recalcula
+// ese número con el mismo multiplicador que ya usa la descripción.
+function buildPassiveTitle(slot, multiplier) {
+    const match = slot.effects && slot.effects[0].stats && slot.name.match(/^(.*\+)\d+$/);
+    if (!match) return slot.name;
+    const amount = Math.round(slot.effects[0].baseAmount * multiplier);
+    return `${match[1]}${amount}`;
+}
+
 // Una fila de habilidad "normal" (bloqueada o con su nivel actual) —
 // misma pinta para los huecos genéricos y para las pasivas propias ya
 // definidas, ambos comparten forma (name/icon/unlockLevel). Si tiene
@@ -1682,11 +1698,12 @@ function buildLeveledPassiveRowMarkup(slot, level, multiplier, characterLevel, s
         `;
     }
     const description = slot.effects ? buildPassiveEffectDescription(slot.effects, multiplier, characterLevel, slotIndex) : slot.description;
+    const title = slot.effects ? buildPassiveTitle(slot, multiplier) : slot.name;
     return `
         <div class="pd-passive-row">
             <span class="pd-passive-icon">${slot.icon}</span>
             <div class="pd-passive-info">
-                <span class="pd-passive-name">${slot.name} — Nv. ${level}</span>
+                <span class="pd-passive-name">${title} — Nv. ${level}</span>
                 <span class="pd-passive-desc">${description}</span>
             </div>
         </div>
