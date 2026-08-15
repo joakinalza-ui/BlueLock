@@ -167,13 +167,21 @@ function getInitialActivePlayer(lineup) {
 // pase SIEMPRE va hacia adelante o al mismo rango, nunca hacia atrás
 // (un MED no le pasa a un DEF, un DEL solo le pasa a otro DEL —
 // POSITION_OFFENSIVE_RANK: POR<DEF<MED<DEL). Entre esos compañeros
-// "hacia adelante", se prioriza el (o los, si hay empate) de rango más
-// cercano al suyo propio, en vez de cualquiera al azar — así el balón
-// circula de forma natural puesto a puesto. Si nadie de la alineación
-// tiene rango igual o mayor (alineación anómala, p. ej. solo porteros
-// aparte de él), se cae a cualquier compañero para no romper el
-// partido. Si solo hay uno en la alineación, se queda con el balón.
-function pickNextActivePlayer(lineup, currentId) {
+// "hacia adelante" hay dos criterios, por orden:
+//  1. Cerca de portería rival (zone >= la zona justo antes de
+//     FIELD_ZONE_RIVAL_GOAL): si hay algún delantero entre los
+//     candidatos, la prioridad es que LE llegue el balón a él (no
+//     importa cuál de ellos si hay varios) para que sea quien remate en
+//     cuanto llegue a esa zona.
+//  2. Si no, se prioriza al de más Técnica (el que mejor construye
+//     juego) — antes se elegía al azar entre los de rango más cercano,
+//     lo que dejaba el balón "pegado" a quien fuera sin ningún
+//     criterio futbolístico.
+// Si nadie de la alineación tiene rango igual o mayor (alineación
+// anómala, p. ej. solo porteros aparte de él), se cae a cualquier
+// compañero para no romper el partido. Si solo hay uno en la
+// alineación, se queda con el balón.
+function pickNextActivePlayer(lineup, currentId, zone) {
     if (lineup.length <= 1) return lineup[0] || null;
     const currentPlayer = lineup.find((c) => c.id === currentId);
     const currentRank = currentPlayer ? (POSITION_OFFENSIVE_RANK[currentPlayer.position] ?? 1) : 1;
@@ -182,11 +190,16 @@ function pickNextActivePlayer(lineup, currentId) {
     const forwardCandidates = others.filter((c) => (POSITION_OFFENSIVE_RANK[c.position] ?? 1) >= currentRank);
     const candidates = forwardCandidates.length ? forwardCandidates : others;
 
-    const rankDiff = (c) => Math.abs((POSITION_OFFENSIVE_RANK[c.position] ?? 1) - currentRank);
-    const closestDiff = Math.min(...candidates.map(rankDiff));
-    const closestCandidates = candidates.filter((c) => rankDiff(c) === closestDiff);
+    if (zone >= FIELD_ZONE_RIVAL_GOAL - 1) {
+        const strikers = candidates.filter((c) => c.position === "DEL");
+        if (strikers.length) return strikers[Math.floor(Math.random() * strikers.length)];
+    }
 
-    return closestCandidates[Math.floor(Math.random() * closestCandidates.length)];
+    const tecnicaOf = (c) => getCharacterStatsAtLevel(c).tecnica;
+    const bestTecnica = Math.max(...candidates.map(tecnicaOf));
+    const bestCandidates = candidates.filter((c) => tecnicaOf(c) === bestTecnica);
+
+    return bestCandidates[Math.floor(Math.random() * bestCandidates.length)];
 }
 
 // Media de las 4 stats de la alineación activa — se sigue usando para
@@ -523,7 +536,7 @@ function resolvePlayerChoice(state, action, useTechnique) {
                 // hacia adelante o al mismo rango, ver
                 // pickNextActivePlayer) y SIEMPRE avanza 1 zona hacia la
                 // portería contraria, igual que el Regate.
-                state.activePlayer = pickNextActivePlayer(state.lineup, state.activePlayer.id);
+                state.activePlayer = pickNextActivePlayer(state.lineup, state.activePlayer.id, state.zone);
                 state.zone = clampZone(state.zone + direction);
             }
         } else {
@@ -656,11 +669,29 @@ function resolveDefenseChoice(state, defenseChoice, useTechnique) {
 // que ya usa la UI manual (recomendar Tiro solo con el balón en la
 // zona de tiro), sin ninguna ventaja de información extra.
 
-// Regate/Pase mientras el balón no está en zona de tiro (al azar entre
-// los dos, igual que decideRivalAction decide para el rival), Tiro en
-// cuanto llega a la zona 5.
+// Regate/Pase mientras el balón no está en zona de tiro, Tiro en
+// cuanto llega a la zona 5. Ya no es un simple 50/50: si el jugador
+// activo no es el más adecuado para la fase actual del ataque y hay
+// alguien mejor en el equipo, se prioriza el Pase para que el balón le
+// llegue (ver pickNextActivePlayer, que es quien decide A QUIÉN) —
+// medio campista en construcción (más Técnica), delantero al acercarse
+// a portería rival. Si el jugador activo YA es el adecuado (o no hay
+// nadie mejor en la alineación), Regate normal. Solo cuando ninguno de
+// los dos casos aplica se cae al azar de antes.
 function decideAutoAttackAction(state) {
     if (state.zone === FIELD_ZONE_RIVAL_GOAL) return "tiro";
+
+    const activePlayer = state.activePlayer;
+    if (activePlayer) {
+        const nearGoal = state.zone >= FIELD_ZONE_RIVAL_GOAL - 1;
+        if (nearGoal && activePlayer.position !== "DEL" && state.lineup.some((c) => c.position === "DEL")) {
+            return "pase";
+        }
+        if (!nearGoal && activePlayer.position !== "MED" && state.lineup.some((c) => c.position === "MED")) {
+            return "pase";
+        }
+    }
+
     return Math.random() < 0.5 ? "regate" : "pase";
 }
 
