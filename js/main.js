@@ -1613,17 +1613,6 @@ function getGenericAbilityLevel(characterLevel, slotIndex) {
     return Math.min(GENERIC_ABILITY_MAX_LEVEL, level);
 }
 
-// Nivel PROPIO de las pasivas "Mejora Supertécnicas [Elemento]" — usa
-// el MISMO calendario de subida que cualquier otra pasiva según el
-// hueco en el que esté (getGenericAbilityLevel: hueco 0 sube en
-// Nv.10,30,50,70... de personaje, hueco 1 en Nv.20,40,60,80...), pero
-// sin bloquearse nunca del todo: por debajo del primer escalón de su
-// hueco ya cuenta como Nv.1 (en vez de 0/bloqueada). El bonus final es
-// +25 en Nv.1, +5 más por cada nivel del aura (Nv.10 = +70 como mucho).
-function getElementAuraLevel(characterLevel, slotIndex) {
-    return Math.max(1, getGenericAbilityLevel(characterLevel, slotIndex));
-}
-
 // A diferencia de la Pasiva Única (que escala un +10%/nivel de
 // Despertar), las pasivas normales propias escalan un +20% de su
 // bonus base por cada nivel de personaje por encima del primero
@@ -1639,18 +1628,9 @@ function getOwnPassiveLevelMultiplier(level) {
 // para que se lea el número final de un vistazo en vez de la fórmula.
 // requiresTeammateId (p.ej. Hermanos Wanima) antepone esa condición;
 // requiresTeamCount (Sinergia de Equipo) antepone la condición de
-// equipo. characterLevel + slotIndex solo los necesita el aura
-// elemental, para calcular su propio nivel 1-10 (getElementAuraLevel,
-// mismo calendario que el hueco en el que esté) — no pasa por
-// multiplier, que es el multiplicador por nivel del HUECO que usa todo
-// lo demás.
-function buildPassiveEffectDescription(effects, multiplier, characterLevel, slotIndex) {
+// equipo.
+function buildPassiveEffectDescription(effects, multiplier) {
     const parts = effects.map((effect) => {
-        if (effect.kind === "elementTechniqueAura") {
-            const auraLevel = getElementAuraLevel(characterLevel, slotIndex);
-            const amount = Math.round(effect.baseAmount + effect.perLevelAmount * (auraLevel - 1));
-            return `los compañeros con Supertécnica de ${effect.element} ganan +${amount} de potencia al usarla`;
-        }
         const amount = Math.round(effect.baseAmount * multiplier);
         const statLabels = effect.stats.map((key) => PLAYER_DETAIL_STAT_LABELS[key]).join(" y ");
         if (effect.requiresTeammateId) {
@@ -1689,7 +1669,7 @@ function buildPassiveTitle(slot, multiplier) {
 // `effects` (pasiva real, no el placeholder "Próximamente") la
 // descripción se calcula con buildPassiveEffectDescription en vez de
 // usar el texto fijo guardado.
-function buildLeveledPassiveRowMarkup(slot, level, multiplier, characterLevel, slotIndex) {
+function buildLeveledPassiveRowMarkup(slot, level, multiplier) {
     if (level < 1) {
         return `
             <div class="pd-passive-row is-locked">
@@ -1701,7 +1681,7 @@ function buildLeveledPassiveRowMarkup(slot, level, multiplier, characterLevel, s
             </div>
         `;
     }
-    const description = slot.effects ? buildPassiveEffectDescription(slot.effects, multiplier, characterLevel, slotIndex) : slot.description;
+    const description = slot.effects ? buildPassiveEffectDescription(slot.effects, multiplier) : slot.description;
     const title = slot.effects ? buildPassiveTitle(slot, multiplier) : slot.name;
     return `
         <div class="pd-passive-row">
@@ -1712,15 +1692,6 @@ function buildLeveledPassiveRowMarkup(slot, level, multiplier, characterLevel, s
             </div>
         </div>
     `;
-}
-
-// Las pasivas "Mejora Supertécnicas [Elemento]" (aura) no se bloquean
-// nunca del todo (ya activas en Nv.1 de personaje) pero SÍ suben de
-// nivel (1-10) en los mismos escalones que le tocarían a ese hueco
-// (getElementAuraLevel: hueco 0 → Nv.10,30,50,70... de personaje,
-// hueco 1 → Nv.20,40,60,80...), igual que el resto de pasivas.
-function isElementAuraSlot(slot) {
-    return !!(slot.effects && slot.effects[0] && slot.effects[0].kind === "elementTechniqueAura");
 }
 
 function buildPassivesListMarkup(character) {
@@ -1734,11 +1705,8 @@ function buildPassivesListMarkup(character) {
     const characterLevel = getCharacterLevel(character.id);
     const slots = (character.passives && character.passives.length) ? character.passives : GENERIC_ABILITY_SLOTS;
     const ownRows = slots.map((slot, index) => {
-        if (isElementAuraSlot(slot)) {
-            return buildLeveledPassiveRowMarkup(slot, getElementAuraLevel(characterLevel, index), 1, characterLevel, index);
-        }
         const level = getGenericAbilityLevel(characterLevel, index);
-        return buildLeveledPassiveRowMarkup(slot, level, getOwnPassiveLevelMultiplier(level), characterLevel, index);
+        return buildLeveledPassiveRowMarkup(slot, level, getOwnPassiveLevelMultiplier(level));
     }).join("");
 
     // La Habilidad Única está bloqueada del todo en Despertar 0; desde

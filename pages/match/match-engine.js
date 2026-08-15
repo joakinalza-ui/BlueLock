@@ -221,9 +221,8 @@ function getMyAverageStats(lineup) {
 // menos ese número de compañeros con ese equipoOriginal — el bonus
 // vale para TODA la alineación, no solo para los de ese equipo, por
 // eso sigue sumando sobre la misma myStats compartida. El guard
-// `!effect.stats` ignora limpiamente efectos de otro tipo (el aura
-// elemental de Supertécnica, ver computeElementTechniqueBonus) si
-// alguna vez se recorre la misma lista de effects sin querer.
+// `!effect.stats` ignora limpiamente cualquier efecto de otro tipo sin
+// stats definidos, por si acaso.
 function applyPassiveEffectList(myStats, lineup, effects, multiplier) {
     effects.forEach((effect) => {
         if (effect.trigger !== "matchStart") return;
@@ -276,39 +275,6 @@ function applyMatchStartPassiveEffects(teamStats, lineup, getLevel, getAwakening
     });
 }
 
-// Aura de equipo de las pasivas "Mejora Supertécnicas [Elemento]": a
-// diferencia de applyPassiveEffectList (que suma directo a las stats),
-// este bonus no se aplica a ninguna stat de forma fija — sube la
-// potencia de la Supertécnica de CUALQUIER compañero de ese elemento
-// cuando la usa de verdad (ver resolvePlayerChoice para mi lado,
-// resolveDefenseChoice para el del rival), así que se calcula aparte
-// como un mapa por elemento y se consulta ahí en cada Command Battle.
-// getLevel: igual que en applyMatchStartPassiveEffects, mi progreso
-// real o el nivel fijo del rival según de qué alineación se trate. A
-// diferencia del resto de pasivas propias, esta NO pasa por el
-// desbloqueo por hueco (getGenericAbilityLevel) — nunca está bloqueada
-// del todo, activa desde el Nivel 1 del propio personaje — pero SÍ sube
-// de nivel 1-10 en los mismos escalones que le tocarían al hueco en el
-// que esté (getElementAuraLevel, en main.js: hueco 0 → Nv.10,30,50,70...
-// de personaje, hueco 1 → Nv.20,40,60,80...), del que escala +25 de
-// base, +5 por cada nivel del aura (Nv.1 = +25, Nv.2 = +30... Nv.10 =
-// +70 como mucho). Si varios personajes de la alineación llevan el aura
-// del mismo elemento, sus bonus se SUMAN.
-function computeElementTechniqueBonus(lineup, getLevel) {
-    const bonus = { Bosque: 0, Fuego: 0, "Montaña": 0, Aire: 0 };
-    lineup.forEach((character) => {
-        const characterLevel = getLevel(character);
-        (character.passives || []).forEach((passive, index) => {
-            (passive.effects || []).forEach((effect) => {
-                if (effect.kind !== "elementTechniqueAura") return;
-                const auraLevel = getElementAuraLevel(characterLevel, index);
-                bonus[effect.element] = (bonus[effect.element] || 0) + effect.baseAmount + effect.perLevelAmount * (auraLevel - 1);
-            });
-        });
-    });
-    return bonus;
-}
-
 function smallVariance(range) {
     return (Math.random() * 2 - 1) * range;
 }
@@ -345,16 +311,15 @@ function createMatchState(character, matchNumber) {
     const myBaseStats = { ...myStats };
     applyMatchStartPassiveEffects(myStats, lineup, (c) => getCharacterLevel(c.id), (c) => getCharacterAwakening(c.id));
     const myPassiveBonus = computePassiveBonusMap(myBaseStats, myStats);
-    const elementTechniqueBonus = computeElementTechniqueBonus(lineup, (c) => getCharacterLevel(c.id));
     const activePlayer = getInitialActivePlayer(lineup);
     // El rival del Mapa de Fichajes tiene nivel/Despertar FIJOS por
     // nodo y partido (ver TRANSFER_RIVAL_DATA en main.js) — nunca la
     // media/nivel de mi propio equipo. rivalLineup (todo su equipo,
     // real, no solo el objetivo del nodo) es lo que permite elegir un
     // defensor por puesto según la zona del balón, y también lo que
-    // cuentan sus propias pasivas (Sinergia de Equipo, aura elemental)
-    // — con el MISMO nivel/Despertar fijo del nodo para todos, nunca mi
-    // progreso real de esos personajes.
+    // cuentan sus propias pasivas (Sinergia de Equipo) — con el MISMO
+    // nivel/Despertar fijo del nodo para todos, nunca mi progreso real
+    // de esos personajes.
     const rivalStats = getTransferRivalStatsAtLevel(character, matchNumber);
     const rivalBaseStats = { ...rivalStats };
     const rivalLineup = getTransferRivalLineup(character, mode);
@@ -362,7 +327,6 @@ function createMatchState(character, matchNumber) {
     const getRivalAwakening = () => getTransferRivalAwakening(character.id);
     applyMatchStartPassiveEffects(rivalStats, rivalLineup, getRivalLevel, getRivalAwakening);
     const rivalPassiveBonus = computePassiveBonusMap(rivalBaseStats, rivalStats);
-    const rivalElementTechniqueBonus = computeElementTechniqueBonus(rivalLineup, getRivalLevel);
 
     return {
         character,
@@ -382,10 +346,8 @@ function createMatchState(character, matchNumber) {
         peMax: MATCH_PE_START,
         myStats,
         myPassiveBonus,
-        elementTechniqueBonus,
         rivalStats,
         rivalPassiveBonus,
-        rivalElementTechniqueBonus,
         activePlayer,
         isOver: false,
     };
@@ -409,7 +371,6 @@ function createChallengeMatchState(mapKey, matchNumber) {
     const myBaseStats = { ...myStats };
     applyMatchStartPassiveEffects(myStats, lineup, (c) => getCharacterLevel(c.id), (c) => getCharacterAwakening(c.id));
     const myPassiveBonus = computePassiveBonusMap(myBaseStats, myStats);
-    const elementTechniqueBonus = computeElementTechniqueBonus(lineup, (c) => getCharacterLevel(c.id));
     const activePlayer = getInitialActivePlayer(lineup);
 
     const rival = getChallengeRivalStatsForMatch(mapKey, matchNumber);
@@ -419,7 +380,6 @@ function createChallengeMatchState(mapKey, matchNumber) {
     const getRivalAwakening = () => rival.awakening;
     applyMatchStartPassiveEffects(rivalStats, rival.lineup, getRivalLevel, getRivalAwakening);
     const rivalPassiveBonus = computePassiveBonusMap(rivalBaseStats, rivalStats);
-    const rivalElementTechniqueBonus = computeElementTechniqueBonus(rival.lineup, getRivalLevel);
 
     return {
         mapKey,
@@ -439,10 +399,8 @@ function createChallengeMatchState(mapKey, matchNumber) {
         peMax: MATCH_PE_START,
         myStats,
         myPassiveBonus,
-        elementTechniqueBonus,
         rivalStats,
         rivalPassiveBonus,
-        rivalElementTechniqueBonus,
         activePlayer,
         isOver: false,
     };
@@ -462,7 +420,6 @@ function createStoryMatchState(chapterKey, matchNumber) {
     const myBaseStats = { ...myStats };
     applyMatchStartPassiveEffects(myStats, lineup, (c) => getCharacterLevel(c.id), (c) => getCharacterAwakening(c.id));
     const myPassiveBonus = computePassiveBonusMap(myBaseStats, myStats);
-    const elementTechniqueBonus = computeElementTechniqueBonus(lineup, (c) => getCharacterLevel(c.id));
     const activePlayer = getInitialActivePlayer(lineup);
 
     const rivalStats = rival.stats;
@@ -471,7 +428,6 @@ function createStoryMatchState(chapterKey, matchNumber) {
     const getRivalAwakening = () => rival.awakening;
     applyMatchStartPassiveEffects(rivalStats, rival.lineup, getRivalLevel, getRivalAwakening);
     const rivalPassiveBonus = computePassiveBonusMap(rivalBaseStats, rivalStats);
-    const rivalElementTechniqueBonus = computeElementTechniqueBonus(rival.lineup, getRivalLevel);
 
     return {
         chapterKey,
@@ -490,10 +446,8 @@ function createStoryMatchState(chapterKey, matchNumber) {
         peMax: MATCH_PE_START,
         myStats,
         myPassiveBonus,
-        elementTechniqueBonus,
         rivalStats,
         rivalPassiveBonus,
-        rivalElementTechniqueBonus,
         activePlayer,
         isOver: false,
     };
@@ -531,14 +485,11 @@ function resolvePlayerChoice(state, action, useTechnique) {
     const techniqueBonus = technique ? TECHNIQUE_BONUS_PERCENT : 0;
     // Cada Técnica tiene su PROPIO elemento (characters-data.js), que no
     // tiene por qué coincidir con el del jugador que la lleva. Si se usa
-    // de verdad (technique truthy — PE pagado), ese elemento manda tanto
-    // para la ventaja elemental (doesElementBeat, abajo) como para el
-    // aura "Mejora Supertécnicas [Elemento]" (solo cuenta cuando hay
-    // Técnica real de por medio, ver computeElementTechniqueBonus, ya
-    // sumado por equipo). Sin Técnica, se usa el elemento propio del
-    // jugador (acción básica, sin nada equipado de por medio).
+    // de verdad (technique truthy — PE pagado), ese elemento manda para
+    // la ventaja elemental (doesElementBeat, abajo). Sin Técnica, se usa
+    // el elemento propio del jugador (acción básica, sin nada equipado
+    // de por medio).
     const activeElement = technique ? technique.element : (state.activePlayer ? state.activePlayer.element : null);
-    const auraBonus = technique ? (state.elementTechniqueBonus[technique.element] || 0) : 0;
 
     let result;
     let outcome; // "advance" | "goal" | "turnover" | "miss"
@@ -552,7 +503,7 @@ function resolvePlayerChoice(state, action, useTechnique) {
         const rivalDefenseStat = getPositionalDefenseStat(state.rivalLineup, defendingPosition, "defensa", state.getRivalCharacterStats, state.rivalStats, state.rivalPassiveBonus);
 
         result = resolveCommandBattle({
-            myStat: state.myStats.tecnica + auraBonus,
+            myStat: state.myStats.tecnica,
             rivalStat: rivalDefenseStat,
             myElement: activeElement,
             rivalElement: state.character.element,
@@ -591,7 +542,7 @@ function resolvePlayerChoice(state, action, useTechnique) {
         const rivalDefenseStat = getPositionalDefenseStat(state.rivalLineup, defendingPosition, defenseStatKey, state.getRivalCharacterStats, state.rivalStats, state.rivalPassiveBonus);
 
         result = resolveCommandBattle({
-            myStat: state.myStats.tiro + auraBonus,
+            myStat: state.myStats.tiro,
             rivalStat: rivalDefenseStat,
             myElement: activeElement,
             rivalElement: state.character.element,
@@ -655,16 +606,10 @@ function resolveDefenseChoice(state, defenseChoice, useTechnique) {
     const techniqueBonus = technique ? TECHNIQUE_BONUS_PERCENT : 0;
 
     const attackStat = rivalAction === "tiro" ? state.rivalStats.tiro : state.rivalStats.tecnica;
-    // El rival no elige/paga una Técnica concreta como yo (no tiene PE
-    // ni selección de acción) — su aura "Mejora Supertécnicas
-    // [Elemento]" (ver computeElementTechniqueBonus) se aplica siempre
-    // según SU elemento de identidad (state.character.element, el mismo
-    // que ya se usa para la ventaja elemental de abajo), no por técnica.
-    const rivalAuraBonus = state.rivalElementTechniqueBonus ? (state.rivalElementTechniqueBonus[state.character.element] || 0) : 0;
 
     const result = resolveCommandBattle({
         myStat: defenseStat,
-        rivalStat: attackStat + rivalAuraBonus,
+        rivalStat: attackStat,
         myElement: state.activePlayer ? state.activePlayer.element : null,
         rivalElement: state.character.element,
         techniqueBonus,
@@ -768,10 +713,9 @@ function wouldDefendWithoutTechnique(state) {
     const myDefenseStatKey = facingShot ? "parada" : "defensa";
     const defenseStat = getPositionalDefenseStat(state.lineup, myDefendingPosition, myDefenseStatKey, getCharacterStatsAtLevel, state.myStats, state.myPassiveBonus);
     const attackStat = facingShot ? state.rivalStats.tiro : state.rivalStats.tecnica;
-    const rivalAuraBonus = state.rivalElementTechniqueBonus ? (state.rivalElementTechniqueBonus[state.character.element] || 0) : 0;
     const myElement = state.activePlayer ? state.activePlayer.element : null;
     const elementalMultiplier = doesElementBeat(myElement, state.character.element) ? 1.15 : 1;
-    return defenseStat * elementalMultiplier >= attackStat + rivalAuraBonus;
+    return defenseStat * elementalMultiplier >= attackStat;
 }
 
 // Solo gasta PE en Técnica defensiva si sin ella se perdería el duelo
