@@ -202,6 +202,23 @@ function pickNextActivePlayer(lineup, currentId, zone) {
     return bestCandidates[Math.floor(Math.random() * bestCandidates.length)];
 }
 
+// Quién arranca la siguiente posesión (jugador "activo" nuevo) cada vez
+// que el balón cambia de manos por un motivo que NO es un Pase
+// completado dentro de la misma posesión -- gol (a favor o en contra),
+// pérdida de balón, robo, bloqueo. Sin esto, el mismo jugador que
+// acababa de marcar o perder el balón se quedaba como activo para
+// SIEMPRE hasta el siguiente Pase con éxito, así que solía ser
+// justo él quien "participaba" (por elemento/stats) en la jugada
+// siguiente, tuviera sentido o no. Al azar entre medios y delanteros
+// (los que más lógicamente presionan/reciben al arrancar una jugada
+// nueva), o cualquiera si la alineación no tiene ninguno de los dos.
+function pickPressingPlayer(lineup) {
+    if (!lineup.length) return null;
+    const candidates = lineup.filter((c) => c.position === "MED" || c.position === "DEL");
+    const pool = candidates.length ? candidates : lineup;
+    return pool[Math.floor(Math.random() * pool.length)];
+}
+
 // Media de las 4 stats de la alineación activa — se sigue usando para
 // el lado que ATACA (mi Regate/Pase/Tiro, o el Regate/Pase/Tiro del
 // rival cuando me toca defender). Con la alineación vacía se usa una
@@ -578,6 +595,9 @@ function resolvePlayerChoice(state, action, useTechnique) {
         // misma zona — el rival ataca en dirección contraria desde ahí.
         // Tras un gol, kickoff: el balón vuelve al centro.
         if (outcome === "goal") state.zone = FIELD_ZONE_START;
+        // Nueva posesión (la del rival) -> nuevo jugador activo al azar,
+        // ver pickPressingPlayer.
+        state.activePlayer = pickPressingPlayer(state.lineup);
     }
 
     return { action, technique, outcome, result, possessionEnded };
@@ -660,6 +680,9 @@ function resolveDefenseChoice(state, defenseChoice, useTechnique) {
         if (outcome === "rivalGoal") state.zone = FIELD_ZONE_START;
         // En bloqueo/interceptado, el balón se queda en la misma zona
         // — ahora ataco yo en dirección contraria desde ahí.
+        // Nueva posesión (la mía) -> nuevo jugador activo al azar, ver
+        // pickPressingPlayer.
+        state.activePlayer = pickPressingPlayer(state.lineup);
     }
 
     return { defenseChoice, rivalAction, predictionCorrect, technique, outcome, result, possessionEnded };
