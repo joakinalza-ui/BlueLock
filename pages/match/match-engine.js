@@ -379,15 +379,22 @@ function computeIndividualBonus(lineup, getAwakening) {
 // Vínculo por marcador (p.ej. El Héroe de Kunigami): a diferencia de
 // computeIndividualBonus (calculado UNA vez al crear el partido), este
 // depende del marcador EN VIVO, así que se recalcula en cada resolución
-// -- solo aplica mientras mi equipo va empatado o perdiendo, y solo
-// para el jugador ACTIVO en ese momento (nunca todo el equipo).
-function getComebackBonus(character, state) {
+// -- solo aplica mientras EL EQUIPO DEL PORTADOR va empatado o
+// perdiendo, y solo para el jugador ACTIVO en ese momento (nunca todo
+// el equipo). ownScore/opponentScore (no siempre state.score.me/.rival
+// directamente) permiten reutilizar la misma función tanto para MI lado
+// (ownScore=state.score.me) como para el RIVAL (ownScore=state.score.rival,
+// ver resolveDefenseChoice) -- el marcador "a favor" es distinto según
+// de quién se mire. getAwakening también se recibe como parámetro: para
+// mí es mi progreso real (getCharacterAwakening), para el rival es su
+// Despertar fijo de ese nodo/mapa/capítulo (nunca mi progreso).
+function getComebackBonus(character, ownScore, opponentScore, getAwakening) {
     if (!character) return {};
     const uniqueEffects = character.uniquePassive && character.uniquePassive.effects;
     if (!uniqueEffects) return {};
-    const awakening = getCharacterAwakening(character.id);
+    const awakening = getAwakening(character);
     if (awakening < 1) return {};
-    if (state.score.me > state.score.rival) return {};
+    if (ownScore > opponentScore) return {};
     const multiplier = 1 + 0.10 * (awakening - 1);
     const bonus = {};
     uniqueEffects.forEach((effect) => {
@@ -453,6 +460,8 @@ function createMatchState(character, matchNumber) {
     const getRivalAwakening = () => getTransferRivalAwakening(character.id);
     applyMatchStartPassiveEffects(rivalStats, rivalLineup, getRivalLevel, getRivalAwakening);
     const rivalPassiveBonus = computePassiveBonusMap(rivalBaseStats, rivalStats);
+    const rivalIndividualBonus = computeIndividualBonus(rivalLineup, getRivalAwakening);
+    const rivalActivePlayer = getInitialActivePlayer(rivalLineup);
 
     return {
         character,
@@ -463,6 +472,7 @@ function createMatchState(character, matchNumber) {
         // Stats de un compañero cualquiera del equipo rival, al mismo
         // nivel/Despertar fijo del nodo (igual que rivalStats arriba).
         getRivalCharacterStats: (c) => getTransferRivalStatsAtLevel(c, matchNumber, character.id),
+        getRivalAwakening,
         matchMinuteLimit: getMatchMinuteLimit(mode),
         currentMinute: 0,
         currentOwner: Math.random() < 0.5 ? "me" : "rival",
@@ -475,7 +485,9 @@ function createMatchState(character, matchNumber) {
         individualBonus,
         rivalStats,
         rivalPassiveBonus,
+        rivalIndividualBonus,
         activePlayer,
+        rivalActivePlayer,
         isOver: false,
     };
 }
@@ -508,12 +520,15 @@ function createChallengeMatchState(mapKey, matchNumber) {
     const getRivalAwakening = () => rival.awakening;
     applyMatchStartPassiveEffects(rivalStats, rival.lineup, getRivalLevel, getRivalAwakening);
     const rivalPassiveBonus = computePassiveBonusMap(rivalBaseStats, rivalStats);
+    const rivalIndividualBonus = computeIndividualBonus(rival.lineup, getRivalAwakening);
+    const rivalActivePlayer = getInitialActivePlayer(rival.lineup);
 
     return {
         mapKey,
         rivalTeam: rival.rivalTeam,
         rivalLineup: rival.lineup,
         getRivalCharacterStats: (c) => getStatsAtLevelAwakening(c, rival.level, rival.awakening),
+        getRivalAwakening,
         character: rival.lineup[0] || { element: null },
         matchNumber,
         mode: "5v5",
@@ -530,7 +545,9 @@ function createChallengeMatchState(mapKey, matchNumber) {
         individualBonus,
         rivalStats,
         rivalPassiveBonus,
+        rivalIndividualBonus,
         activePlayer,
+        rivalActivePlayer,
         isOver: false,
     };
 }
@@ -558,11 +575,14 @@ function createStoryMatchState(chapterKey, matchNumber) {
     const getRivalAwakening = () => rival.awakening;
     applyMatchStartPassiveEffects(rivalStats, rival.lineup, getRivalLevel, getRivalAwakening);
     const rivalPassiveBonus = computePassiveBonusMap(rivalBaseStats, rivalStats);
+    const rivalIndividualBonus = computeIndividualBonus(rival.lineup, getRivalAwakening);
+    const rivalActivePlayer = getInitialActivePlayer(rival.lineup);
 
     return {
         chapterKey,
         rivalLineup: rival.lineup,
         getRivalCharacterStats: (c) => getStatsAtLevelAwakening(c, rival.level, rival.awakening),
+        getRivalAwakening,
         character: rival.lineup[0] || { element: null },
         matchNumber,
         mode: rival.mode,
@@ -579,7 +599,9 @@ function createStoryMatchState(chapterKey, matchNumber) {
         individualBonus,
         rivalStats,
         rivalPassiveBonus,
+        rivalIndividualBonus,
         activePlayer,
+        rivalActivePlayer,
         isOver: false,
     };
 }
@@ -628,7 +650,7 @@ function resolvePlayerChoice(state, action, useTechnique) {
     // porque depende del resultado EN VIVO, no se puede precalcular una
     // sola vez al crear el partido como el resto.
     const individualBonus = (state.individualBonus && state.activePlayer && state.individualBonus[state.activePlayer.id]) || {};
-    const comebackBonus = getComebackBonus(state.activePlayer, state);
+    const comebackBonus = getComebackBonus(state.activePlayer, state.score.me, state.score.rival, (c) => getCharacterAwakening(c.id));
 
     let result;
     let outcome; // "advance" | "goal" | "turnover" | "miss"
@@ -639,7 +661,7 @@ function resolvePlayerChoice(state, action, useTechnique) {
         // solo entra en juego en un Tiro con el balón en su propia
         // área, ver más abajo).
         const defendingPosition = getDefendingPositionForZone(state.zone, "rival");
-        const rivalDefenseStat = getPositionalDefenseStat(state.rivalLineup, defendingPosition, "defensa", state.getRivalCharacterStats, state.rivalStats, state.rivalPassiveBonus);
+        const rivalDefenseStat = getPositionalDefenseStat(state.rivalLineup, defendingPosition, "defensa", state.getRivalCharacterStats, state.rivalStats, state.rivalPassiveBonus, state.rivalIndividualBonus);
 
         result = resolveCommandBattle({
             myStat: state.myStats.tecnica + (individualBonus.tecnica || 0) + (comebackBonus.tecnica || 0),
@@ -678,7 +700,7 @@ function resolvePlayerChoice(state, action, useTechnique) {
         const onTime = state.zone === FIELD_ZONE_RIVAL_GOAL;
         const defendingPosition = onTime ? "POR" : getDefendingPositionForZone(state.zone, "rival");
         const defenseStatKey = onTime ? "parada" : "defensa";
-        const rivalDefenseStat = getPositionalDefenseStat(state.rivalLineup, defendingPosition, defenseStatKey, state.getRivalCharacterStats, state.rivalStats, state.rivalPassiveBonus);
+        const rivalDefenseStat = getPositionalDefenseStat(state.rivalLineup, defendingPosition, defenseStatKey, state.getRivalCharacterStats, state.rivalStats, state.rivalPassiveBonus, state.rivalIndividualBonus);
 
         result = resolveCommandBattle({
             myStat: state.myStats.tiro + (individualBonus.tiro || 0) + (comebackBonus.tiro || 0),
@@ -705,8 +727,13 @@ function resolvePlayerChoice(state, action, useTechnique) {
         // Tras un gol, kickoff: el balón vuelve al centro.
         if (outcome === "goal") state.zone = FIELD_ZONE_START;
         // Nueva posesión (la del rival) -> nuevo jugador activo al azar,
-        // ver pickPressingPlayer.
+        // ver pickPressingPlayer. Se queda fijo durante TODA esa posesión
+        // rival (a diferencia de mi lado, el rival no "pasa" el balón
+        // entre jugadores concretos dentro de una misma posesión — su
+        // ataque siempre es la cifra agregada de equipo, ver
+        // resolveDefenseChoice), solo cambia al empezar la siguiente.
         state.activePlayer = pickPressingPlayer(state.lineup);
+        state.rivalActivePlayer = pickPressingPlayer(state.rivalLineup);
     }
 
     return { action, technique, outcome, result, possessionEnded };
@@ -747,7 +774,21 @@ function resolveDefenseChoice(state, defenseChoice, useTechnique) {
     }
     const techniqueBonus = technique ? TECHNIQUE_BONUS_PERCENT : 0;
 
-    const attackStat = rivalAction === "tiro" ? state.rivalStats.tiro : state.rivalStats.tecnica;
+    // Bonus individuales del RIVAL (self/duoBond/selfComeback, ver
+    // computeIndividualBonus/getComebackBonus): mismo tratamiento que mi
+    // lado en resolvePlayerChoice, pero mirados desde su jugador activo
+    // (state.rivalActivePlayer) y su propio marcador (state.score.rival
+    // como "a favor", state.score.me como "en contra") y su Despertar
+    // fijo de nodo/mapa/capítulo (state.getRivalAwakening, nunca mi
+    // progreso real).
+    const rivalIndividualBonus = (state.rivalIndividualBonus && state.rivalActivePlayer && state.rivalIndividualBonus[state.rivalActivePlayer.id]) || {};
+    const rivalComebackBonus = state.getRivalAwakening
+        ? getComebackBonus(state.rivalActivePlayer, state.score.rival, state.score.me, state.getRivalAwakening)
+        : {};
+    const rivalBonusForStat = (statKey) => (rivalIndividualBonus[statKey] || 0) + (rivalComebackBonus[statKey] || 0);
+    const attackStat = rivalAction === "tiro"
+        ? state.rivalStats.tiro + rivalBonusForStat("tiro")
+        : state.rivalStats.tecnica + rivalBonusForStat("tecnica");
 
     const result = resolveCommandBattle({
         myStat: defenseStat,
@@ -839,7 +880,7 @@ function wouldWinWithoutTechnique(state, action) {
     const myStat = action === "tiro" ? state.myStats.tiro : state.myStats.tecnica;
     const defendingPosition = (action === "tiro" && onTime) ? "POR" : getDefendingPositionForZone(state.zone, "rival");
     const defenseStatKey = (action === "tiro" && onTime) ? "parada" : "defensa";
-    const rivalStat = getPositionalDefenseStat(state.rivalLineup, defendingPosition, defenseStatKey, state.getRivalCharacterStats, state.rivalStats, state.rivalPassiveBonus);
+    const rivalStat = getPositionalDefenseStat(state.rivalLineup, defendingPosition, defenseStatKey, state.getRivalCharacterStats, state.rivalStats, state.rivalPassiveBonus, state.rivalIndividualBonus);
     const myElement = state.activePlayer ? state.activePlayer.element : null;
     const elementalMultiplier = doesElementBeat(myElement, state.character.element) ? 1.15 : 1;
     const reliabilityMultiplier = action === "pase" ? 1.05 : 1;
@@ -875,7 +916,17 @@ function wouldDefendWithoutTechnique(state) {
     const myDefendingPosition = facingShot ? "POR" : getDefendingPositionForZone(state.zone, "me");
     const myDefenseStatKey = facingShot ? "parada" : "defensa";
     const defenseStat = getPositionalDefenseStat(state.lineup, myDefendingPosition, myDefenseStatKey, getCharacterStatsAtLevel, state.myStats, state.myPassiveBonus, state.individualBonus);
-    const attackStat = facingShot ? state.rivalStats.tiro : state.rivalStats.tecnica;
+    // Mismos bonus individuales del rival que ya aplica la resolución
+    // real (ver resolveDefenseChoice) -- si no, el modo AUTO a veces no
+    // gastaría Técnica defensiva creyendo que gana sin ella, cuando en
+    // realidad el rival activo lleva un bonus que no se está mirando.
+    const rivalIndividualBonus = (state.rivalIndividualBonus && state.rivalActivePlayer && state.rivalIndividualBonus[state.rivalActivePlayer.id]) || {};
+    const rivalComebackBonus = state.getRivalAwakening
+        ? getComebackBonus(state.rivalActivePlayer, state.score.rival, state.score.me, state.getRivalAwakening)
+        : {};
+    const rivalStatKey = facingShot ? "tiro" : "tecnica";
+    const attackStat = (facingShot ? state.rivalStats.tiro : state.rivalStats.tecnica)
+        + (rivalIndividualBonus[rivalStatKey] || 0) + (rivalComebackBonus[rivalStatKey] || 0);
     const myElement = state.activePlayer ? state.activePlayer.element : null;
     const elementalMultiplier = doesElementBeat(myElement, state.character.element) ? 1.15 : 1;
     return defenseStat * elementalMultiplier >= attackStat;
