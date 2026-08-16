@@ -74,6 +74,14 @@ const CHARACTERS_DATA = [
                 ]
             }
         ],
+        "uniquePassive": {
+            "id": "kisaburo-hijikata-unique-passive",
+            "name": "Reflejos de Acero",
+            "icon": "🧤",
+            "effects": [
+                { "kind": "self", "stats": ["parada", "defensa"], "baseAmount": 100, "trigger": "matchStart" }
+            ]
+        },
         "statsLevel1": {
             "parada": 34,
             "defensa": 24,
@@ -133,6 +141,14 @@ const CHARACTERS_DATA = [
                 ]
             }
         ],
+        "uniquePassive": {
+            "id": "wataru-kuon-unique-passive",
+            "name": "Muro Personal",
+            "icon": "🛡️",
+            "effects": [
+                { "kind": "self", "stats": ["defensa", "parada"], "baseAmount": 100, "trigger": "matchStart" }
+            ]
+        },
         "statsLevel1": {
             "defensa": 34,
             "tecnica": 24,
@@ -192,6 +208,14 @@ const CHARACTERS_DATA = [
                 ]
             }
         ],
+        "uniquePassive": {
+            "id": "retsu-nerima-unique-passive",
+            "name": "Garra Defensiva",
+            "icon": "✊",
+            "effects": [
+                { "kind": "self", "stats": ["defensa", "tecnica"], "baseAmount": 100, "trigger": "matchStart" }
+            ]
+        },
         "statsLevel1": {
             "defensa": 34,
             "tecnica": 24,
@@ -251,6 +275,14 @@ const CHARACTERS_DATA = [
                 ]
             }
         ],
+        "uniquePassive": {
+            "id": "kei-shishiya-unique-passive",
+            "name": "Muro Personal",
+            "icon": "🛡️",
+            "effects": [
+                { "kind": "self", "stats": ["defensa", "parada"], "baseAmount": 100, "trigger": "matchStart" }
+            ]
+        },
         "statsLevel1": {
             "defensa": 34,
             "tecnica": 24,
@@ -310,6 +342,14 @@ const CHARACTERS_DATA = [
                 ]
             }
         ],
+        "uniquePassive": {
+            "id": "tsukoteru-eiyu-unique-passive",
+            "name": "Garra Defensiva",
+            "icon": "✊",
+            "effects": [
+                { "kind": "self", "stats": ["defensa", "tecnica"], "baseAmount": 100, "trigger": "matchStart" }
+            ]
+        },
         "statsLevel1": {
             "defensa": 34,
             "tecnica": 24,
@@ -369,6 +409,14 @@ const CHARACTERS_DATA = [
                 ]
             }
         ],
+        "uniquePassive": {
+            "id": "yudai-imamura-unique-passive",
+            "name": "Visión de Juego",
+            "icon": "🧠",
+            "effects": [
+                { "kind": "self", "stats": ["tecnica", "tiro"], "baseAmount": 100, "trigger": "matchStart" }
+            ]
+        },
         "statsLevel1": {
             "tecnica": 34,
             "tiro": 24,
@@ -428,6 +476,14 @@ const CHARACTERS_DATA = [
                 ]
             }
         ],
+        "uniquePassive": {
+            "id": "asahi-naruhaya-unique-passive",
+            "name": "Motor del Equipo",
+            "icon": "🔋",
+            "effects": [
+                { "kind": "self", "stats": ["tecnica", "defensa"], "baseAmount": 100, "trigger": "matchStart" }
+            ]
+        },
         "statsLevel1": {
             "tecnica": 34,
             "tiro": 24,
@@ -487,6 +543,14 @@ const CHARACTERS_DATA = [
                 ]
             }
         ],
+        "uniquePassive": {
+            "id": "masumi-atatame-unique-passive",
+            "name": "Visión de Juego",
+            "icon": "🧠",
+            "effects": [
+                { "kind": "self", "stats": ["tecnica", "tiro"], "baseAmount": 100, "trigger": "matchStart" }
+            ]
+        },
         "statsLevel1": {
             "tecnica": 34,
             "tiro": 24,
@@ -546,6 +610,14 @@ const CHARACTERS_DATA = [
                 ]
             }
         ],
+        "uniquePassive": {
+            "id": "haato-meiji-unique-passive",
+            "name": "Motor del Equipo",
+            "icon": "🔋",
+            "effects": [
+                { "kind": "self", "stats": ["tecnica", "defensa"], "baseAmount": 100, "trigger": "matchStart" }
+            ]
+        },
         "statsLevel1": {
             "tecnica": 34,
             "tiro": 24,
@@ -605,6 +677,14 @@ const CHARACTERS_DATA = [
                 ]
             }
         ],
+        "uniquePassive": {
+            "id": "yusei-amazora-unique-passive",
+            "name": "Chispa Ofensiva",
+            "icon": "⚡",
+            "effects": [
+                { "kind": "self", "stats": ["tiro", "tecnica"], "baseAmount": 100, "trigger": "matchStart" }
+            ]
+        },
         "statsLevel1": {
             "tiro": 34,
             "tecnica": 24,
@@ -664,6 +744,14 @@ const CHARACTERS_DATA = [
                 ]
             }
         ],
+        "uniquePassive": {
+            "id": "rian-sanga-unique-passive",
+            "name": "Instinto Killer",
+            "icon": "🎯",
+            "effects": [
+                { "kind": "self", "stats": ["tiro"], "baseAmount": 120, "trigger": "matchStart" }
+            ]
+        },
         "statsLevel1": {
             "tiro": 34,
             "tecnica": 24,
@@ -2066,6 +2154,14 @@ const CHARACTERS_DATA = [
                 ]
             }
         ],
+        "uniquePassive": {
+            "id": "sota-nemoto-unique-passive",
+            "name": "Muro Personal",
+            "icon": "🛡️",
+            "effects": [
+                { "kind": "self", "stats": ["defensa", "parada"], "baseAmount": 100, "trigger": "matchStart" }
+            ]
+        },
         "statsLevel1": {
             "defensa": 34,
             "tecnica": 24,
@@ -2125,6 +2221,14 @@ const CHARACTERS_DATA = [
                 ]
             }
         ],
+        "uniquePassive": {
+            "id": "rikiya-hohai-unique-passive",
+            "name": "Chispa Ofensiva",
+            "icon": "⚡",
+            "effects": [
+                { "kind": "self", "stats": ["tiro", "tecnica"], "baseAmount": 100, "trigger": "matchStart" }
+            ]
+        },
         "statsLevel1": {
             "tiro": 34,
             "tecnica": 24,
@@ -2184,6 +2288,14 @@ const CHARACTERS_DATA = [
                 ]
             }
         ],
+        "uniquePassive": {
+            "id": "hirakazu-midorikawa-unique-passive",
+            "name": "Garra Defensiva",
+            "icon": "✊",
+            "effects": [
+                { "kind": "self", "stats": ["defensa", "tecnica"], "baseAmount": 100, "trigger": "matchStart" }
+            ]
+        },
         "statsLevel1": {
             "defensa": 34,
             "tecnica": 24,
@@ -2243,6 +2355,14 @@ const CHARACTERS_DATA = [
                 ]
             }
         ],
+        "uniquePassive": {
+            "id": "shuhei-ebina-unique-passive",
+            "name": "Instinto Killer",
+            "icon": "🎯",
+            "effects": [
+                { "kind": "self", "stats": ["tiro"], "baseAmount": 120, "trigger": "matchStart" }
+            ]
+        },
         "statsLevel1": {
             "tiro": 34,
             "tecnica": 24,
@@ -2302,6 +2422,14 @@ const CHARACTERS_DATA = [
                 ]
             }
         ],
+        "uniquePassive": {
+            "id": "kanji-torikai-unique-passive",
+            "name": "Visión de Juego",
+            "icon": "🧠",
+            "effects": [
+                { "kind": "self", "stats": ["tecnica", "tiro"], "baseAmount": 100, "trigger": "matchStart" }
+            ]
+        },
         "statsLevel1": {
             "tecnica": 34,
             "tiro": 24,
@@ -2361,6 +2489,14 @@ const CHARACTERS_DATA = [
                 ]
             }
         ],
+        "uniquePassive": {
+            "id": "koki-mera-unique-passive",
+            "name": "Muro Personal",
+            "icon": "🛡️",
+            "effects": [
+                { "kind": "self", "stats": ["defensa", "parada"], "baseAmount": 100, "trigger": "matchStart" }
+            ]
+        },
         "statsLevel1": {
             "defensa": 34,
             "tecnica": 24,
@@ -2420,6 +2556,14 @@ const CHARACTERS_DATA = [
                 ]
             }
         ],
+        "uniquePassive": {
+            "id": "kai-tokita-unique-passive",
+            "name": "Garra Defensiva",
+            "icon": "✊",
+            "effects": [
+                { "kind": "self", "stats": ["defensa", "tecnica"], "baseAmount": 100, "trigger": "matchStart" }
+            ]
+        },
         "statsLevel1": {
             "defensa": 34,
             "tecnica": 24,
@@ -2479,6 +2623,14 @@ const CHARACTERS_DATA = [
                 ]
             }
         ],
+        "uniquePassive": {
+            "id": "yujin-koshinaka-unique-passive",
+            "name": "Muro Personal",
+            "icon": "🛡️",
+            "effects": [
+                { "kind": "self", "stats": ["defensa", "parada"], "baseAmount": 100, "trigger": "matchStart" }
+            ]
+        },
         "statsLevel1": {
             "defensa": 34,
             "tecnica": 24,
@@ -2538,6 +2690,14 @@ const CHARACTERS_DATA = [
                 ]
             }
         ],
+        "uniquePassive": {
+            "id": "takuma-isezaki-unique-passive",
+            "name": "Motor del Equipo",
+            "icon": "🔋",
+            "effects": [
+                { "kind": "self", "stats": ["tecnica", "defensa"], "baseAmount": 100, "trigger": "matchStart" }
+            ]
+        },
         "statsLevel1": {
             "tecnica": 34,
             "tiro": 24,
@@ -2597,6 +2757,14 @@ const CHARACTERS_DATA = [
                 ]
             }
         ],
+        "uniquePassive": {
+            "id": "noboru-jigen-unique-passive",
+            "name": "Visión de Juego",
+            "icon": "🧠",
+            "effects": [
+                { "kind": "self", "stats": ["tecnica", "tiro"], "baseAmount": 100, "trigger": "matchStart" }
+            ]
+        },
         "statsLevel1": {
             "tecnica": 34,
             "tiro": 24,
@@ -2656,6 +2824,14 @@ const CHARACTERS_DATA = [
                 ]
             }
         ],
+        "uniquePassive": {
+            "id": "hiromu-munakata-unique-passive",
+            "name": "Motor del Equipo",
+            "icon": "🔋",
+            "effects": [
+                { "kind": "self", "stats": ["tecnica", "defensa"], "baseAmount": 100, "trigger": "matchStart" }
+            ]
+        },
         "statsLevel1": {
             "tecnica": 34,
             "tiro": 24,
@@ -2715,6 +2891,14 @@ const CHARACTERS_DATA = [
                 ]
             }
         ],
+        "uniquePassive": {
+            "id": "yawara-banku-unique-passive",
+            "name": "Garra Defensiva",
+            "icon": "✊",
+            "effects": [
+                { "kind": "self", "stats": ["defensa", "tecnica"], "baseAmount": 100, "trigger": "matchStart" }
+            ]
+        },
         "statsLevel1": {
             "defensa": 34,
             "tecnica": 24,
@@ -2774,6 +2958,14 @@ const CHARACTERS_DATA = [
                 ]
             }
         ],
+        "uniquePassive": {
+            "id": "daiya-morinaga-unique-passive",
+            "name": "Muro Personal",
+            "icon": "🛡️",
+            "effects": [
+                { "kind": "self", "stats": ["defensa", "parada"], "baseAmount": 100, "trigger": "matchStart" }
+            ]
+        },
         "statsLevel1": {
             "defensa": 34,
             "tecnica": 24,
@@ -2833,6 +3025,14 @@ const CHARACTERS_DATA = [
                 ]
             }
         ],
+        "uniquePassive": {
+            "id": "chihiro-ezaki-unique-passive",
+            "name": "Garra Defensiva",
+            "icon": "✊",
+            "effects": [
+                { "kind": "self", "stats": ["defensa", "tecnica"], "baseAmount": 100, "trigger": "matchStart" }
+            ]
+        },
         "statsLevel1": {
             "defensa": 34,
             "tecnica": 24,
@@ -2892,6 +3092,14 @@ const CHARACTERS_DATA = [
                 ]
             }
         ],
+        "uniquePassive": {
+            "id": "kosei-otsuka-unique-passive",
+            "name": "Visión de Juego",
+            "icon": "🧠",
+            "effects": [
+                { "kind": "self", "stats": ["tecnica", "tiro"], "baseAmount": 100, "trigger": "matchStart" }
+            ]
+        },
         "statsLevel1": {
             "tecnica": 34,
             "tiro": 24,
@@ -2951,6 +3159,14 @@ const CHARACTERS_DATA = [
                 ]
             }
         ],
+        "uniquePassive": {
+            "id": "buruto-kora-unique-passive",
+            "name": "Motor del Equipo",
+            "icon": "🔋",
+            "effects": [
+                { "kind": "self", "stats": ["tecnica", "defensa"], "baseAmount": 100, "trigger": "matchStart" }
+            ]
+        },
         "statsLevel1": {
             "tecnica": 34,
             "tiro": 24,
@@ -3011,6 +3227,14 @@ const CHARACTERS_DATA = [
                 ]
             }
         ],
+        "uniquePassive": {
+            "id": "soshi-kagura-unique-passive",
+            "name": "Visión de Juego",
+            "icon": "🧠",
+            "effects": [
+                { "kind": "self", "stats": ["tecnica", "tiro"], "baseAmount": 100, "trigger": "matchStart" }
+            ]
+        },
         "statsLevel1": {
             "tecnica": 34,
             "tiro": 24,
@@ -3070,6 +3294,14 @@ const CHARACTERS_DATA = [
                 ]
             }
         ],
+        "uniquePassive": {
+            "id": "fuma-rokkaku-unique-passive",
+            "name": "Motor del Equipo",
+            "icon": "🔋",
+            "effects": [
+                { "kind": "self", "stats": ["tecnica", "defensa"], "baseAmount": 100, "trigger": "matchStart" }
+            ]
+        },
         "statsLevel1": {
             "tecnica": 34,
             "tiro": 24,
@@ -3130,6 +3362,14 @@ const CHARACTERS_DATA = [
                 ]
             }
         ],
+        "uniquePassive": {
+            "id": "burai-daido-unique-passive",
+            "name": "Chispa Ofensiva",
+            "icon": "⚡",
+            "effects": [
+                { "kind": "self", "stats": ["tiro", "tecnica"], "baseAmount": 100, "trigger": "matchStart" }
+            ]
+        },
         "statsLevel1": {
             "tiro": 34,
             "tecnica": 24,
@@ -3189,6 +3429,14 @@ const CHARACTERS_DATA = [
                 ]
             }
         ],
+        "uniquePassive": {
+            "id": "mareto-takeyama-unique-passive",
+            "name": "Muro Personal",
+            "icon": "🛡️",
+            "effects": [
+                { "kind": "self", "stats": ["defensa", "parada"], "baseAmount": 100, "trigger": "matchStart" }
+            ]
+        },
         "statsLevel1": {
             "defensa": 34,
             "tecnica": 24,
@@ -3248,6 +3496,14 @@ const CHARACTERS_DATA = [
                 ]
             }
         ],
+        "uniquePassive": {
+            "id": "hyuga-koshiba-unique-passive",
+            "name": "Instinto Killer",
+            "icon": "🎯",
+            "effects": [
+                { "kind": "self", "stats": ["tiro"], "baseAmount": 120, "trigger": "matchStart" }
+            ]
+        },
         "statsLevel1": {
             "tiro": 34,
             "tecnica": 24,
@@ -3308,6 +3564,14 @@ const CHARACTERS_DATA = [
                 ]
             }
         ],
+        "uniquePassive": {
+            "id": "raito-fuwa-unique-passive",
+            "name": "Guardián Novato",
+            "icon": "🥅",
+            "effects": [
+                { "kind": "self", "stats": ["parada"], "baseAmount": 120, "trigger": "matchStart" }
+            ]
+        },
         "statsLevel1": {
             "parada": 34,
             "defensa": 24,
@@ -3367,6 +3631,14 @@ const CHARACTERS_DATA = [
                 ]
             }
         ],
+        "uniquePassive": {
+            "id": "yuza-dokomo-unique-passive",
+            "name": "Reflejos de Acero",
+            "icon": "🧤",
+            "effects": [
+                { "kind": "self", "stats": ["parada", "defensa"], "baseAmount": 100, "trigger": "matchStart" }
+            ]
+        },
         "statsLevel1": {
             "parada": 34,
             "defensa": 24,
@@ -3426,6 +3698,14 @@ const CHARACTERS_DATA = [
                 ]
             }
         ],
+        "uniquePassive": {
+            "id": "juraki-ito-unique-passive",
+            "name": "Guardián Novato",
+            "icon": "🥅",
+            "effects": [
+                { "kind": "self", "stats": ["parada"], "baseAmount": 120, "trigger": "matchStart" }
+            ]
+        },
         "statsLevel1": {
             "parada": 34,
             "defensa": 24,
@@ -3486,6 +3766,14 @@ const CHARACTERS_DATA = [
                 ]
             }
         ],
+        "uniquePassive": {
+            "id": "ashime-suzuki-unique-passive",
+            "name": "Chispa Ofensiva",
+            "icon": "⚡",
+            "effects": [
+                { "kind": "self", "stats": ["tiro", "tecnica"], "baseAmount": 100, "trigger": "matchStart" }
+            ]
+        },
         "statsLevel1": {
             "tiro": 34,
             "tecnica": 24,
@@ -3545,6 +3833,14 @@ const CHARACTERS_DATA = [
                 ]
             }
         ],
+        "uniquePassive": {
+            "id": "tobio-madoka-unique-passive",
+            "name": "Garra Defensiva",
+            "icon": "✊",
+            "effects": [
+                { "kind": "self", "stats": ["defensa", "tecnica"], "baseAmount": 100, "trigger": "matchStart" }
+            ]
+        },
         "statsLevel1": {
             "defensa": 34,
             "tecnica": 24,
@@ -3604,6 +3900,14 @@ const CHARACTERS_DATA = [
                 ]
             }
         ],
+        "uniquePassive": {
+            "id": "shinichi-konan-unique-passive",
+            "name": "Muro Personal",
+            "icon": "🛡️",
+            "effects": [
+                { "kind": "self", "stats": ["defensa", "parada"], "baseAmount": 100, "trigger": "matchStart" }
+            ]
+        },
         "statsLevel1": {
             "defensa": 34,
             "tecnica": 24,
@@ -3663,6 +3967,14 @@ const CHARACTERS_DATA = [
                 ]
             }
         ],
+        "uniquePassive": {
+            "id": "iori-sato-unique-passive",
+            "name": "Garra Defensiva",
+            "icon": "✊",
+            "effects": [
+                { "kind": "self", "stats": ["defensa", "tecnica"], "baseAmount": 100, "trigger": "matchStart" }
+            ]
+        },
         "statsLevel1": {
             "defensa": 34,
             "tecnica": 24,
