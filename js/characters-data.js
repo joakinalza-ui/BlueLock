@@ -1313,6 +1313,14 @@ const CHARACTERS_DATA = [
                 ]
             }
         ],
+        "uniquePassive": {
+            "id": "ikki-niko-unique-passive",
+            "name": "Genio en la Sombra",
+            "icon": "🌑",
+            "effects": [
+                { "id": "genioEnLaSombra", "stats": ["tiro", "tecnica", "defensa", "parada"], "baseAmount": 150, "trigger": "matchStart" }
+            ]
+        },
         "statsLevel1": {
             "tecnica": 47,
             "tiro": 33,

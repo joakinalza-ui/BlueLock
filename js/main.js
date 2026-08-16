@@ -1688,7 +1688,10 @@ function getOwnPassiveLevelMultiplier(level) {
 function buildPassiveEffectDescription(effects, multiplier) {
     const parts = effects.map((effect) => {
         const amount = Math.round(effect.baseAmount * multiplier);
-        const statLabels = effect.stats.map((key) => PLAYER_DETAIL_STAT_LABELS[key]).join(" y ");
+        const statNames = effect.stats.map((key) => PLAYER_DETAIL_STAT_LABELS[key]);
+        const statLabels = statNames.length > 1
+            ? `${statNames.slice(0, -1).join(", ")} y ${statNames[statNames.length - 1]}`
+            : statNames[0];
         if (effect.requiresTeammateId) {
             const teammate = CHARACTERS_DATA.find((c) => c.id === effect.requiresTeammateId);
             const teammateName = teammate ? teammate.name : "su compañero";
