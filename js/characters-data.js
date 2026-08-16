@@ -723,6 +723,14 @@ const CHARACTERS_DATA = [
                 ]
             }
         ],
+        "uniquePassive": {
+            "id": "isagi-yoichi-unique-passive",
+            "name": "Vínculo con Isagi",
+            "icon": "✨",
+            "effects": [
+                { "kind": "duoBondMirror", "partnerId": "bachira-meguru", "stats": ["tecnica", "tiro"], "baseAmount": 250, "trigger": "matchStart" }
+            ]
+        },
         "statsLevel1": {
             "tecnica": 47,
             "tiro": 33,
@@ -849,6 +857,14 @@ const CHARACTERS_DATA = [
                 ]
             }
         ],
+        "uniquePassive": {
+            "id": "chigiri-hyoma-unique-passive",
+            "name": "El Más Veloz",
+            "icon": "🏃",
+            "effects": [
+                { "kind": "self", "stats": ["defensa", "tecnica"], "baseAmount": 200, "trigger": "matchStart" }
+            ]
+        },
         "statsLevel1": {
             "defensa": 47,
             "tecnica": 33,
@@ -908,6 +924,14 @@ const CHARACTERS_DATA = [
                 ]
             }
         ],
+        "uniquePassive": {
+            "id": "kunigami-rensuke-unique-passive",
+            "name": "El Héroe",
+            "icon": "🦸",
+            "effects": [
+                { "kind": "selfComeback", "stats": ["tiro", "tecnica", "defensa", "parada"], "baseAmount": 200, "trigger": "matchStart" }
+            ]
+        },
         "statsLevel1": {
             "tiro": 47,
             "tecnica": 33,
@@ -967,6 +991,14 @@ const CHARACTERS_DATA = [
                 ]
             }
         ],
+        "uniquePassive": {
+            "id": "nagi-seishiro-unique-passive",
+            "name": "Genios Novatos",
+            "icon": "🌱",
+            "effects": [
+                { "kind": "duoBondMirror", "partnerId": "reo-mikage", "stats": ["tecnica", "tiro", "defensa"], "baseAmount": 250, "trigger": "matchStart" }
+            ]
+        },
         "statsLevel1": {
             "tiro": 47,
             "tecnica": 33,
@@ -1026,6 +1058,14 @@ const CHARACTERS_DATA = [
                 ]
             }
         ],
+        "uniquePassive": {
+            "id": "reo-mikage-unique-passive",
+            "name": "Genios Novatos",
+            "icon": "🌱",
+            "effects": [
+                { "kind": "duoBond", "partnerId": "nagi-seishiro", "stats": ["tecnica", "tiro", "defensa"], "baseAmount": 250, "trigger": "matchStart" }
+            ]
+        },
         "statsLevel1": {
             "tecnica": 47,
             "tiro": 33,
@@ -1085,6 +1125,14 @@ const CHARACTERS_DATA = [
                 ]
             }
         ],
+        "uniquePassive": {
+            "id": "aryu-jyubei-unique-passive",
+            "name": "Envergadura Superior",
+            "icon": "📏",
+            "effects": [
+                { "kind": "self", "stats": ["defensa", "tecnica", "tiro"], "baseAmount": 200, "trigger": "matchStart" }
+            ]
+        },
         "statsLevel1": {
             "defensa": 47,
             "tecnica": 33,
@@ -1144,6 +1192,14 @@ const CHARACTERS_DATA = [
                 ]
             }
         ],
+        "uniquePassive": {
+            "id": "rin-itoshi-unique-passive",
+            "name": "Genio Insaciable",
+            "icon": "❄️",
+            "effects": [
+                { "kind": "self", "stats": ["tiro", "tecnica"], "baseAmount": 250, "trigger": "matchStart" }
+            ]
+        },
         "statsLevel1": {
             "tiro": 47,
             "tecnica": 33,
@@ -1203,6 +1259,14 @@ const CHARACTERS_DATA = [
                 ]
             }
         ],
+        "uniquePassive": {
+            "id": "shoei-barou-unique-passive",
+            "name": "El Rey",
+            "icon": "👑",
+            "effects": [
+                { "kind": "self", "stats": ["tiro", "tecnica"], "baseAmount": 200, "trigger": "matchStart" }
+            ]
+        },
         "statsLevel1": {
             "tiro": 47,
             "tecnica": 33,
@@ -1262,6 +1326,14 @@ const CHARACTERS_DATA = [
                 ]
             }
         ],
+        "uniquePassive": {
+            "id": "zantetsu-tsurugi-unique-passive",
+            "name": "Aceleración Explosiva",
+            "icon": "⚡",
+            "effects": [
+                { "kind": "self", "stats": ["tecnica", "defensa"], "baseAmount": 200, "trigger": "matchStart" }
+            ]
+        },
         "statsLevel1": {
             "defensa": 47,
             "tecnica": 33,
@@ -1388,6 +1460,14 @@ const CHARACTERS_DATA = [
                 ]
             }
         ],
+        "uniquePassive": {
+            "id": "aoshi-tokimitsu-unique-passive",
+            "name": "Monstruo Físico",
+            "icon": "💪",
+            "effects": [
+                { "kind": "self", "stats": ["tiro", "tecnica", "defensa", "parada"], "baseAmount": 200, "trigger": "matchStart" }
+            ]
+        },
         "statsLevel1": {
             "tecnica": 47,
             "tiro": 33,

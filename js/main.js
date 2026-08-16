@@ -1686,7 +1686,13 @@ function getOwnPassiveLevelMultiplier(level) {
 // requiresTeamCount (Sinergia de Equipo) antepone la condición de
 // equipo; "duoBond" (p.ej. Vínculo con Isagi) dice claramente que el
 // bonus NO es para todo el equipo, solo para esos 2 (ver
-// computeDuoBondBonus en match-engine.js).
+// computeIndividualBonus en match-engine.js). "duoBondMirror" es el
+// mismo texto reflejado en la Ficha del otro miembro del vínculo (p.ej.
+// Isagi o Nagi) -- puramente decorativo, no se vuelve a calcular en el
+// motor. "self" es un bonus incondicional solo para el propio portador
+// (p.ej. Monstruo Físico de Tokimitsu); "selfComeback" es igual pero
+// solo mientras el equipo va empatado o perdiendo (p.ej. El Héroe de
+// Kunigami).
 function buildPassiveEffectDescription(effects, multiplier) {
     const parts = effects.map((effect) => {
         const amount = Math.round(effect.baseAmount * multiplier);
@@ -1694,10 +1700,16 @@ function buildPassiveEffectDescription(effects, multiplier) {
         const statLabels = statNames.length > 1
             ? `${statNames.slice(0, -1).join(", ")} y ${statNames[statNames.length - 1]}`
             : statNames[0];
-        if (effect.kind === "duoBond") {
+        if (effect.kind === "duoBond" || effect.kind === "duoBondMirror") {
             const partner = CHARACTERS_DATA.find((c) => c.id === effect.partnerId);
             const partnerName = partner ? partner.name : "su compañero";
             return `si ${partnerName} también juega, ${statLabels} +${amount} solo para ellos dos`;
+        }
+        if (effect.kind === "self") {
+            return `${statLabels} +${amount}, solo para él`;
+        }
+        if (effect.kind === "selfComeback") {
+            return `si tu equipo va empatado o perdiendo, ${statLabels} +${amount}, solo para él`;
         }
         if (effect.requiresTeammateId) {
             const teammate = CHARACTERS_DATA.find((c) => c.id === effect.requiresTeammateId);

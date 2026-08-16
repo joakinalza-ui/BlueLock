@@ -74,10 +74,21 @@ function getDefendingPositionForZone(zone, defendingSide) {
 // usa si no hay nadie de ese puesto en la alineación). Por eso antes
 // atacar "sacaba mucho" y defender "sacaba poco": el ataque siempre
 // pasaba por las pasivas, la defensa nunca.
-function getPositionalDefenseStat(lineup, position, statKey, getStatsFn, fallbackStats, passiveBonus) {
+// individualBonus (opcional): mapa por id de personaje con el bonus de
+// SU PROPIA Pasiva Única de tipo "self" (p.ej. Envergadura Superior de
+// Aryu) — a diferencia de passiveBonus (plano, igual para todo el
+// equipo), este solo suma la stat del candidato concreto que lleva esa
+// pasiva, no de los demás. Sin esto, las Pasivas Únicas "self" de los
+// defensores nunca se notarían al defender (solo se aplican al puesto
+// de campo del jugador ACTIVO al atacar, y un defensor casi nunca lo
+// es — ver pickPressingPlayer).
+function getPositionalDefenseStat(lineup, position, statKey, getStatsFn, fallbackStats, passiveBonus, individualBonus) {
     const candidates = lineup.filter((c) => c.position === position);
     if (!candidates.length) return fallbackStats[statKey];
-    const total = candidates.reduce((sum, c) => sum + getStatsFn(c)[statKey], 0);
+    const total = candidates.reduce((sum, c) => {
+        const own = (individualBonus && individualBonus[c.id] && individualBonus[c.id][statKey]) || 0;
+        return sum + getStatsFn(c)[statKey] + own;
+    }, 0);
     const bonus = (passiveBonus && passiveBonus[statKey]) || 0;
     return (total / candidates.length) + bonus;
 }
@@ -257,11 +268,15 @@ function applyPassiveEffectList(myStats, lineup, effects, multiplier) {
     effects.forEach((effect) => {
         if (effect.trigger !== "matchStart") return;
         if (!effect.stats) return;
-        // "duoBond" (p.ej. Vínculo con Isagi de Bachira) NO suma a la
-        // media compartida del equipo como el resto -- solo beneficia a
-        // los 2 personajes concretos del vínculo cuando actúan ellos,
-        // ver computeDuoBondBonus/resolvePlayerChoice.
-        if (effect.kind === "duoBond") return;
+        // "duoBond" (p.ej. Vínculo con Isagi de Bachira), "duoBondMirror"
+        // (la misma pasiva reflejada en la Ficha del otro miembro del
+        // vínculo, p.ej. Isagi o Nagi -- puramente decorativa, NO se
+        // vuelve a calcular aquí para no duplicar el bonus que ya aporta
+        // el portador original), "self" (p.ej. Monstruo Físico de
+        // Tokimitsu) y "selfComeback" (p.ej. El Héroe de Kunigami) NO
+        // suman a la media compartida del equipo como el resto -- ver
+        // computeIndividualBonus/getComebackBonus/resolvePlayerChoice.
+        if (effect.kind === "duoBond" || effect.kind === "duoBondMirror" || effect.kind === "self" || effect.kind === "selfComeback") return;
         if (effect.requiresTeammateId && !lineup.some((c) => c.id === effect.requiresTeammateId)) return;
         if (effect.requiresTeamCount) {
             const count = lineup.filter((c) => c.equipoOriginal === effect.requiresTeamCount.equipoOriginal).length;
@@ -310,18 +325,31 @@ function applyMatchStartPassiveEffects(teamStats, lineup, getLevel, getAwakening
     });
 }
 
-// Pasivas Únicas tipo "duoBond" (p.ej. Vínculo con Isagi de Bachira):
-// a diferencia de TODO lo demás (que suma a la media compartida de todo
-// el equipo), esta SOLO beneficia a los 2 personajes concretos del
-// vínculo, y solo cuando es justo ESE el que actúa (ver
-// resolvePlayerChoice) -- por eso se calcula aparte, como un mapa por
-// id de personaje, en vez de mutar teamStats directamente. Requiere que
-// el compañero (effect.partnerId) esté también en la alineación, igual
-// que requiresTeammateId; si se cumple, el bonus se apunta tanto al
-// portador de la pasiva como a su compañero (el vínculo es mutuo).
-// Mismo escalado por Despertar que el resto de Pasivas Únicas.
-function computeDuoBondBonus(lineup, getAwakening) {
+// Pasivas Únicas que benefician a UNO o DOS personajes concretos, nunca
+// a todo el equipo -- por eso se calculan aparte, como un mapa por id
+// de personaje, en vez de mutar teamStats directamente (ver
+// applyPassiveEffectList, que las ignora explícitamente). Dos tipos:
+//  - "duoBond" (p.ej. Vínculo con Isagi de Bachira, Genios Novatos de
+//    Reo): requiere que el compañero (effect.partnerId) esté también en
+//    la alineación, igual que requiresTeammateId; si se cumple, el
+//    bonus se apunta tanto al portador de la pasiva como a su compañero
+//    (el vínculo es mutuo). "duoBondMirror" (la misma pasiva reflejada
+//    en la Ficha del otro miembro del vínculo, p.ej. Isagi o Nagi) NO
+//    se vuelve a calcular aquí -- solo existe para que su propia Ficha
+//    muestre el texto, el bonus real ya lo aporta el "duoBond" original.
+//  - "self" (p.ej. Monstruo Físico de Tokimitsu, El Rey de Barou): sin
+//    condición, solo para el propio portador.
+// Solo se usa cuando el personaje ACTÚA (jugador activo al atacar, o
+// defensor de su puesto al defender -- ver resolvePlayerChoice y
+// getPositionalDefenseStat), nunca como bonus de equipo. Mismo escalado
+// por Despertar que el resto de Pasivas Únicas.
+function computeIndividualBonus(lineup, getAwakening) {
     const bonus = {};
+    const addTo = (id, statKey, amount) => {
+        if (!bonus[id]) bonus[id] = {};
+        bonus[id][statKey] = (bonus[id][statKey] || 0) + amount;
+    };
+
     lineup.forEach((character) => {
         const uniqueEffects = character.uniquePassive && character.uniquePassive.effects;
         if (!uniqueEffects) return;
@@ -330,15 +358,43 @@ function computeDuoBondBonus(lineup, getAwakening) {
         const multiplier = 1 + 0.10 * (awakening - 1);
 
         uniqueEffects.forEach((effect) => {
-            if (effect.kind !== "duoBond") return;
-            if (!lineup.some((c) => c.id === effect.partnerId)) return;
-            const amount = Math.round(effect.baseAmount * multiplier);
-            [character.id, effect.partnerId].forEach((id) => {
-                if (!bonus[id]) bonus[id] = {};
+            if (effect.kind === "duoBond") {
+                if (!lineup.some((c) => c.id === effect.partnerId)) return;
+                const amount = Math.round(effect.baseAmount * multiplier);
                 effect.stats.forEach((statKey) => {
-                    bonus[id][statKey] = (bonus[id][statKey] || 0) + amount;
+                    addTo(character.id, statKey, amount);
+                    addTo(effect.partnerId, statKey, amount);
                 });
-            });
+                return;
+            }
+            if (effect.kind === "self") {
+                const amount = Math.round(effect.baseAmount * multiplier);
+                effect.stats.forEach((statKey) => addTo(character.id, statKey, amount));
+            }
+        });
+    });
+    return bonus;
+}
+
+// Vínculo por marcador (p.ej. El Héroe de Kunigami): a diferencia de
+// computeIndividualBonus (calculado UNA vez al crear el partido), este
+// depende del marcador EN VIVO, así que se recalcula en cada resolución
+// -- solo aplica mientras mi equipo va empatado o perdiendo, y solo
+// para el jugador ACTIVO en ese momento (nunca todo el equipo).
+function getComebackBonus(character, state) {
+    if (!character) return {};
+    const uniqueEffects = character.uniquePassive && character.uniquePassive.effects;
+    if (!uniqueEffects) return {};
+    const awakening = getCharacterAwakening(character.id);
+    if (awakening < 1) return {};
+    if (state.score.me > state.score.rival) return {};
+    const multiplier = 1 + 0.10 * (awakening - 1);
+    const bonus = {};
+    uniqueEffects.forEach((effect) => {
+        if (effect.kind !== "selfComeback") return;
+        const amount = Math.round(effect.baseAmount * multiplier);
+        effect.stats.forEach((statKey) => {
+            bonus[statKey] = (bonus[statKey] || 0) + amount;
         });
     });
     return bonus;
@@ -380,7 +436,7 @@ function createMatchState(character, matchNumber) {
     const myBaseStats = { ...myStats };
     applyMatchStartPassiveEffects(myStats, lineup, (c) => getCharacterLevel(c.id), (c) => getCharacterAwakening(c.id));
     const myPassiveBonus = computePassiveBonusMap(myBaseStats, myStats);
-    const duoBondBonus = computeDuoBondBonus(lineup, (c) => getCharacterAwakening(c.id));
+    const individualBonus = computeIndividualBonus(lineup, (c) => getCharacterAwakening(c.id));
     const activePlayer = getInitialActivePlayer(lineup);
     // El rival del Mapa de Fichajes tiene nivel/Despertar FIJOS por
     // nodo y partido (ver TRANSFER_RIVAL_DATA en main.js) — nunca la
@@ -416,7 +472,7 @@ function createMatchState(character, matchNumber) {
         peMax: MATCH_PE_START,
         myStats,
         myPassiveBonus,
-        duoBondBonus,
+        individualBonus,
         rivalStats,
         rivalPassiveBonus,
         activePlayer,
@@ -442,7 +498,7 @@ function createChallengeMatchState(mapKey, matchNumber) {
     const myBaseStats = { ...myStats };
     applyMatchStartPassiveEffects(myStats, lineup, (c) => getCharacterLevel(c.id), (c) => getCharacterAwakening(c.id));
     const myPassiveBonus = computePassiveBonusMap(myBaseStats, myStats);
-    const duoBondBonus = computeDuoBondBonus(lineup, (c) => getCharacterAwakening(c.id));
+    const individualBonus = computeIndividualBonus(lineup, (c) => getCharacterAwakening(c.id));
     const activePlayer = getInitialActivePlayer(lineup);
 
     const rival = getChallengeRivalStatsForMatch(mapKey, matchNumber);
@@ -471,7 +527,7 @@ function createChallengeMatchState(mapKey, matchNumber) {
         peMax: MATCH_PE_START,
         myStats,
         myPassiveBonus,
-        duoBondBonus,
+        individualBonus,
         rivalStats,
         rivalPassiveBonus,
         activePlayer,
@@ -493,7 +549,7 @@ function createStoryMatchState(chapterKey, matchNumber) {
     const myBaseStats = { ...myStats };
     applyMatchStartPassiveEffects(myStats, lineup, (c) => getCharacterLevel(c.id), (c) => getCharacterAwakening(c.id));
     const myPassiveBonus = computePassiveBonusMap(myBaseStats, myStats);
-    const duoBondBonus = computeDuoBondBonus(lineup, (c) => getCharacterAwakening(c.id));
+    const individualBonus = computeIndividualBonus(lineup, (c) => getCharacterAwakening(c.id));
     const activePlayer = getInitialActivePlayer(lineup);
 
     const rivalStats = rival.stats;
@@ -520,7 +576,7 @@ function createStoryMatchState(chapterKey, matchNumber) {
         peMax: MATCH_PE_START,
         myStats,
         myPassiveBonus,
-        duoBondBonus,
+        individualBonus,
         rivalStats,
         rivalPassiveBonus,
         activePlayer,
@@ -565,10 +621,14 @@ function resolvePlayerChoice(state, action, useTechnique) {
     // el elemento propio del jugador (acción básica, sin nada equipado
     // de por medio).
     const activeElement = technique ? technique.element : (state.activePlayer ? state.activePlayer.element : null);
-    // Vínculo por pareja (duoBond, p.ej. Bachira+Isagi): solo cuenta si
-    // el jugador que actúa AHORA es uno de los 2 del vínculo, nunca para
-    // el resto del equipo -- ver computeDuoBondBonus.
-    const duoBonus = (state.duoBondBonus && state.activePlayer && state.duoBondBonus[state.activePlayer.id]) || {};
+    // Bonus individuales (duoBond/self, ver computeIndividualBonus): solo
+    // cuentan si el jugador que actúa AHORA es el portador (o su pareja
+    // de vínculo), nunca para el resto del equipo. El de marcador
+    // (selfComeback, ver getComebackBonus) se recalcula aquí mismo
+    // porque depende del resultado EN VIVO, no se puede precalcular una
+    // sola vez al crear el partido como el resto.
+    const individualBonus = (state.individualBonus && state.activePlayer && state.individualBonus[state.activePlayer.id]) || {};
+    const comebackBonus = getComebackBonus(state.activePlayer, state);
 
     let result;
     let outcome; // "advance" | "goal" | "turnover" | "miss"
@@ -582,7 +642,7 @@ function resolvePlayerChoice(state, action, useTechnique) {
         const rivalDefenseStat = getPositionalDefenseStat(state.rivalLineup, defendingPosition, "defensa", state.getRivalCharacterStats, state.rivalStats, state.rivalPassiveBonus);
 
         result = resolveCommandBattle({
-            myStat: state.myStats.tecnica + (duoBonus.tecnica || 0),
+            myStat: state.myStats.tecnica + (individualBonus.tecnica || 0) + (comebackBonus.tecnica || 0),
             rivalStat: rivalDefenseStat,
             myElement: activeElement,
             rivalElement: state.character.element,
@@ -621,7 +681,7 @@ function resolvePlayerChoice(state, action, useTechnique) {
         const rivalDefenseStat = getPositionalDefenseStat(state.rivalLineup, defendingPosition, defenseStatKey, state.getRivalCharacterStats, state.rivalStats, state.rivalPassiveBonus);
 
         result = resolveCommandBattle({
-            myStat: state.myStats.tiro + (duoBonus.tiro || 0),
+            myStat: state.myStats.tiro + (individualBonus.tiro || 0) + (comebackBonus.tiro || 0),
             rivalStat: rivalDefenseStat,
             myElement: activeElement,
             rivalElement: state.character.element,
@@ -678,7 +738,7 @@ function resolveDefenseChoice(state, defenseChoice, useTechnique) {
     const facingShot = rivalAction === "tiro";
     const myDefendingPosition = facingShot ? "POR" : getDefendingPositionForZone(state.zone, "me");
     const myDefenseStatKey = facingShot ? "parada" : "defensa";
-    const defenseStat = getPositionalDefenseStat(state.lineup, myDefendingPosition, myDefenseStatKey, getCharacterStatsAtLevel, state.myStats, state.myPassiveBonus);
+    const defenseStat = getPositionalDefenseStat(state.lineup, myDefendingPosition, myDefenseStatKey, getCharacterStatsAtLevel, state.myStats, state.myPassiveBonus, state.individualBonus);
 
     let technique = null;
     if (useTechnique) {
@@ -814,7 +874,7 @@ function wouldDefendWithoutTechnique(state) {
     const facingShot = state.zone === FIELD_ZONE_MINE_GOAL;
     const myDefendingPosition = facingShot ? "POR" : getDefendingPositionForZone(state.zone, "me");
     const myDefenseStatKey = facingShot ? "parada" : "defensa";
-    const defenseStat = getPositionalDefenseStat(state.lineup, myDefendingPosition, myDefenseStatKey, getCharacterStatsAtLevel, state.myStats, state.myPassiveBonus);
+    const defenseStat = getPositionalDefenseStat(state.lineup, myDefendingPosition, myDefenseStatKey, getCharacterStatsAtLevel, state.myStats, state.myPassiveBonus, state.individualBonus);
     const attackStat = facingShot ? state.rivalStats.tiro : state.rivalStats.tecnica;
     const myElement = state.activePlayer ? state.activePlayer.element : null;
     const elementalMultiplier = doesElementBeat(myElement, state.character.element) ? 1.15 : 1;
