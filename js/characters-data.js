@@ -1527,6 +1527,14 @@ const CHARACTERS_DATA = [
                 ]
             }
         ],
+        "uniquePassive": {
+            "id": "kira-ryosuke-unique-passive",
+            "name": "Instinto Rápido",
+            "icon": "🎯",
+            "effects": [
+                { "kind": "self", "stats": ["tiro", "tecnica"], "baseAmount": 150, "trigger": "matchStart" }
+            ]
+        },
         "statsLevel1": {
             "tiro": 40,
             "tecnica": 28,
@@ -1586,6 +1594,14 @@ const CHARACTERS_DATA = [
                 ]
             }
         ],
+        "uniquePassive": {
+            "id": "gagamaru-gin-unique-passive",
+            "name": "Instinto Animal",
+            "icon": "🦍",
+            "effects": [
+                { "kind": "self", "stats": ["tiro"], "baseAmount": 150, "trigger": "matchStart" }
+            ]
+        },
         "statsLevel1": {
             "tiro": 40,
             "tecnica": 28,
@@ -1645,6 +1661,14 @@ const CHARACTERS_DATA = [
                 ]
             }
         ],
+        "uniquePassive": {
+            "id": "jingo-raichi-unique-passive",
+            "name": "Presión Incansable",
+            "icon": "🛹",
+            "effects": [
+                { "kind": "self", "stats": ["defensa", "tecnica"], "baseAmount": 150, "trigger": "matchStart" }
+            ]
+        },
         "statsLevel1": {
             "defensa": 40,
             "tecnica": 28,
@@ -1705,6 +1729,14 @@ const CHARACTERS_DATA = [
                 ]
             }
         ],
+        "uniquePassive": {
+            "id": "gurimu-igarashi-unique-passive",
+            "name": "Determinación",
+            "icon": "🥊",
+            "effects": [
+                { "kind": "self", "stats": ["defensa", "tecnica"], "baseAmount": 150, "trigger": "matchStart" }
+            ]
+        },
         "statsLevel1": {
             "defensa": 40,
             "tecnica": 28,
@@ -1898,6 +1930,14 @@ const CHARACTERS_DATA = [
                 ]
             }
         ],
+        "uniquePassive": {
+            "id": "hibiki-ookawa-unique-passive",
+            "name": "Instinto Ofensivo",
+            "icon": "🏹",
+            "effects": [
+                { "kind": "self", "stats": ["tiro", "tecnica"], "baseAmount": 150, "trigger": "matchStart" }
+            ]
+        },
         "statsLevel1": {
             "tiro": 40,
             "tecnica": 28,
@@ -1958,6 +1998,14 @@ const CHARACTERS_DATA = [
                 ]
             }
         ],
+        "uniquePassive": {
+            "id": "iemon-naoyuki-unique-passive",
+            "name": "Última Barrera",
+            "icon": "🧱",
+            "effects": [
+                { "kind": "self", "stats": ["parada"], "baseAmount": 150, "trigger": "matchStart" }
+            ]
+        },
         "statsLevel1": {
             "parada": 40,
             "defensa": 28,
