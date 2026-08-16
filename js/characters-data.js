@@ -782,6 +782,14 @@ const CHARACTERS_DATA = [
                 ]
             }
         ],
+        "uniquePassive": {
+            "id": "bachira-meguru-unique-passive",
+            "name": "Vínculo con Isagi",
+            "icon": "✨",
+            "effects": [
+                { "kind": "duoBond", "partnerId": "isagi-yoichi", "stats": ["tecnica", "tiro"], "baseAmount": 250, "trigger": "matchStart" }
+            ]
+        },
         "statsLevel1": {
             "tecnica": 47,
             "tiro": 33,

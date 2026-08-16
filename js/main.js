@@ -1684,7 +1684,9 @@ function getOwnPassiveLevelMultiplier(level) {
 // para que se lea el número final de un vistazo en vez de la fórmula.
 // requiresTeammateId (p.ej. Hermanos Wanima) antepone esa condición;
 // requiresTeamCount (Sinergia de Equipo) antepone la condición de
-// equipo.
+// equipo; "duoBond" (p.ej. Vínculo con Isagi) dice claramente que el
+// bonus NO es para todo el equipo, solo para esos 2 (ver
+// computeDuoBondBonus en match-engine.js).
 function buildPassiveEffectDescription(effects, multiplier) {
     const parts = effects.map((effect) => {
         const amount = Math.round(effect.baseAmount * multiplier);
@@ -1692,6 +1694,11 @@ function buildPassiveEffectDescription(effects, multiplier) {
         const statLabels = statNames.length > 1
             ? `${statNames.slice(0, -1).join(", ")} y ${statNames[statNames.length - 1]}`
             : statNames[0];
+        if (effect.kind === "duoBond") {
+            const partner = CHARACTERS_DATA.find((c) => c.id === effect.partnerId);
+            const partnerName = partner ? partner.name : "su compañero";
+            return `si ${partnerName} también juega, ${statLabels} +${amount} solo para ellos dos`;
+        }
         if (effect.requiresTeammateId) {
             const teammate = CHARACTERS_DATA.find((c) => c.id === effect.requiresTeammateId);
             const teammateName = teammate ? teammate.name : "su compañero";
