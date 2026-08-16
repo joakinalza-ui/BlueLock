@@ -732,16 +732,17 @@ function getTransferMatchMode(matchNumber) {
 // dependen en absoluto del progreso del jugador. El nivel sube de
 // forma lineal entre partido 1 y el 11 (TRANSFER_NODE_MATCHES) de ese
 // nodo; el Despertar se queda fijo durante todo el nodo.
-// Subido (antes 5-78 de nivel, Despertar 1-6 — muy por debajo de
-// LEVEL_MAX=200 y AWAKENING_MAX=10, dejaba el mapa entero fácil de
-// sobra) para que el último nodo llegue cerca del tope de verdad.
+// Nivel sin tocar; Despertar bajado ~30% (antes 2-10, ver historial)
+// para compensar que ahora cada nivel de Despertar vale +8% en vez de
+// +4% (sube también a los rivales, no solo a mis personajes) y hacer
+// el mapa un poco más asequible.
 const TRANSFER_RIVAL_DATA = {
-    "sota-nemoto": { levelStart: 10, levelEnd: 25, awakening: 2 },
-    "soshi-kagura": { levelStart: 25, levelEnd: 45, awakening: 3 },
-    "burai-daido": { levelStart: 45, levelEnd: 70, awakening: 5 },
-    "raito-fuwa": { levelStart: 70, levelEnd: 100, awakening: 6 },
-    "gurimu-igarashi": { levelStart: 100, levelEnd: 140, awakening: 8 },
-    "iemon-naoyuki": { levelStart: 140, levelEnd: 180, awakening: 10 },
+    "sota-nemoto": { levelStart: 10, levelEnd: 25, awakening: 1 },
+    "soshi-kagura": { levelStart: 25, levelEnd: 45, awakening: 2 },
+    "burai-daido": { levelStart: 45, levelEnd: 70, awakening: 3 },
+    "raito-fuwa": { levelStart: 70, levelEnd: 100, awakening: 4 },
+    "gurimu-igarashi": { levelStart: 100, levelEnd: 140, awakening: 6 },
+    "iemon-naoyuki": { levelStart: 140, levelEnd: 180, awakening: 7 },
 };
 
 function getTransferRivalLevel(characterId, matchNumber) {
@@ -906,9 +907,9 @@ const CHALLENGE_MATCHES_PER_BLOCK = 5;
 const CHALLENGE_WIN_DIAMONDS = 200;
 const CHALLENGE_RIVAL_LEVEL_START = 1;
 const CHALLENGE_RIVAL_LEVEL_END = 200;
-// 10 bloques de 5 (50 / 5) — Despertar del rival sube 1 por bloque
-// hasta llegar al máximo (10) en el último.
-const CHALLENGE_AWAKENING_BY_BLOCK = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
+// 10 bloques de 5 (50 / 5) — Despertar del rival, bajado ~30% (antes
+// 1-10, un bloque por nivel) por el mismo motivo que TRANSFER_RIVAL_DATA.
+const CHALLENGE_AWAKENING_BY_BLOCK = [1, 1, 2, 3, 4, 4, 5, 6, 6, 7];
 const CHALLENGE_LINEUP_SIZE = 5;
 
 function getChallengeMapConfig(mapKey) {
@@ -1230,7 +1231,7 @@ const STORY_CHAPTERS = [
     },
     {
         key: "segunda-seleccion", kind: "matches", title: "Segunda Selección",
-        totalMatches: 10, levelStart: 20, levelEnd: 30, awakening: 2, modePattern: "5v5",
+        totalMatches: 10, levelStart: 20, levelEnd: 30, awakening: 1, modePattern: "5v5",
     },
 ];
 const STORY_WIN_DIAMONDS = 100;
