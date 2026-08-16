@@ -1889,7 +1889,7 @@ const CHARACTERS_DATA = [
             "name": "Hermanos Wanima",
             "icon": "✨",
             "effects": [
-                { "id": "hermanosWanima", "stats": ["tiro", "tecnica"], "baseAmount": 50, "trigger": "matchStart", "requiresTeammateId": "junichi-wanima" }
+                { "id": "hermanosWanima", "stats": ["tiro", "tecnica"], "baseAmount": 150, "trigger": "matchStart", "requiresTeammateId": "junichi-wanima" }
             ]
         },
         "statsLevel1": {
@@ -1956,7 +1956,7 @@ const CHARACTERS_DATA = [
             "name": "Hermanos Wanima",
             "icon": "✨",
             "effects": [
-                { "id": "hermanosWanima", "stats": ["tiro", "tecnica"], "baseAmount": 50, "trigger": "matchStart", "requiresTeammateId": "keisuke-wanima" }
+                { "id": "hermanosWanima", "stats": ["tiro", "tecnica"], "baseAmount": 150, "trigger": "matchStart", "requiresTeammateId": "keisuke-wanima" }
             ]
         },
         "statsLevel1": {
