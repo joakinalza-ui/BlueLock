@@ -1,3 +1,58 @@
+// Bloqueo de orientación: manifest.json ya pide "orientation":"portrait",
+// pero iOS Safari (incluida la app instalada en pantalla de inicio) NUNCA
+// ha implementado ese bloqueo del manifest -- a diferencia de Android,
+// girar el móvil giraba también toda la interfaz. Como no hay forma real
+// de IMPEDIR la rotación en iOS, se tapa la pantalla entera con un aviso
+// en cuanto el viewport queda en horizontal y se pide volver a vertical
+// -- así el usuario nunca ve el layout normal deformado en horizontal.
+// max-height:550px es lo que distingue un móvil de verdad tumbado (alto
+// corto, ~375-430px en la mayoría) de una ventana de escritorio normal
+// (también "landscape" según el navegador, pero bastante más alta).
+function ensureOrientationLockOverlay() {
+    if (document.getElementById("orientation-lock-overlay")) return;
+
+    const style = document.createElement("style");
+    style.textContent = `
+        #orientation-lock-overlay{
+            display:none;
+            position:fixed;
+            inset:0;
+            z-index:999999;
+            background:#070b14;
+            color:#fff;
+            flex-direction:column;
+            align-items:center;
+            justify-content:center;
+            gap:16px;
+            text-align:center;
+            padding:24px;
+            font-family:sans-serif;
+        }
+        #orientation-lock-overlay .orientation-lock-icon{
+            font-size:48px;
+        }
+        #orientation-lock-overlay p{
+            font-size:15px;
+            color:#c3cbe0;
+            max-width:280px;
+            margin:0;
+        }
+        @media (orientation:landscape) and (max-height:550px){
+            #orientation-lock-overlay{ display:flex; }
+        }
+    `;
+    document.head.appendChild(style);
+
+    const overlay = document.createElement("div");
+    overlay.id = "orientation-lock-overlay";
+    overlay.innerHTML = `
+        <span class="orientation-lock-icon">📱</span>
+        <p>Gira el móvil para volver a la posición vertical — Blue Lock Coach solo funciona así.</p>
+    `;
+    document.body.appendChild(overlay);
+}
+ensureOrientationLockOverlay();
+
 const PLAYER_NAME_KEY = "bl_player_name";
 const PLAYER_NAME_DEFAULT = "Entrenador";
 const PLAYER_NAME_MAX_LENGTH = 8;
