@@ -770,6 +770,12 @@ body{
     color:#7fa8ff;
 }
 
+.result-card-badge.badge-universal{
+    background:rgba(16,24,42,0.9);
+    border:1px solid #a78bfa;
+    color:#c4b5fd;
+}
+
 .result-card-stars{
     font-size:8px;
     color:#facc15;

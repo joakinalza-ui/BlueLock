@@ -212,6 +212,15 @@ body{
     gap:8px;
 }
 
+/* Misma especificidad que .player-section de arriba (0,1,0) — sin este
+   selector combinado, [hidden] pierde el empate de especificidad frente
+   a .player-section y la sección se queda visible pese al atributo
+   (bug preexistente: "Subir de Nivel" nunca se ocultaba de verdad para
+   personajes fuera del Quinteto). */
+.player-section[hidden]{
+    display:none;
+}
+
 .pd-section-title{
     font-size:11px;
     font-weight:700;

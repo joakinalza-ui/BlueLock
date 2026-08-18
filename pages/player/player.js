@@ -78,6 +78,44 @@ function renderAwakeningSection() {
     };
 }
 
+// Esencia Universal: saldo COMPARTIDO (no por personaje, como los
+// Diamantes) que sale de duplicados que ya no tendrían ningún uso
+// (personaje en Despertar máximo, ver resolvePullResult en gacha.js).
+// Se puede canjear desde la Ficha de CUALQUIER personaje que no esté ya
+// en Despertar máximo, convirtiéndolo en Esencia propia suya (1 a 1).
+// Solo se muestra la sección si hay saldo que gastar -- si el jugador
+// nunca ha tenido un duplicado "desperdiciado", no tiene sentido
+// enseñarle un sistema que todavía no le afecta.
+function renderUniversalEssenceSection() {
+    const section = document.getElementById("player-universal-essence-section");
+    const balance = getUniversalEssence();
+    if (balance <= 0) {
+        section.hidden = true;
+        return;
+    }
+    section.hidden = false;
+
+    document.getElementById("player-universal-essence-balance").textContent = `💠 ${balance.toLocaleString("es-ES")} disponibles`;
+    const btn = document.getElementById("player-universal-essence-btn");
+
+    const isMaxed = getAwakeningCost(character.rarity, getCharacterAwakening(character.id)) === null;
+    if (isMaxed) {
+        btn.textContent = "Ya en Despertar Máximo";
+        btn.disabled = true;
+        btn.onclick = null;
+        return;
+    }
+
+    btn.textContent = `Convertir en Esencia de ${character.name}`;
+    btn.disabled = false;
+    btn.onclick = () => {
+        if (!spendUniversalEssence(balance)) return;
+        addEssence(character.id, balance);
+        renderUniversalEssenceSection();
+        renderAwakeningSection();
+    };
+}
+
 function renderTechniques() {
     document.getElementById("player-techniques").innerHTML = buildTechniqueListMarkup(character);
     const freeSlotBtn = document.querySelector('[data-technique-slot="free"]');
@@ -220,6 +258,7 @@ document.addEventListener("DOMContentLoaded", () => {
     renderStats();
     renderPassives();
     renderAwakeningSection();
+    renderUniversalEssenceSection();
     renderTechniques();
     renderLevelUpSection();
     initTabs();

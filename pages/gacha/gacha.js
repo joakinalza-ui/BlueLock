@@ -43,20 +43,27 @@ function pickRarityTier(forceGuaranteed3) {
 
 // Elige un personaje al azar dentro de una rareza ya decidida y
 // resuelve si es nuevo (se desbloquea) o duplicado (se convierte en
-// Esencias del propio personaje). No decide la rareza ni toca el
-// pity — eso es cosa de quien la llame (pullOnce con las probabilidades
-// normales, o el sobre de bienvenida con rarezas fijas).
+// Esencias del propio personaje) -- salvo que ese personaje ya esté en
+// Despertar máximo, en cuyo caso esa Esencia no tendría ningún uso y se
+// convierte en Esencia Universal en su lugar (ver addUniversalEssence
+// en main.js). No decide la rareza ni toca el pity — eso es cosa de
+// quien la llame (pullOnce con las probabilidades normales, o el sobre
+// de bienvenida con rarezas fijas).
 function resolvePullResult(rarity) {
     const pool = CHARACTERS_DATA.filter((c) => c.rarity === rarity && !c.gachaExcluded);
     const character = pool[Math.floor(Math.random() * pool.length)];
 
     const wasUnlocked = isCharacterUnlocked(character);
     if (wasUnlocked) {
+        if (getCharacterAwakening(character.id) >= AWAKENING_MAX) {
+            addUniversalEssence(GACHA_PULL_DUPLICATE_ESSENCE);
+            return { character, isNew: false, essenceGained: 0, universalEssenceGained: GACHA_PULL_DUPLICATE_ESSENCE };
+        }
         addEssence(character.id, GACHA_PULL_DUPLICATE_ESSENCE);
-        return { character, isNew: false, essenceGained: GACHA_PULL_DUPLICATE_ESSENCE };
+        return { character, isNew: false, essenceGained: GACHA_PULL_DUPLICATE_ESSENCE, universalEssenceGained: 0 };
     }
     unlockCharacter(character.id);
-    return { character, isNew: true, essenceGained: 0 };
+    return { character, isNew: true, essenceGained: 0, universalEssenceGained: 0 };
 }
 
 // Una tirada normal: elige rareza respetando el pity y resuelve el
@@ -131,7 +138,9 @@ function buildResultCardMarkup(result) {
     const spritePath = hasRealSprite ? getCharacterThumbSprite(character) : PLACEHOLDER_PORTRAIT;
     const badge = result.isNew
         ? '<span class="result-card-badge badge-new">¡NUEVO!</span>'
-        : `<span class="result-card-badge badge-essence">+${result.essenceGained} Esen.</span>`;
+        : result.universalEssenceGained
+            ? `<span class="result-card-badge badge-universal">+${result.universalEssenceGained} Univ.</span>`
+            : `<span class="result-card-badge badge-essence">+${result.essenceGained} Esen.</span>`;
     return `
         <span class="result-card-thumb">
             <img src="${resolveAssetPath(spritePath)}" alt="${character.name}" data-real-sprite="${hasRealSprite}">
@@ -307,8 +316,13 @@ function handlePointsShopRedeem(characterId) {
     if (!spendRecruitPoints(RECRUIT_POINTS_REDEEM_COST)) return;
 
     if (wasUnlocked) {
-        addEssence(character.id, GACHA_PULL_DUPLICATE_ESSENCE);
-        showPointsShopToast(`+${GACHA_PULL_DUPLICATE_ESSENCE} Esencias de ${character.name}`);
+        if (getCharacterAwakening(character.id) >= AWAKENING_MAX) {
+            addUniversalEssence(GACHA_PULL_DUPLICATE_ESSENCE);
+            showPointsShopToast(`+${GACHA_PULL_DUPLICATE_ESSENCE} Esencia Universal`);
+        } else {
+            addEssence(character.id, GACHA_PULL_DUPLICATE_ESSENCE);
+            showPointsShopToast(`+${GACHA_PULL_DUPLICATE_ESSENCE} Esencias de ${character.name}`);
+        }
     } else {
         unlockCharacter(character.id);
         showPointsShopToast(`¡${character.name} desbloqueado!`);
