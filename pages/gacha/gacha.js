@@ -43,27 +43,23 @@ function pickRarityTier(forceGuaranteed3) {
 
 // Elige un personaje al azar dentro de una rareza ya decidida y
 // resuelve si es nuevo (se desbloquea) o duplicado (se convierte en
-// Esencias del propio personaje) -- salvo que ese personaje ya esté en
-// Despertar máximo, en cuyo caso esa Esencia no tendría ningún uso y se
-// convierte en Esencia Universal en su lugar (ver addUniversalEssence
-// en main.js). No decide la rareza ni toca el pity — eso es cosa de
-// quien la llame (pullOnce con las probabilidades normales, o el sobre
-// de bienvenida con rarezas fijas).
+// Esencias del propio personaje). No decide la rareza ni toca el
+// pity — eso es cosa de quien la llame (pullOnce con las probabilidades
+// normales, o el sobre de bienvenida con rarezas fijas). Si el
+// personaje ya está en Despertar máximo esa Esencia no tiene uso
+// directo, pero puede canjearse luego por la de otro en la Tienda de
+// Esencias (ver initEssenceShop más abajo).
 function resolvePullResult(rarity) {
     const pool = CHARACTERS_DATA.filter((c) => c.rarity === rarity && !c.gachaExcluded);
     const character = pool[Math.floor(Math.random() * pool.length)];
 
     const wasUnlocked = isCharacterUnlocked(character);
     if (wasUnlocked) {
-        if (getCharacterAwakening(character.id) >= AWAKENING_MAX) {
-            addUniversalEssence(GACHA_PULL_DUPLICATE_ESSENCE);
-            return { character, isNew: false, essenceGained: 0, universalEssenceGained: GACHA_PULL_DUPLICATE_ESSENCE };
-        }
         addEssence(character.id, GACHA_PULL_DUPLICATE_ESSENCE);
-        return { character, isNew: false, essenceGained: GACHA_PULL_DUPLICATE_ESSENCE, universalEssenceGained: 0 };
+        return { character, isNew: false, essenceGained: GACHA_PULL_DUPLICATE_ESSENCE };
     }
     unlockCharacter(character.id);
-    return { character, isNew: true, essenceGained: 0, universalEssenceGained: 0 };
+    return { character, isNew: true, essenceGained: 0 };
 }
 
 // Una tirada normal: elige rareza respetando el pity y resuelve el
@@ -110,6 +106,7 @@ function updateHeaderCounters() {
     const pity = getPityCount();
     document.getElementById("pity-fraction").textContent = `${pity} / ${PITY_THRESHOLD}`;
     document.getElementById("pity-fill").style.width = Math.min(100, (pity / PITY_THRESHOLD) * 100) + "%";
+    updateEssenceShopButtonCount();
 
     updatePullX1CostDisplay();
     updatePullX10CostDisplay();
@@ -138,9 +135,7 @@ function buildResultCardMarkup(result) {
     const spritePath = hasRealSprite ? getCharacterThumbSprite(character) : PLACEHOLDER_PORTRAIT;
     const badge = result.isNew
         ? '<span class="result-card-badge badge-new">¡NUEVO!</span>'
-        : result.universalEssenceGained
-            ? `<span class="result-card-badge badge-universal">+${result.universalEssenceGained} Univ.</span>`
-            : `<span class="result-card-badge badge-essence">+${result.essenceGained} Esen.</span>`;
+        : `<span class="result-card-badge badge-essence">+${result.essenceGained} Esen.</span>`;
     return `
         <span class="result-card-thumb">
             <img src="${resolveAssetPath(spritePath)}" alt="${character.name}" data-real-sprite="${hasRealSprite}">
@@ -316,13 +311,8 @@ function handlePointsShopRedeem(characterId) {
     if (!spendRecruitPoints(RECRUIT_POINTS_REDEEM_COST)) return;
 
     if (wasUnlocked) {
-        if (getCharacterAwakening(character.id) >= AWAKENING_MAX) {
-            addUniversalEssence(GACHA_PULL_DUPLICATE_ESSENCE);
-            showPointsShopToast(`+${GACHA_PULL_DUPLICATE_ESSENCE} Esencia Universal`);
-        } else {
-            addEssence(character.id, GACHA_PULL_DUPLICATE_ESSENCE);
-            showPointsShopToast(`+${GACHA_PULL_DUPLICATE_ESSENCE} Esencias de ${character.name}`);
-        }
+        addEssence(character.id, GACHA_PULL_DUPLICATE_ESSENCE);
+        showPointsShopToast(`+${GACHA_PULL_DUPLICATE_ESSENCE} Esencias de ${character.name}`);
     } else {
         unlockCharacter(character.id);
         showPointsShopToast(`¡${character.name} desbloqueado!`);
@@ -330,6 +320,7 @@ function handlePointsShopRedeem(characterId) {
 
     renderPointsShop();
     updatePointsShopButtonCount();
+    updateEssenceShopButtonCount();
 }
 
 function initPointsShop() {
@@ -347,6 +338,188 @@ function initPointsShop() {
         const btn = event.target.closest(".points-shop-redeem-btn");
         if (!btn || btn.disabled) return;
         handlePointsShopRedeem(btn.dataset.character);
+    });
+}
+
+// ===================================================================
+// Tienda de Esencias: cambia Esencias "sobrantes" (de un personaje que
+// ya está en Despertar máximo, donde ya no tienen ningún uso) por
+// Esencias de OTRO personaje de la MISMA rareza que todavía pueda
+// aprovecharlas. 3 pestañas por rareza porque el coste de Despertar
+// escala distinto según rareza (AWAKENING_COST_BY_RARITY) -- mezclar
+// rarezas rompería ese equilibrio. Canje 1 a 1, todo el saldo del
+// origen elegido de una sola vez (no hay forma de canjear solo una
+// parte). Flujo en 2 pasos dentro de cada pestaña: 1) tocar un
+// personaje de la lista de "origen" para seleccionarlo (alterna
+// selección/deselección), 2) tocar "Dar Esencia" en un personaje de la
+// lista de "destino" para completar el canje.
+// ===================================================================
+
+let essenceShopActiveRarity = 1;
+// Origen seleccionado por pestaña -- se guarda por rareza para no
+// perder la selección de una pestaña al mirar otra y volver.
+const essenceShopSelectedSource = { 1: null, 2: null, 3: null };
+
+function getEssenceShopSourceCandidates(rarity) {
+    return CHARACTERS_DATA
+        .filter((c) => c.rarity === rarity && !c.gachaExcluded && isCharacterUnlocked(c))
+        .filter((c) => getCharacterAwakening(c.id) >= AWAKENING_MAX && getEssenceBalance(c.id) > 0)
+        .sort((a, b) => a.name.localeCompare(b.name));
+}
+
+function getEssenceShopTargetCandidates(rarity) {
+    return CHARACTERS_DATA
+        .filter((c) => c.rarity === rarity && !c.gachaExcluded && isCharacterUnlocked(c))
+        .filter((c) => getCharacterAwakening(c.id) < AWAKENING_MAX)
+        .sort((a, b) => a.name.localeCompare(b.name));
+}
+
+// Total de Esencia hoy mismo "atrapada" en personajes ya al máximo, de
+// cualquier rareza -- solo para el contador del botón que abre la
+// tienda (avisa de que hay algo aprovechable sin tener que entrar).
+function getEssenceShopExchangeableTotal() {
+    return CHARACTERS_DATA
+        .filter((c) => !c.gachaExcluded && isCharacterUnlocked(c) && getCharacterAwakening(c.id) >= AWAKENING_MAX)
+        .reduce((sum, c) => sum + getEssenceBalance(c.id), 0);
+}
+
+function updateEssenceShopButtonCount() {
+    const el = document.getElementById("essence-shop-btn-count");
+    if (el) el.textContent = getEssenceShopExchangeableTotal().toLocaleString("es-ES");
+}
+
+function buildEssenceShopSourceRowMarkup(character, isSelected) {
+    const hasRealSprite = !!character.sprite;
+    const spritePath = hasRealSprite ? getCharacterThumbSprite(character) : PLACEHOLDER_PORTRAIT;
+    return `
+        <button class="essence-shop-row essence-shop-source-row${isSelected ? " is-selected" : ""}" type="button" data-source="${character.id}">
+            <span class="essence-shop-row-thumb">
+                <img src="${resolveAssetPath(spritePath)}" alt="${character.name}" data-real-sprite="${hasRealSprite}">
+            </span>
+            <span class="essence-shop-row-name">${character.name}</span>
+            <span class="essence-shop-row-essence">✨ ${getEssenceBalance(character.id).toLocaleString("es-ES")}</span>
+        </button>
+    `;
+}
+
+function buildEssenceShopTargetRowMarkup(character, hasSourceSelected) {
+    const hasRealSprite = !!character.sprite;
+    const spritePath = hasRealSprite ? getCharacterThumbSprite(character) : PLACEHOLDER_PORTRAIT;
+    return `
+        <div class="essence-shop-row essence-shop-target-row">
+            <span class="essence-shop-row-thumb">
+                <img src="${resolveAssetPath(spritePath)}" alt="${character.name}" data-real-sprite="${hasRealSprite}">
+            </span>
+            <span class="essence-shop-row-name">${character.name}</span>
+            <span class="essence-shop-row-essence">✨ ${getEssenceBalance(character.id).toLocaleString("es-ES")}</span>
+            <button class="essence-shop-give-btn" type="button" data-target="${character.id}" ${hasSourceSelected ? "" : "disabled"}>Dar Esencia</button>
+        </div>
+    `;
+}
+
+function renderEssenceShopPanel(rarity) {
+    const panel = document.querySelector(`[data-rarity-panel="${rarity}"]`);
+    if (!panel) return;
+    const selectedId = essenceShopSelectedSource[rarity];
+    const sources = getEssenceShopSourceCandidates(rarity);
+    const targets = getEssenceShopTargetCandidates(rarity);
+
+    // Si el origen seleccionado ya no es válido (se gastó su Esencia en
+    // otra pestaña, por ejemplo) se limpia la selección.
+    if (selectedId && !sources.some((c) => c.id === selectedId)) {
+        essenceShopSelectedSource[rarity] = null;
+    }
+    const hasSourceSelected = !!essenceShopSelectedSource[rarity];
+
+    const sourcesHtml = sources.length
+        ? sources.map((c) => buildEssenceShopSourceRowMarkup(c, c.id === essenceShopSelectedSource[rarity])).join("")
+        : '<p class="essence-shop-empty">No tienes Esencia sobrante de esta rareza todavía.</p>';
+
+    const targetsHtml = targets.length
+        ? targets.map((c) => buildEssenceShopTargetRowMarkup(c, hasSourceSelected)).join("")
+        : '<p class="essence-shop-empty">No hay nadie de esta rareza que pueda aprovecharla ahora mismo.</p>';
+
+    panel.innerHTML = `
+        <div class="essence-shop-section-title">1. Elige de quién sacar la Esencia sobrante</div>
+        <div class="essence-shop-list">${sourcesHtml}</div>
+        <div class="essence-shop-section-title">2. Elige a quién dársela</div>
+        <div class="essence-shop-list">${targetsHtml}</div>
+    `;
+}
+
+function handleEssenceShopExchange(sourceId, targetId, rarity) {
+    const targetChar = CHARACTERS_DATA.find((c) => c.id === targetId);
+    if (!targetChar) return;
+    const amount = getEssenceBalance(sourceId);
+    if (amount <= 0) return;
+    if (!spendEssence(sourceId, amount)) return;
+    addEssence(targetId, amount);
+    essenceShopSelectedSource[rarity] = null;
+    showEssenceShopToast(`+${amount} Esencia para ${targetChar.name}`);
+    renderEssenceShopPanel(rarity);
+    updateEssenceShopButtonCount();
+}
+
+function showEssenceShopToast(text) {
+    const toast = document.getElementById("essence-shop-toast");
+    toast.textContent = text;
+    toast.hidden = false;
+    clearTimeout(toast._hideTimer);
+    toast._hideTimer = setTimeout(() => { toast.hidden = true; }, 2200);
+}
+
+function switchEssenceShopTab(rarity) {
+    essenceShopActiveRarity = rarity;
+    document.querySelectorAll(".essence-shop-tab").forEach((btn) => {
+        btn.classList.toggle("is-active", Number(btn.dataset.rarity) === rarity);
+    });
+    document.querySelectorAll("[data-rarity-panel]").forEach((panel) => {
+        panel.hidden = Number(panel.dataset.rarityPanel) !== rarity;
+    });
+    renderEssenceShopPanel(rarity);
+}
+
+function openEssenceShop() {
+    switchEssenceShopTab(essenceShopActiveRarity);
+    document.getElementById("essence-shop-overlay").hidden = false;
+}
+
+function closeEssenceShop() {
+    document.getElementById("essence-shop-overlay").hidden = true;
+}
+
+function initEssenceShop() {
+    updateEssenceShopButtonCount();
+
+    document.getElementById("essence-shop-btn").addEventListener("click", openEssenceShop);
+    document.getElementById("essence-shop-close").addEventListener("click", closeEssenceShop);
+
+    const overlay = document.getElementById("essence-shop-overlay");
+    overlay.addEventListener("click", (event) => {
+        if (event.target === overlay) closeEssenceShop();
+    });
+
+    document.querySelectorAll(".essence-shop-tab").forEach((btn) => {
+        btn.addEventListener("click", () => switchEssenceShopTab(Number(btn.dataset.rarity)));
+    });
+
+    document.querySelectorAll("[data-rarity-panel]").forEach((panel) => {
+        panel.addEventListener("click", (event) => {
+            const rarity = Number(panel.dataset.rarityPanel);
+            const sourceBtn = event.target.closest("[data-source]");
+            if (sourceBtn) {
+                const id = sourceBtn.dataset.source;
+                essenceShopSelectedSource[rarity] = (essenceShopSelectedSource[rarity] === id) ? null : id;
+                renderEssenceShopPanel(rarity);
+                return;
+            }
+            const targetBtn = event.target.closest("[data-target]");
+            if (targetBtn && !targetBtn.disabled) {
+                const sourceId = essenceShopSelectedSource[rarity];
+                if (!sourceId) return;
+                handleEssenceShopExchange(sourceId, targetBtn.dataset.target, rarity);
+            }
+        });
     });
 }
 
@@ -391,5 +564,6 @@ document.addEventListener("DOMContentLoaded", () => {
     initPullButtons();
     initBannerDetails();
     initPointsShop();
+    initEssenceShop();
     initWelcomePull();
 });

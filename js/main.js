@@ -2219,32 +2219,6 @@ function addEssence(characterId, amount) {
     return essences[characterId];
 }
 
-// Esencia Universal: cuando un duplicado (de gacha o del Canje de
-// Puntos de Fichaje) sería de un personaje que ya está en Despertar
-// máximo, su Esencia normal no tendría ningún uso (el Despertar ya no
-// puede subir más) -- en vez de perderse, se convierte en esta versión
-// compartida (un único saldo, como los Diamantes), canjeable luego por
-// Esencias de CUALQUIER OTRO personaje desde su propia Ficha (ver
-// renderUniversalEssenceSection en pages/player/player.js). Cambio de
-// 1 a 1: no es un bonus, solo redirige lo que si no se perdería.
-const UNIVERSAL_ESSENCE_KEY = "bl_universal_essence";
-
-function getUniversalEssence() {
-    const stored = localStorage.getItem(UNIVERSAL_ESSENCE_KEY);
-    return stored === null ? 0 : parseInt(stored, 10) || 0;
-}
-
-function addUniversalEssence(amount) {
-    localStorage.setItem(UNIVERSAL_ESSENCE_KEY, String(getUniversalEssence() + amount));
-}
-
-function spendUniversalEssence(amount) {
-    const current = getUniversalEssence();
-    if (current < amount) return false;
-    localStorage.setItem(UNIVERSAL_ESSENCE_KEY, String(current - amount));
-    return true;
-}
-
 // Combustible de Ego: recurso que se gasta al subir de nivel a un
 // miembro del Quinteto Principal (no es por personaje, es un saldo
 // único del jugador, como los diamantes). Coste de cada subida = nivel
