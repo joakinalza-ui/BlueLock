@@ -282,7 +282,7 @@ function renderFinal(container) {
         if (rewardResult) {
             const rewards = [];
             if (rewardResult.unlocked) rewards.push(`🔓 ${state.character.name} desbloqueado en tu roster`);
-            if (rewardResult.essenceGained) rewards.push(`✨ +${rewardResult.essenceGained} Esencias de ${state.character.name}`);
+            if (rewardResult.essenceGained) rewards.push(`✨ +${rewardResult.essenceGained} Esencia de Intercambio`);
             rewards.push(`◆ +${rewardResult.diamondsGained} diamantes`);
             if (rewardResult.nodeCompleted) rewards.push("🏁 Fichaje completado — siguiente nodo desbloqueado");
             rewardsHtml = rewards.map((r) => `<div class="match-reward-row">${r}</div>`).join("");

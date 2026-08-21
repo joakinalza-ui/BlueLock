@@ -87,11 +87,6 @@
                     <span class="points-shop-btn-title">🎫 Tienda de Puntos de Reclutamiento</span>
                     <span class="points-shop-btn-count" id="points-shop-btn-count">0</span>
                 </button>
-
-                <button class="points-shop-btn" id="essence-shop-btn" type="button">
-                    <span class="points-shop-btn-title">✨ Tienda de Esencias</span>
-                    <span class="points-shop-btn-count" id="essence-shop-btn-count">0</span>
-                </button>
             </div>
         </div>
     </div>
@@ -126,25 +121,8 @@
         </div>
     </div>
 
-    <div id="essence-shop-overlay" class="gacha-modal-overlay" hidden>
-        <div class="gacha-modal essence-shop-modal">
-            <button class="gacha-modal-close" id="essence-shop-close" type="button" aria-label="Cerrar">×</button>
-            <p class="gacha-modal-title">Tienda de Esencias</p>
-            <p class="essence-shop-hint">Cambia Esencias de un personaje que ya está en Despertar máximo (donde ya no sirven de nada) por Esencias de otro de la misma rareza.</p>
-            <div class="essence-shop-tabs">
-                <button class="essence-shop-tab is-active" type="button" data-rarity="1">★1</button>
-                <button class="essence-shop-tab" type="button" data-rarity="2">★2</button>
-                <button class="essence-shop-tab" type="button" data-rarity="3">★3</button>
-            </div>
-            <div class="essence-shop-panel" data-rarity-panel="1"></div>
-            <div class="essence-shop-panel" data-rarity-panel="2" hidden></div>
-            <div class="essence-shop-panel" data-rarity-panel="3" hidden></div>
-        </div>
-    </div>
-
     <div id="insufficient-funds-toast" class="gacha-toast" hidden>Diamantes insuficientes</div>
     <div id="points-shop-toast" class="points-shop-toast" hidden></div>
-    <div id="essence-shop-toast" class="points-shop-toast" hidden></div>
 
     <script src="gacha.js"></script>
 

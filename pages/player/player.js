@@ -38,11 +38,12 @@ function renderPassives() {
 
 // A diferencia de Subir de Nivel, el Despertar no depende de estar en
 // el Quinteto — es una mejora permanente del personaje, siempre
-// disponible. Gasta Esencias del propio personaje (las que ya da el
-// gacha al sacar un duplicado suyo), no Combustible de Ego.
+// disponible. Gasta Esencia de Intercambio, el saldo COMPARTIDO entre
+// todos los personajes (ver getEssenceBalance en main.js), no
+// Combustible de Ego.
 function renderAwakeningSection() {
     const awakening = getCharacterAwakening(character.id);
-    const essences = getEssenceBalance(character.id);
+    const essences = getEssenceBalance();
     const btn = document.getElementById("player-awakening-btn");
 
     document.getElementById("player-awakening-current").textContent = `Despertar ${awakening} / ${AWAKENING_MAX}`;
@@ -69,7 +70,7 @@ function renderAwakeningSection() {
     btn.textContent = "Despertar";
     btn.disabled = false;
     btn.onclick = () => {
-        if (!spendEssence(character.id, cost)) return;
+        if (!spendEssenceBalance(cost)) return;
         setCharacterAwakening(character.id, awakening + 1);
         renderHero();
         renderStats();
