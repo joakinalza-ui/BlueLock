@@ -41,6 +41,11 @@ function renderPassives() {
 // disponible. Gasta Esencias del propio personaje (las que ya da el
 // gacha al sacar un duplicado suyo), no Combustible de Ego.
 function renderAwakeningSection() {
+    // Si ya está al máximo y le quedó Esencia propia sin gastar, se
+    // convierte sola a Esencia de Intercambio antes de pintar nada --
+    // así la Ficha nunca muestra un sobrante que ya no sirve de nada.
+    sweepLeftoverEssenceIfMaxed(character);
+
     const awakening = getCharacterAwakening(character.id);
     const essences = getEssenceBalance(character.id);
     const btn = document.getElementById("player-awakening-btn");

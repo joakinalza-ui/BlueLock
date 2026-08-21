@@ -777,6 +777,25 @@ function getEssenceValueForRarity(rarity) {
     return ESSENCE_VALUE_BY_RARITY[rarity] || 0;
 }
 
+// Si un personaje llega a Despertar máximo con Esencia propia sobrante
+// (p. ej. la fue acumulando -- por gacha, Puntos de Fichaje o el Mapa de
+// Fichajes -- antes de completar su Despertar, y le sobró más de lo que
+// necesitaba para el último nivel), esa Esencia ya no tiene ningún uso
+// posible para él y se quedaría muerta para siempre. Se barre entera a
+// Esencia de Intercambio, con el mismo valor por punto que un duplicado
+// de esa rareza (ver getEssenceValueForRarity) -- no importa si llegó
+// como sobra acumulada o como un duplicado nuevo, vale lo mismo. Se
+// llama cada vez que se pinta la sección de Despertar de la Ficha
+// (ver renderAwakeningSection en pages/player/player.js), así que
+// también limpia personajes que ya estaban maximizados de antes.
+function sweepLeftoverEssenceIfMaxed(character) {
+    if (getCharacterAwakening(character.id) < AWAKENING_MAX) return;
+    const leftover = getEssenceBalance(character.id);
+    if (leftover <= 0) return;
+    if (!spendEssence(character.id, leftover)) return;
+    addExchangeEssence(leftover * getEssenceValueForRarity(character.rarity));
+}
+
 // Mapa de Fichajes: 6 personajes exclusivos (gachaExcluded:true en
 // characters-data.js — no salen ni en el gacha ni en la Tienda de
 // Puntos), cada uno con su propio nodo de 11 partidos secuenciales.
