@@ -618,6 +618,93 @@ body{
     display:none;
 }
 
+/* Tienda de Intercambio (mismo lenguaje visual que la Tienda de Puntos,
+   ver .points-shop-* arriba) */
+
+.essence-shop-hint{
+    margin:-8px 0 14px;
+    font-size:12px;
+    color:#9aa6c3;
+    text-align:center;
+    line-height:1.4;
+}
+
+.essence-shop-list{
+    display:flex;
+    flex-direction:column;
+    gap:8px;
+}
+
+.essence-shop-empty{
+    font-size:12px;
+    color:#5b6580;
+    text-align:center;
+    padding:10px 0;
+}
+
+.essence-shop-row{
+    display:flex;
+    align-items:center;
+    gap:10px;
+    background:#0a0f1c;
+    border:1px solid #2c3a5c;
+    border-radius:12px;
+    padding:8px 10px;
+}
+
+.essence-shop-row-thumb{
+    width:40px;
+    height:40px;
+    flex-shrink:0;
+    border-radius:8px;
+    overflow:hidden;
+    background:#111a2e;
+    display:block;
+}
+
+.essence-shop-row-thumb img{
+    width:100%;
+    height:100%;
+    object-fit:cover;
+    display:block;
+}
+
+.essence-shop-row-name{
+    flex:1;
+    min-width:0;
+    font-size:13px;
+    font-weight:700;
+    white-space:nowrap;
+    overflow:hidden;
+    text-overflow:ellipsis;
+}
+
+.essence-shop-row-essence{
+    flex-shrink:0;
+    font-size:12px;
+    color:#f5c542;
+    font-variant-numeric:tabular-nums;
+}
+
+.essence-shop-give-btn{
+    flex-shrink:0;
+    padding:9px 12px;
+    border-radius:8px;
+    border:none;
+    background:#7fa8ff;
+    color:#0a0f1c;
+    font-weight:700;
+    font-size:11.5px;
+    white-space:nowrap;
+    cursor:pointer;
+}
+
+.essence-shop-give-btn:disabled{
+    background:#1c2438;
+    color:#5b6580;
+    cursor:not-allowed;
+}
+
 /* Modales compartidos (resultado de tirada / detalles del banner) */
 
 .gacha-modal-overlay{
@@ -768,6 +855,12 @@ body{
     background:rgba(16,24,42,0.9);
     border:1px solid #3b82f6;
     color:#7fa8ff;
+}
+
+.result-card-badge.badge-exchange{
+    background:rgba(16,24,42,0.9);
+    border:1px solid #a78bfa;
+    color:#c4b5fd;
 }
 
 .result-card-stars{

@@ -87,6 +87,11 @@
                     <span class="points-shop-btn-title">🎫 Tienda de Puntos de Reclutamiento</span>
                     <span class="points-shop-btn-count" id="points-shop-btn-count">0</span>
                 </button>
+
+                <button class="points-shop-btn" id="exchange-shop-btn" type="button">
+                    <span class="points-shop-btn-title">✨ Tienda de Intercambio</span>
+                    <span class="points-shop-btn-count" id="exchange-shop-btn-count">0</span>
+                </button>
             </div>
         </div>
     </div>
@@ -121,8 +126,23 @@
         </div>
     </div>
 
+    <div id="exchange-shop-overlay" class="gacha-modal-overlay" hidden>
+        <div class="gacha-modal essence-shop-modal">
+            <button class="gacha-modal-close" id="exchange-shop-close" type="button" aria-label="Cerrar">×</button>
+            <p class="gacha-modal-title">Tienda de Intercambio</p>
+            <p class="essence-shop-hint">Reparte tu Esencia de Intercambio (la que sale de duplicados de personajes ya en Despertar máximo) entre cualquier otro personaje, sin importar su rareza.</p>
+            <div class="points-shop-balance">
+                <span class="points-shop-balance-icon">✨</span>
+                <span id="exchange-shop-balance-value">0</span>
+                <span class="points-shop-balance-label">Esencia de Intercambio</span>
+            </div>
+            <div class="essence-shop-list" id="exchange-shop-list"></div>
+        </div>
+    </div>
+
     <div id="insufficient-funds-toast" class="gacha-toast" hidden>Diamantes insuficientes</div>
     <div id="points-shop-toast" class="points-shop-toast" hidden></div>
+    <div id="exchange-shop-toast" class="points-shop-toast" hidden></div>
 
     <script src="gacha.js"></script>
 

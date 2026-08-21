@@ -706,35 +706,71 @@ function getAwakeningStatMultiplier(characterId) {
     return 1 + getAwakeningStatBonus(getCharacterAwakening(characterId));
 }
 
-// Esencia de Intercambio: saldo ÚNICO y compartido (como los Diamantes,
-// no por personaje) que paga el Despertar de CUALQUIER personaje con la
-// misma tabla de coste de siempre (AWAKENING_COST_BY_RARITY, sigue
-// variando por rareza al GASTAR). Lo que se GANA al sacar un duplicado
-// (gacha o Canje de Puntos de Fichaje) depende de la rareza de ESE
-// personaje, no de a quién se lo vaya a gastar luego -- ver
-// ESSENCE_VALUE_BY_RARITY más abajo.
-const ESSENCE_BALANCE_KEY = "bl_essence_balance";
+// Esencias: lo que se recibe al sacar en el gacha (o canjear Puntos de
+// Fichaje) a un personaje que ya estaba desbloqueado, en vez de un
+// duplicado inútil. Son propias de cada personaje (no un recurso
+// compartido) y pagan SU PROPIO Despertar -- esto es el sistema
+// original, sin tocar.
+const ESSENCES_KEY = "bl_essences";
 
-function getEssenceBalance() {
-    const stored = localStorage.getItem(ESSENCE_BALANCE_KEY);
-    return stored === null ? 0 : parseInt(stored, 10) || 0;
+function getEssences() {
+    try {
+        const parsed = JSON.parse(localStorage.getItem(ESSENCES_KEY));
+        return parsed && typeof parsed === "object" ? parsed : {};
+    } catch (e) {
+        return {};
+    }
 }
 
-function addEssenceBalance(amount) {
-    localStorage.setItem(ESSENCE_BALANCE_KEY, String(getEssenceBalance() + amount));
+function addEssence(characterId, amount) {
+    const essences = getEssences();
+    essences[characterId] = (essences[characterId] || 0) + amount;
+    localStorage.setItem(ESSENCES_KEY, JSON.stringify(essences));
+    return essences[characterId];
 }
 
-function spendEssenceBalance(amount) {
-    const current = getEssenceBalance();
+function getEssenceBalance(characterId) {
+    return getEssences()[characterId] || 0;
+}
+
+function spendEssence(characterId, amount) {
+    const essences = getEssences();
+    const current = essences[characterId] || 0;
     if (current < amount) return false;
-    localStorage.setItem(ESSENCE_BALANCE_KEY, String(current - amount));
+    essences[characterId] = current - amount;
+    localStorage.setItem(ESSENCES_KEY, JSON.stringify(essences));
     return true;
 }
 
-// Valor en Esencia de Intercambio de UN duplicado, según la rareza del
-// personaje duplicado -- un ★3 es mucho más raro de sacar que un ★1, así
-// que su duplicado vale mucho más, aunque esa Esencia luego sirva para
-// despertar a cualquiera.
+// Esencia de Intercambio: saldo ÚNICO y compartido (como los Diamantes),
+// APARTE de las Esencias normales de arriba -- solo existe para
+// aprovechar un duplicado que, si no, se perdería sin uso: si el
+// personaje duplicado YA está en Despertar máximo, su Esencia normal no
+// serviría de nada (ver resolvePullResult/handlePointsShopRedeem en
+// gacha.js), así que en vez de dársela a él se convierte en esta,
+// ponderada por SU rareza (ESSENCE_VALUE_BY_RARITY -- un duplicado de
+// un ★3 es mucho más raro que uno de un ★1, así que vale mucho más).
+// Se gasta desde la Tienda de Intercambio (gacha.js) regalándosela a
+// CUALQUIER otro personaje, de cualquier rareza, sumándose a su Esencia
+// normal 1 a 1.
+const EXCHANGE_ESSENCE_KEY = "bl_exchange_essence";
+
+function getExchangeEssence() {
+    const stored = localStorage.getItem(EXCHANGE_ESSENCE_KEY);
+    return stored === null ? 0 : parseInt(stored, 10) || 0;
+}
+
+function addExchangeEssence(amount) {
+    localStorage.setItem(EXCHANGE_ESSENCE_KEY, String(getExchangeEssence() + amount));
+}
+
+function spendExchangeEssence(amount) {
+    const current = getExchangeEssence();
+    if (current < amount) return false;
+    localStorage.setItem(EXCHANGE_ESSENCE_KEY, String(current - amount));
+    return true;
+}
+
 const ESSENCE_VALUE_BY_RARITY = { 1: 1, 2: 5, 3: 50 };
 
 function getEssenceValueForRarity(rarity) {
@@ -917,10 +953,9 @@ function getTransferRivalTeamPower(targetCharacter, matchNumber, mode) {
 // Aplica las recompensas de ganar el siguiente partido pendiente de
 // ese nodo (no hace falta pasar el número: se calcula solo a partir
 // del progreso guardado). 1ª victoria = desbloquea al personaje;
-// victorias 2ª-11ª = dan la Esencia de Intercambio de la tabla de
-// Despertar para ese paso (mismos números de siempre, aunque ahora vayan
-// al saldo COMPARTIDO en vez de a este personaje en concreto). Todas
-// dan 50 diamantes fijos.
+// victorias 2ª-11ª = dan exactamente las Esencias de la tabla de
+// Despertar para ese paso (así completar el nodo entero siempre deja
+// al personaje en Despertar 10 justo). Todas dan 50 diamantes fijos.
 function applyTransferMatchWin(characterId) {
     const character = CHARACTERS_DATA.find((c) => c.id === characterId);
     if (!character) return null;
@@ -940,7 +975,7 @@ function applyTransferMatchWin(characterId) {
     } else {
         const costTable = AWAKENING_COST_BY_RARITY[character.rarity] || [];
         essenceGained = costTable[matchNumber - 2] || 0;
-        if (essenceGained) addEssenceBalance(essenceGained);
+        if (essenceGained) addEssence(characterId, essenceGained);
     }
 
     return {
@@ -2263,12 +2298,11 @@ function canCharacterLevelUp(character) {
 }
 
 // El Despertar no depende del Quinteto — cualquier personaje puede
-// subirlo si llega el saldo de Esencia de Intercambio (compartido entre
-// todos, ver getEssenceBalance).
+// subirlo si le llegan las Esencias suyas.
 function canCharacterAwaken(character) {
     const cost = getAwakeningCost(character.rarity, getCharacterAwakening(character.id));
     if (cost === null) return false;
-    return getEssenceBalance() >= cost;
+    return getEssenceBalance(character.id) >= cost;
 }
 
 // Aviso combinado para las cartas del roster: si cualquiera de las dos
