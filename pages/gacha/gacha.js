@@ -388,7 +388,7 @@ function buildExchangeShopRowMarkup(character, balance) {
             </span>
             <span class="essence-shop-row-name">${character.name}${" · " + buildStars(character.rarity)}</span>
             <span class="essence-shop-row-essence">✨ ${getEssenceBalance(character.id).toLocaleString("es-ES")}</span>
-            <button class="essence-shop-give-btn" type="button" data-target="${character.id}" ${canGive ? "" : "disabled"}>Dar Esencia</button>
+            <button class="essence-shop-give-btn" type="button" data-target="${character.id}" ${canGive ? "" : "disabled"}>+1 Esencia</button>
         </div>
     `;
 }
@@ -404,14 +404,18 @@ function renderExchangeShop() {
         : '<p class="essence-shop-empty">No hay nadie que pueda aprovecharla ahora mismo.</p>';
 }
 
+// De 1 en 1 (no todo el saldo de golpe) para que se pueda repartir entre
+// varios personajes y quede claro en todo momento cuánto se ha dado a
+// cada uno -- antes un solo toque vaciaba todo el saldo en un único
+// personaje sin posibilidad de repartir.
+const EXCHANGE_SHOP_GIVE_STEP = 1;
+
 function handleExchangeShopGive(targetId) {
     const targetChar = CHARACTERS_DATA.find((c) => c.id === targetId);
     if (!targetChar) return;
-    const amount = getExchangeEssence();
-    if (amount <= 0) return;
-    if (!spendExchangeEssence(amount)) return;
-    addEssence(targetId, amount);
-    showExchangeShopToast(`+${amount} Esencia para ${targetChar.name}`);
+    if (!spendExchangeEssence(EXCHANGE_SHOP_GIVE_STEP)) return;
+    addEssence(targetId, EXCHANGE_SHOP_GIVE_STEP);
+    showExchangeShopToast(`+${EXCHANGE_SHOP_GIVE_STEP} Esencia para ${targetChar.name}`);
     renderExchangeShop();
     updateExchangeShopButtonCount();
 }
