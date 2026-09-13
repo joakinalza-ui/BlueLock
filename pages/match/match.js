@@ -37,11 +37,13 @@ function runAutoStep() {
     if (!autoMode || isMatchOver(state)) return;
 
     let outcomeKey;
+    let myScorer = null;
     if (state.currentOwner === "rival") {
         const useTechnique = decideAutoUseDefenseTechnique(state);
         const outcome = resolveDefenseChoice(state, decideAutoDefenseChoice(), useTechnique);
         outcomeKey = outcome.outcome;
     } else {
+        myScorer = state.activePlayer; // capturado ANTES de resolver, ver comentario de playOutcomeFx
         const action = decideAutoAttackAction(state);
         const useTechnique = decideAutoUseTechnique(state, action);
         const outcome = resolvePlayerChoice(state, action, useTechnique);
@@ -53,7 +55,7 @@ function runAutoStep() {
     playOutcomeFx(outcomeKey, () => {
         renderActions();
         scheduleAutoStep();
-    });
+    }, myScorer);
 }
 
 // Al activar, la Command Battle actual pasa a resolverse sola (sin
@@ -133,8 +135,8 @@ function getLivePitchTargetZone(character, side) {
 // líneas coincidan cerca de la misma zona (el punto del balón), no
 // queden exactamente montadas una encima de otra.
 let livePitchSlotOffsets = {};
-const LIVE_PITCH_SLOT_SPACING = 28;
-const LIVE_PITCH_TEAM_BIAS = { me: -15, rival: 15 };
+const LIVE_PITCH_SLOT_SPACING = 32;
+const LIVE_PITCH_TEAM_BIAS = { me: -16, rival: 16 };
 
 function computeLivePitchSlots() {
     livePitchSlotOffsets = {};
@@ -150,26 +152,30 @@ function computeLivePitchSlots() {
     });
 }
 
+// El sprite GRANDE (no el "-thumb", que recorta muy cerca de la cara)
+// es una ilustración de cuerpo entero con fondo transparente -- se usa
+// tal cual, sin recortar en círculo, para que el jugador se vea como un
+// muñeco de pie sobre el campo en vez de una ficha con la cara.
 function buildLivePitchIconMarkup(character, side, index) {
     const hasRealSprite = !!character.sprite;
-    const spritePath = hasRealSprite ? getCharacterThumbSprite(character) : PLAYER_DETAIL_PLACEHOLDER;
+    const spritePath = hasRealSprite ? character.sprite : PLAYER_DETAIL_PLACEHOLDER;
     // El balanceo de reposo (ver .live-pitch-icon-bob en match.css) se
     // retrasa un poco distinto por jugador (inline, para que gane
     // siempre a cualquier animation-delay de una clase CSS) para que no
     // boten todos exactamente a la vez -- se ve más vivo.
     const bobDelay = ((index || 0) % 4) * 0.15;
-    // 3 capas: .live-pitch-icon coloca (top/left, nunca se anima nada
+    // 4 capas: .live-pitch-icon coloca (top/left, nunca se anima nada
     // más ahí) -- .live-pitch-icon-bob balancea/corre (rebote e
-    // inclinación) -- .live-pitch-icon-ring reacciona a la jugada
-    // (pulso de color, golpeo al chutar). Al ir en elementos distintos,
-    // las 3 animaciones conviven sin pisarse.
+    // inclinación) -- .live-pitch-icon-glow reacciona con color (pulso
+    // al ganar/perder, resalte si está activo) -- .live-pitch-icon-figure
+    // es el propio muñeco (golpeo al chutar). Al ir en elementos
+    // distintos, todas las animaciones conviven sin pisarse.
     return `
         <div class="live-pitch-icon" data-character="${character.id}" data-side="${side}">
             <div class="live-pitch-icon-shadow"></div>
             <div class="live-pitch-icon-bob" style="animation-delay:${bobDelay}s">
-                <div class="live-pitch-icon-ring">
-                    <img src="${resolveAssetPath(spritePath)}" alt="${character.name}" data-real-sprite="${hasRealSprite}">
-                </div>
+                <div class="live-pitch-icon-glow"></div>
+                <img class="live-pitch-icon-figure" src="${resolveAssetPath(spritePath)}" alt="${character.name}" data-real-sprite="${hasRealSprite}">
                 <span class="live-pitch-icon-ball">⚽</span>
             </div>
         </div>
@@ -207,7 +213,7 @@ function getLivePitchTrackRect() {
 // Deja un margen a cada lado (la mitad del icono) para que el jugador
 // activo en la zona 1/5 no quede a caballo entre la franja de juego y
 // la franja de portería.
-const LIVE_PITCH_ICON_RADIUS = 18;
+const LIVE_PITCH_ICON_RADIUS = 26;
 
 function zoneToTopPx(zoneValue, trackRect) {
     const usableHeight = Math.max(0, trackRect.height - LIVE_PITCH_ICON_RADIUS * 2);
@@ -254,21 +260,35 @@ function updateLivePitchPositions() {
     });
 }
 
-// Aviso grande a pantalla completa sobre el campo (¡GOL!/GOL RIVAL) más
-// el "bump" del marcador -- se auto-oculta sola pasado el tiempo de la
-// animación (ver PITCH_ANIM_MS).
-function flashPitchGoal(isBad) {
-    const flash = document.getElementById("live-pitch-flash");
-    if (flash) {
-        flash.textContent = isBad ? "GOL RIVAL" : "¡GOL!";
-        flash.classList.toggle("is-bad", isBad);
-        flash.classList.add("is-visible");
-        setTimeout(() => flash.classList.remove("is-visible"), PITCH_ANIM_MS + 250);
+const GOAL_CUTSCENE_MS = 1050;
+
+// Escena de gol a pantalla completa sobre el campo (estilo "parada de
+// cámara" de Captain Tsubasa Dream Team): el retrato GRANDE de quien
+// marcó entra con un golpe de escala + un destello radial detrás, se
+// mantiene un instante con el texto ¡GOL!/GOL RIVAL, y se apaga sola
+// (ver GOAL_CUTSCENE_MS). scorer puede ser null (por ejemplo si el
+// motor no diera un jugador concreto) -- en ese caso se usa el
+// placeholder en vez de romper.
+function playGoalCutscene(scorer, isBad) {
+    const cutscene = document.getElementById("live-pitch-cutscene");
+    const img = document.getElementById("live-pitch-cutscene-img");
+    const text = document.getElementById("live-pitch-cutscene-text");
+    if (cutscene && img && text) {
+        const hasRealSprite = scorer && !!scorer.sprite;
+        img.src = resolveAssetPath(hasRealSprite ? scorer.sprite : PLAYER_DETAIL_PLACEHOLDER);
+        img.alt = scorer ? scorer.name : "";
+        text.textContent = isBad ? "GOL RIVAL" : "¡GOL!";
+
+        cutscene.classList.remove("is-visible");
+        void cutscene.offsetWidth; // fuerza reflow para poder repetir la animación en goles consecutivos
+        cutscene.classList.toggle("is-bad", isBad);
+        cutscene.classList.add("is-visible");
+        setTimeout(() => cutscene.classList.remove("is-visible"), GOAL_CUTSCENE_MS);
     }
 
     const scoreEl = document.getElementById("score-line");
     scoreEl.classList.remove("is-bump");
-    void scoreEl.offsetWidth; // fuerza reflow para poder re-disparar la animación aunque ya estuviera puesta
+    void scoreEl.offsetWidth;
     scoreEl.classList.add("is-bump");
 }
 
@@ -314,16 +334,24 @@ const OUTCOME_PITCH_FX = {
 // Efecto visual de UN resultado de Command Battle (ataque o defensa),
 // ya con las posiciones recalculadas (renderHeader -> updateLivePitchPositions
 // se llama justo antes, en cada punto de llamada). callback se dispara
-// pasado el tiempo de la animación: ahí es cuando
-// se pintan los botones de la siguiente decisión (o se programa el
-// siguiente paso automático) -- así no se puede interrumpir a mitad
-// tocando otro botón ni se pisan animaciones entre sí.
-function playOutcomeFx(outcomeKey, callback) {
+// pasado el tiempo de la animación (más largo si hay escena de gol, ver
+// GOAL_CUTSCENE_MS): ahí es cuando se pintan los botones de la
+// siguiente decisión (o se programa el siguiente paso automático) --
+// así no se puede interrumpir a mitad tocando otro botón ni se pisan
+// animaciones entre sí. myScorer: quién marcó SI el resultado es "goal"
+// -- hay que pasarlo capturado desde fuera (ver handleChoice/
+// runAutoStep) porque para cuando esta función se llama,
+// resolvePlayerChoice ya reasignó state.activePlayer a quien presiona
+// la siguiente jugada, no a quien acaba de chutar. Para "rivalGoal" no
+// hace falta: state.rivalActivePlayer no se toca al perder ELLOS la
+// posesión, así que sigue apuntando al que marcó.
+function playOutcomeFx(outcomeKey, callback, myScorer) {
     pulseActivePitchIcon(OUTCOME_PITCH_FX[outcomeKey] || "warn");
     if (KICK_OUTCOMES.has(outcomeKey)) kickActivePitchIcon();
-    if (outcomeKey === "goal") flashPitchGoal(false);
-    if (outcomeKey === "rivalGoal") flashPitchGoal(true);
-    setTimeout(callback, PITCH_ANIM_MS);
+    if (outcomeKey === "goal") playGoalCutscene(myScorer, false);
+    if (outcomeKey === "rivalGoal") playGoalCutscene(state.rivalActivePlayer, true);
+    const isGoal = outcomeKey === "goal" || outcomeKey === "rivalGoal";
+    setTimeout(callback, isGoal ? GOAL_CUTSCENE_MS : PITCH_ANIM_MS);
 }
 
 function renderHeader() {
@@ -348,13 +376,14 @@ const ACTION_LABELS = { regate: "Regate", pase: "Pase", tiro: "Tiro" };
 const DEFENSE_LABELS = { entrada: "Entrada", interceptacion: "Interceptación", bloqueo: "Bloqueo" };
 
 function handleChoice(action, useTechnique) {
+    const myScorer = state.activePlayer; // capturado ANTES de resolver, ver comentario de playOutcomeFx
     const outcome = resolvePlayerChoice(state, action, useTechnique);
     renderHeader();
     // Se vacían los botones ANTES de animar (en vez de esperar a
     // renderActions) para que no se pueda tocar la siguiente decisión a
     // mitad de la animación del campo.
     document.getElementById("match-actions").innerHTML = "";
-    playOutcomeFx(outcome.outcome, renderActions);
+    playOutcomeFx(outcome.outcome, renderActions, myScorer);
 }
 
 function renderMyTurnActions(container) {
