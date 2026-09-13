@@ -83,11 +83,72 @@ const FIELD_ZONE_LABELS = {
 
 // Orden de filas de arriba a abajo: el rival primero (su portería queda
 // fuera de pantalla por encima) y luego mi equipo en espejo (mi
-// portería queda fuera de pantalla por debajo) -- así los delanteros de
-// los dos equipos caen cerca de la franja central, como en una
-// formación real vista de lado.
-const LIVE_PITCH_RIVAL_ROW_ORDER = ["POR", "DEF", "MED", "DEL"];
-const LIVE_PITCH_MY_ROW_ORDER = ["DEL", "MED", "DEF", "POR"];
+// portería queda fuera de pantalla por debajo).
+//
+// Cada puesto tiene una "zona de reposo" NEUTRAL: distancia fija a la
+// propia portería (POR=0, DEF=1, MED=2, DEL=3 líneas de profundidad),
+// igual para los dos equipos, solo mirada desde la portería de cada
+// uno -- por eso da zonas altas para mí (empezando en 1) y bajas para
+// el rival (empezando en 5). Esa zona de reposo se empuja hacia
+// state.zone según cuánto "siga" esa línea al balón
+// (LIVE_PITCH_PUSH_WEIGHT: el portero casi nada, los delanteros mucho)
+// y a media fuerza si ese equipo no tiene la posesión (forma más
+// compacta al defender) -- así el equipo entero sube al atacar y se
+// repliega al defender, en vez de quedarse siempre en la misma
+// formación fija. El jugador que tiene el balón AHORA MISMO se despega
+// de su línea y se coloca exactamente en state.zone.
+const LIVE_PITCH_POSITION_DEPTH = { POR: 0, DEF: 1, MED: 2, DEL: 3 };
+const LIVE_PITCH_PUSH_WEIGHT = { POR: 0.08, DEF: 0.3, MED: 0.5, DEL: 0.7 };
+
+function getLivePitchGoalZone(side) {
+    return side === "me" ? FIELD_ZONE_MINE_GOAL : FIELD_ZONE_RIVAL_GOAL;
+}
+
+function getLivePitchNeutralZone(position, side) {
+    const goal = getLivePitchGoalZone(side);
+    const depth = LIVE_PITCH_POSITION_DEPTH[position] ?? 1;
+    return side === "me" ? goal + depth : goal - depth;
+}
+
+function isLivePitchActiveCharacter(character, side) {
+    return side === "me"
+        ? !!(state.currentOwner === "me" && state.activePlayer && state.activePlayer.id === character.id)
+        : !!(state.currentOwner === "rival" && state.rivalActivePlayer && state.rivalActivePlayer.id === character.id);
+}
+
+function getLivePitchTargetZone(character, side) {
+    if (isLivePitchActiveCharacter(character, side)) return state.zone;
+
+    const neutral = getLivePitchNeutralZone(character.position, side);
+    const hasPossession = state.currentOwner === side;
+    const pushWeight = (LIVE_PITCH_PUSH_WEIGHT[character.position] ?? 0.3) * (hasPossession ? 1 : 0.5);
+    const pushed = neutral + (state.zone - neutral) * pushWeight;
+    return Math.max(FIELD_ZONE_MIN, Math.min(FIELD_ZONE_MAX, pushed));
+}
+
+// Reparto horizontal fijo (no cambia durante el partido): a cada
+// jugador de un mismo (equipo, puesto) le toca un hueco a izquierda o
+// derecha del centro, y cada equipo se sesga un poco hacia su lado
+// (mío a la izquierda, rival a la derecha) para que, cuando las dos
+// líneas coincidan cerca de la misma zona (el punto del balón), no
+// queden exactamente montadas una encima de otra.
+let livePitchSlotOffsets = {};
+const LIVE_PITCH_SLOT_SPACING = 28;
+const LIVE_PITCH_TEAM_BIAS = { me: -15, rival: 15 };
+
+function computeLivePitchSlots() {
+    livePitchSlotOffsets = {};
+    [["me", state.lineup], ["rival", state.rivalLineup]].forEach(([side, lineup]) => {
+        const byPosition = {};
+        lineup.forEach((c) => { (byPosition[c.position] = byPosition[c.position] || []).push(c); });
+        Object.values(byPosition).forEach((group) => {
+            group.forEach((c, i) => {
+                const spread = (i - (group.length - 1) / 2) * LIVE_PITCH_SLOT_SPACING;
+                livePitchSlotOffsets[side + "|" + c.id] = LIVE_PITCH_TEAM_BIAS[side] + spread;
+            });
+        });
+    });
+}
 
 function buildLivePitchIconMarkup(character, side) {
     const hasRealSprite = !!character.sprite;
@@ -102,41 +163,64 @@ function buildLivePitchIconMarkup(character, side) {
     `;
 }
 
-// Pinta la alineación COMPLETA de los dos equipos, agrupada por puesto
-// -- una sola vez al arrancar el partido (las alineaciones no cambian a
-// mitad, solo quién está activo). Los puestos sin nadie no dejan fila
-// vacía.
+// Pinta TODOS los jugadores de los dos equipos -- una sola vez al
+// arrancar el partido (las alineaciones no cambian a mitad de
+// partido). La posición de cada uno se calcula aparte, en
+// updateLivePitchPositions.
 function renderLivePitchRoster() {
-    const rivalContainer = document.getElementById("live-pitch-rival-rows");
-    const myContainer = document.getElementById("live-pitch-my-rows");
-    if (!rivalContainer || !myContainer) return;
-
-    rivalContainer.innerHTML = LIVE_PITCH_RIVAL_ROW_ORDER.map((position) => {
-        const members = state.rivalLineup.filter((c) => c.position === position);
-        if (!members.length) return "";
-        return `<div class="live-pitch-row">${members.map((c) => buildLivePitchIconMarkup(c, "rival")).join("")}</div>`;
-    }).join("");
-
-    myContainer.innerHTML = LIVE_PITCH_MY_ROW_ORDER.map((position) => {
-        const members = state.lineup.filter((c) => c.position === position);
-        if (!members.length) return "";
-        return `<div class="live-pitch-row">${members.map((c) => buildLivePitchIconMarkup(c, "me")).join("")}</div>`;
-    }).join("");
+    const track = document.getElementById("live-pitch-track");
+    if (!track) return;
+    computeLivePitchSlots();
+    track.innerHTML =
+        state.lineup.map((c) => buildLivePitchIconMarkup(c, "me")).join("") +
+        state.rivalLineup.map((c) => buildLivePitchIconMarkup(c, "rival")).join("");
+    updateLivePitchPositions();
 }
 
-// Resalta (anillo de color + balón) al jugador que tiene la posesión
-// AHORA MISMO -- mío (state.activePlayer) o rival
-// (state.rivalActivePlayer, el mismo que ya usa el motor para sus
-// propias Habilidades Únicas), nunca se mueve a nadie de sitio.
-function updateLivePitchActive() {
-    document.querySelectorAll(".live-pitch-icon.is-active").forEach((el) => el.classList.remove("is-active"));
+// Rectángulo (relativo a #live-pitch) de la zona de juego, sin contar
+// las franjas de portería arriba/abajo -- medido en vivo con
+// getBoundingClientRect, no a mano, así encaja sea cual sea el tamaño
+// real de pantalla.
+function getLivePitchTrackRect() {
+    const pitch = document.getElementById("live-pitch");
+    const track = document.getElementById("live-pitch-track");
+    if (!pitch || !track) return null;
+    const pitchRect = pitch.getBoundingClientRect();
+    const trackRect = track.getBoundingClientRect();
+    return { top: trackRect.top - pitchRect.top, height: trackRect.height };
+}
 
-    const isMine = state.currentOwner === "me";
-    const activeChar = isMine ? state.activePlayer : state.rivalActivePlayer;
-    if (!activeChar) return;
+// Deja un margen a cada lado (la mitad del icono) para que el jugador
+// activo en la zona 1/5 no quede a caballo entre la franja de juego y
+// la franja de portería.
+const LIVE_PITCH_ICON_RADIUS = 18;
 
-    const el = document.querySelector(`.live-pitch-icon[data-character="${activeChar.id}"][data-side="${isMine ? "me" : "rival"}"]`);
-    if (el) el.classList.add("is-active");
+function zoneToTopPx(zoneValue, trackRect) {
+    const usableHeight = Math.max(0, trackRect.height - LIVE_PITCH_ICON_RADIUS * 2);
+    const fraction = (FIELD_ZONE_MAX - zoneValue) / (FIELD_ZONE_MAX - FIELD_ZONE_MIN);
+    return trackRect.top + LIVE_PITCH_ICON_RADIUS + fraction * usableHeight;
+}
+
+// Recoloca a TODOS los jugadores según la situación actual (zona del
+// balón, quién ataca/defiende, quién tiene el balón ahora mismo) y
+// resalta al que lo tiene -- se llama en cada Command Battle, nunca
+// solo al arrancar, así el campo entero se mueve solo con cada jugada
+// (transición CSS de "top"/"left", ver .live-pitch-icon en match.css).
+function updateLivePitchPositions() {
+    const trackRect = getLivePitchTrackRect();
+    if (!trackRect) return;
+
+    document.querySelectorAll(".live-pitch-icon").forEach((el) => {
+        const side = el.dataset.side;
+        const lineup = side === "me" ? state.lineup : state.rivalLineup;
+        const character = lineup.find((c) => c.id === el.dataset.character);
+        if (!character) return;
+
+        const zoneValue = getLivePitchTargetZone(character, side);
+        el.style.top = zoneToTopPx(zoneValue, trackRect) + "px";
+        el.style.left = `calc(50% + ${livePitchSlotOffsets[side + "|" + character.id] || 0}px)`;
+        el.classList.toggle("is-active", isLivePitchActiveCharacter(character, side));
+    });
 }
 
 // Aviso grande a pantalla completa sobre el campo (¡GOL!/GOL RIVAL) más
@@ -158,7 +242,7 @@ function flashPitchGoal(isBad) {
 }
 
 // Pulso de color en el icono ACTIVO ahora mismo (ver
-// updateLivePitchActive, que ya se llamó antes desde renderHeader) --
+// updateLivePitchPositions, que ya se llamó antes desde renderHeader) --
 // verde (bien para mí), ámbar/rojo con sacudida (mal para mí) o ámbar
 // neutro (avance rival sin gol). Se fuerza un reflow para poder repetir
 // la misma animación en Command Battles consecutivas.
@@ -183,7 +267,7 @@ const OUTCOME_PITCH_FX = {
 };
 
 // Efecto visual de UN resultado de Command Battle (ataque o defensa),
-// ya con el icono activo actualizado (renderHeader -> updateLivePitchActive
+// ya con las posiciones recalculadas (renderHeader -> updateLivePitchPositions
 // se llama justo antes, en cada punto de llamada). callback se dispara
 // pasado el tiempo de la animación: ahí es cuando
 // se pintan los botones de la siguiente decisión (o se programa el
@@ -202,7 +286,7 @@ function renderHeader() {
         ? "Partido terminado"
         : `Min. ${Math.round(state.currentMinute)} / ${state.matchMinuteLimit} — ${state.currentOwner === "me" ? "Tuya" : "Rival"}`;
     document.getElementById("zone-line").textContent = FIELD_ZONE_LABELS[state.zone];
-    updateLivePitchActive();
+    updateLivePitchPositions();
 }
 
 function buildActionButton(label, onClick) {

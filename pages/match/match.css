@@ -575,22 +575,24 @@ body.prematch-active #match-screen{
     color:#aaa;
 }
 
-/* Campo visual del partido en vivo: la alineación COMPLETA de los dos
-   equipos, cada una agrupada por puesto (mismo criterio que la
-   formación de solo lectura de la pantalla previa, ver
-   renderPrematchPitchReadOnly), una encima de otra con una franja
-   central de por medio -- el rival arriba (su portería queda fuera de
-   pantalla, por encima; delanteros rivales cerca del centro) y mi
-   equipo abajo en espejo (mis delanteros cerca del centro, mi portero
-   pegado a mi portería, fuera de pantalla por debajo). El icono del
-   jugador que tiene el balón AHORA MISMO (mío o rival, ver
-   updateLivePitchActive() en match.js) se resalta con un anillo de
-   color y un balón — nunca se mueve nada de sitio, todos los jugadores
-   están siempre visibles en su puesto. */
+/* Campo visual del partido en vivo: TODOS los jugadores de los dos
+   equipos (state.lineup + state.rivalLineup) posicionados libremente
+   sobre una pista continua de 5 zonas (zona 5 = portería rival arriba,
+   zona 1 = mi portería abajo) -- cada línea (POR/DEF/MED/DEL) tiene una
+   "zona de reposo" propia (ver getLivePitchNeutralZone en match.js) que
+   se empuja hacia la zona del balón según si ese equipo ataca o
+   defiende (getLivePitchTargetZone), así que el equipo entero se nota
+   subir cuando ataca y replegarse cuando defiende, en vez de quedarse
+   siempre en la misma formación fija. El jugador con el balón AHORA
+   MISMO se despega de su línea para colocarse justo en la zona real
+   (state.zone) con un anillo de color + balón. Todo el movimiento es
+   una transición CSS de "top"/"left" (ver updateLivePitchPositions en
+   match.js), no hace falta animar nada a mano salvo el pulso de color. */
 .live-pitch{
     position:relative;
     width:100%;
     max-width:360px;
+    height:460px;
     border-radius:16px;
     overflow:hidden;
     border:1px solid #2c3a5c;
@@ -602,55 +604,42 @@ body.prematch-active #match-screen{
     background-position:center, center;
     font-family:sans-serif;
     flex-shrink:0;
-    padding:14px 10px;
-    display:flex;
-    flex-direction:column;
-    gap:10px;
 }
 
-.live-pitch-label{
-    font-size:9px;
-    font-weight:700;
-    text-transform:uppercase;
-    letter-spacing:0.05em;
-    color:rgba(255,255,255,0.65);
-    text-align:center;
-}
-
-.live-pitch-rows{
-    display:flex;
-    flex-direction:column;
-    gap:10px;
-}
-
-.live-pitch-row{
-    display:flex;
-    justify-content:center;
-    flex-wrap:wrap;
-    gap:10px;
-}
-
-.live-pitch-halfway{
+.live-pitch-goal{
+    position:absolute;
+    left:0;
+    right:0;
+    height:26px;
     display:flex;
     align-items:center;
     justify-content:center;
-    padding:6px 0;
-    border-top:1px dashed rgba(255,255,255,0.3);
-    border-bottom:1px dashed rgba(255,255,255,0.3);
-}
-.live-pitch-zone-text{
-    font-size:11px;
+    font-size:9px;
     font-weight:700;
-    color:#fff;
+    letter-spacing:0.04em;
     text-transform:uppercase;
-    letter-spacing:0.03em;
+    color:rgba(255,255,255,0.7);
+    background:rgba(0,0,0,0.35);
+    z-index:1;
+}
+.live-pitch-goal-rival{ top:0; border-bottom:2px dashed rgba(255,255,255,0.3); }
+.live-pitch-goal-mine{ bottom:0; border-top:2px dashed rgba(255,255,255,0.3); }
+
+.live-pitch-track{
+    position:absolute;
+    top:26px;
+    bottom:26px;
+    left:0;
+    right:0;
 }
 
 .live-pitch-icon{
-    position:relative;
-    width:38px;
-    height:38px;
-    flex-shrink:0;
+    position:absolute;
+    width:34px;
+    height:34px;
+    transform:translate(-50%, -50%);
+    transition:top 0.6s cubic-bezier(.34,1,.64,1), left 0.6s cubic-bezier(.34,1,.64,1);
+    z-index:1;
 }
 
 .live-pitch-icon-ring{
