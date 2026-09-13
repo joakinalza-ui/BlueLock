@@ -150,15 +150,28 @@ function computeLivePitchSlots() {
     });
 }
 
-function buildLivePitchIconMarkup(character, side) {
+function buildLivePitchIconMarkup(character, side, index) {
     const hasRealSprite = !!character.sprite;
     const spritePath = hasRealSprite ? getCharacterThumbSprite(character) : PLAYER_DETAIL_PLACEHOLDER;
+    // El balanceo de reposo (ver .live-pitch-icon-bob en match.css) se
+    // retrasa un poco distinto por jugador (inline, para que gane
+    // siempre a cualquier animation-delay de una clase CSS) para que no
+    // boten todos exactamente a la vez -- se ve más vivo.
+    const bobDelay = ((index || 0) % 4) * 0.15;
+    // 3 capas: .live-pitch-icon coloca (top/left, nunca se anima nada
+    // más ahí) -- .live-pitch-icon-bob balancea/corre (rebote e
+    // inclinación) -- .live-pitch-icon-ring reacciona a la jugada
+    // (pulso de color, golpeo al chutar). Al ir en elementos distintos,
+    // las 3 animaciones conviven sin pisarse.
     return `
         <div class="live-pitch-icon" data-character="${character.id}" data-side="${side}">
-            <div class="live-pitch-icon-ring">
-                <img src="${resolveAssetPath(spritePath)}" alt="${character.name}" data-real-sprite="${hasRealSprite}">
+            <div class="live-pitch-icon-shadow"></div>
+            <div class="live-pitch-icon-bob" style="animation-delay:${bobDelay}s">
+                <div class="live-pitch-icon-ring">
+                    <img src="${resolveAssetPath(spritePath)}" alt="${character.name}" data-real-sprite="${hasRealSprite}">
+                </div>
+                <span class="live-pitch-icon-ball">⚽</span>
             </div>
-            <span class="live-pitch-icon-ball">⚽</span>
         </div>
     `;
 }
@@ -171,9 +184,10 @@ function renderLivePitchRoster() {
     const track = document.getElementById("live-pitch-track");
     if (!track) return;
     computeLivePitchSlots();
+    livePitchLastZone = {};
     track.innerHTML =
-        state.lineup.map((c) => buildLivePitchIconMarkup(c, "me")).join("") +
-        state.rivalLineup.map((c) => buildLivePitchIconMarkup(c, "rival")).join("");
+        state.lineup.map((c, i) => buildLivePitchIconMarkup(c, "me", i)).join("") +
+        state.rivalLineup.map((c, i) => buildLivePitchIconMarkup(c, "rival", i)).join("");
     updateLivePitchPositions();
 }
 
@@ -206,6 +220,13 @@ function zoneToTopPx(zoneValue, trackRect) {
 // resalta al que lo tiene -- se llama en cada Command Battle, nunca
 // solo al arrancar, así el campo entero se mueve solo con cada jugada
 // (transición CSS de "top"/"left", ver .live-pitch-icon en match.css).
+// Recuerda la última zona pintada de cada jugador para poder detectar
+// si de verdad se ha movido de un paso a otro (y solo entonces
+// disparar la animación de carrera, ver .is-moving en match.css) --
+// sin esto, cada Command Battle repintaría la animación de correr
+// aunque nadie hubiera cambiado de sitio.
+let livePitchLastZone = {};
+
 function updateLivePitchPositions() {
     const trackRect = getLivePitchTrackRect();
     if (!trackRect) return;
@@ -216,10 +237,20 @@ function updateLivePitchPositions() {
         const character = lineup.find((c) => c.id === el.dataset.character);
         if (!character) return;
 
+        const key = side + "|" + character.id;
         const zoneValue = getLivePitchTargetZone(character, side);
+        const movedEnough = livePitchLastZone[key] !== undefined && Math.abs(livePitchLastZone[key] - zoneValue) > 0.05;
+        livePitchLastZone[key] = zoneValue;
+
         el.style.top = zoneToTopPx(zoneValue, trackRect) + "px";
-        el.style.left = `calc(50% + ${livePitchSlotOffsets[side + "|" + character.id] || 0}px)`;
+        el.style.left = `calc(50% + ${livePitchSlotOffsets[key] || 0}px)`;
         el.classList.toggle("is-active", isLivePitchActiveCharacter(character, side));
+
+        if (movedEnough) {
+            el.classList.add("is-moving");
+            clearTimeout(el._liveMoveTimer);
+            el._liveMoveTimer = setTimeout(() => el.classList.remove("is-moving"), 620);
+        }
     });
 }
 
@@ -254,6 +285,20 @@ function pulseActivePitchIcon(kind) {
     el.classList.add("fx-" + kind);
 }
 
+// Golpeo de balón (rotación + estirón, ver .fx-kick en match.css) en el
+// icono ACTIVO -- solo en un Tiro de verdad (propio: gol o fallo; del
+// rival cuando dispara a puerta), independiente del pulso de color de
+// arriba (van en elementos distintos, conviven sin pisarse).
+const KICK_OUTCOMES = new Set(["goal", "miss", "rivalGoal", "blocked"]);
+
+function kickActivePitchIcon() {
+    const el = document.querySelector(".live-pitch-icon.is-active");
+    if (!el) return;
+    el.classList.remove("fx-kick");
+    void el.offsetWidth;
+    el.classList.add("fx-kick");
+}
+
 const PITCH_ANIM_MS = 550;
 const OUTCOME_PITCH_FX = {
     advance: "good",
@@ -275,6 +320,7 @@ const OUTCOME_PITCH_FX = {
 // tocando otro botón ni se pisan animaciones entre sí.
 function playOutcomeFx(outcomeKey, callback) {
     pulseActivePitchIcon(OUTCOME_PITCH_FX[outcomeKey] || "warn");
+    if (KICK_OUTCOMES.has(outcomeKey)) kickActivePitchIcon();
     if (outcomeKey === "goal") flashPitchGoal(false);
     if (outcomeKey === "rivalGoal") flashPitchGoal(true);
     setTimeout(callback, PITCH_ANIM_MS);

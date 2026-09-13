@@ -642,6 +642,47 @@ body.prematch-active #match-screen{
     z-index:1;
 }
 
+/* Sombra elíptica fija en el suelo (no se anima) -- da sensación de
+   volumen/apoyo en el césped en vez de una pegatina plana flotando. */
+.live-pitch-icon-shadow{
+    position:absolute;
+    left:50%;
+    bottom:-4px;
+    width:60%;
+    height:7px;
+    background:rgba(0,0,0,0.5);
+    border-radius:50%;
+    transform:translateX(-50%);
+    filter:blur(1px);
+}
+
+/* Capa de movimiento: balanceo suave en reposo (pitch-idle-bob, para
+   que no parezcan pegatinas estáticas) que cambia a un vaivén de
+   carrera más marcado y rápido (pitch-run) mientras el jugador está de
+   verdad desplazándose a una zona nueva (.is-moving, ver
+   updateLivePitchPositions en match.js). Va en su propia capa (ni la
+   posición en .live-pitch-icon ni el pulso de color en
+   .live-pitch-icon-ring) para que las tres animaciones convivan sin
+   pisarse unas a otras. */
+.live-pitch-icon-bob{
+    position:relative;
+    width:100%;
+    height:100%;
+    animation:pitch-idle-bob 1.6s ease-in-out infinite;
+}
+.live-pitch-icon.is-moving .live-pitch-icon-bob{
+    animation:pitch-run 0.28s ease-in-out infinite;
+}
+@keyframes pitch-idle-bob{
+    0%,100%{ transform:translateY(0) rotate(0deg); }
+    50%{ transform:translateY(-2.5px) rotate(0deg); }
+}
+@keyframes pitch-run{
+    0%,100%{ transform:translateY(0) rotate(0deg); }
+    25%{ transform:translateY(-3px) rotate(-9deg); }
+    75%{ transform:translateY(-3px) rotate(9deg); }
+}
+
 .live-pitch-icon-ring{
     width:100%;
     height:100%;
@@ -701,6 +742,26 @@ body.prematch-active #match-screen{
 .live-pitch-icon.fx-good .live-pitch-icon-ring{ animation:pitch-pulse-good 0.6s ease-out; }
 .live-pitch-icon.fx-warn .live-pitch-icon-ring{ animation:pitch-pulse-warn 0.6s ease-out; }
 .live-pitch-icon.fx-bad .live-pitch-icon-ring{ animation:pitch-shake 0.4s ease-in-out, pitch-pulse-warn 0.4s ease-out; }
+
+/* Golpeo de balón (rotación + estirón) en un Tiro de verdad -- ver
+   KICK_OUTCOMES en match.js. Se combina explícitamente con el pulso de
+   color correspondiente (más específico que las reglas .fx-good/.fx-bad
+   de arriba, así gana) en vez de sustituirlo, para que el mismo Tiro
+   muestre las dos cosas a la vez. Sustituye la sacudida genérica de
+   .fx-bad -- un tiro fallado/encajado se ve mejor "golpeando" que
+   temblando. */
+@keyframes pitch-kick{
+    0%{ transform:scale(1.2) rotate(0deg); }
+    35%{ transform:scale(1.4) rotate(-20deg); }
+    65%{ transform:scale(1.25) rotate(10deg); }
+    100%{ transform:scale(1.2) rotate(0deg); }
+}
+.live-pitch-icon.fx-kick.fx-good .live-pitch-icon-ring{
+    animation:pitch-pulse-good 0.6s ease-out, pitch-kick 0.4s ease-out;
+}
+.live-pitch-icon.fx-kick.fx-bad .live-pitch-icon-ring{
+    animation:pitch-pulse-warn 0.4s ease-out, pitch-kick 0.4s ease-out;
+}
 
 .live-pitch-flash{
     position:absolute;
