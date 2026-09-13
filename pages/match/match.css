@@ -560,24 +560,6 @@ body.prematch-active #match-screen{
     background:rgba(74,222,128,0.12);
 }
 
-.match-log{
-    width:100%;
-    max-width:340px;
-    margin-top:12px;
-    height:180px;
-    overflow-y:auto;
-    border:1px solid #444;
-    padding:8px;
-    font-size:12px;
-    display:flex;
-    flex-direction:column;
-    gap:4px;
-}
-
-.match-log-line{
-    color:#ccc;
-}
-
 .match-actions{
     width:100%;
     max-width:340px;
@@ -593,127 +575,143 @@ body.prematch-active #match-screen{
     color:#aaa;
 }
 
-/* Campo visual del partido en vivo: pista vertical con 5 franjas (zona
-   5 = portería rival arriba, zona 1 = mi portería abajo), mismo fondo
-   de césped que ya usan F5/F11/la pantalla previa (campo-5v5.webp). El
-   token (retrato circular del jugador activo + balón) se desplaza solo
-   con una transición CSS de "top" cada vez que cambia la zona -- ver
-   updateLivePitchToken()/playOutcomeFx() en match.js. Las franjas
-   (.live-pitch-lane) solo existen para medir en JS dónde cae el centro
-   de cada zona (getLiveLaneCenterTop), no llevan contenido propio. */
+/* Campo visual del partido en vivo: la alineación COMPLETA de los dos
+   equipos, cada una agrupada por puesto (mismo criterio que la
+   formación de solo lectura de la pantalla previa, ver
+   renderPrematchPitchReadOnly), una encima de otra con una franja
+   central de por medio -- el rival arriba (su portería queda fuera de
+   pantalla, por encima; delanteros rivales cerca del centro) y mi
+   equipo abajo en espejo (mis delanteros cerca del centro, mi portero
+   pegado a mi portería, fuera de pantalla por debajo). El icono del
+   jugador que tiene el balón AHORA MISMO (mío o rival, ver
+   updateLivePitchActive() en match.js) se resalta con un anillo de
+   color y un balón — nunca se mueve nada de sitio, todos los jugadores
+   están siempre visibles en su puesto. */
 .live-pitch{
     position:relative;
     width:100%;
-    max-width:340px;
-    height:360px;
+    max-width:360px;
     border-radius:16px;
     overflow:hidden;
     border:1px solid #2c3a5c;
     background-color:#0b2e18;
     background-image:
-        linear-gradient(180deg, rgba(5,8,15,0.5) 0%, rgba(5,8,15,0.05) 15%, rgba(5,8,15,0.05) 85%, rgba(5,8,15,0.5) 100%),
+        linear-gradient(180deg, rgba(5,8,15,0.55) 0%, rgba(5,8,15,0.1) 15%, rgba(5,8,15,0.1) 85%, rgba(5,8,15,0.55) 100%),
         url("../../assets/backgrounds/campo-5v5.webp");
     background-size:cover, cover;
     background-position:center, center;
     font-family:sans-serif;
     flex-shrink:0;
+    padding:14px 10px;
+    display:flex;
+    flex-direction:column;
+    gap:10px;
 }
 
-.live-pitch-goal{
-    position:absolute;
-    left:0;
-    right:0;
-    height:26px;
+.live-pitch-label{
+    font-size:9px;
+    font-weight:700;
+    text-transform:uppercase;
+    letter-spacing:0.05em;
+    color:rgba(255,255,255,0.65);
+    text-align:center;
+}
+
+.live-pitch-rows{
+    display:flex;
+    flex-direction:column;
+    gap:10px;
+}
+
+.live-pitch-row{
+    display:flex;
+    justify-content:center;
+    flex-wrap:wrap;
+    gap:10px;
+}
+
+.live-pitch-halfway{
     display:flex;
     align-items:center;
     justify-content:center;
-    font-size:9px;
+    padding:6px 0;
+    border-top:1px dashed rgba(255,255,255,0.3);
+    border-bottom:1px dashed rgba(255,255,255,0.3);
+}
+.live-pitch-zone-text{
+    font-size:11px;
     font-weight:700;
-    letter-spacing:0.04em;
+    color:#fff;
     text-transform:uppercase;
-    color:rgba(255,255,255,0.7);
-    background:rgba(0,0,0,0.35);
-    z-index:1;
-}
-.live-pitch-goal-rival{ top:0; border-bottom:2px dashed rgba(255,255,255,0.3); }
-.live-pitch-goal-mine{ bottom:0; border-top:2px dashed rgba(255,255,255,0.3); }
-
-.live-pitch-lanes{
-    position:absolute;
-    top:26px;
-    bottom:26px;
-    left:0;
-    right:0;
-    display:flex;
-    flex-direction:column;
-}
-.live-pitch-lane{
-    flex:1;
-    border-bottom:1px dashed rgba(255,255,255,0.12);
-}
-.live-pitch-lane:last-child{ border-bottom:none; }
-
-.live-pitch-token{
-    position:absolute;
-    left:50%;
-    top:50%;
-    width:56px;
-    height:56px;
-    transform:translate(-50%, -50%);
-    transition:top 0.55s cubic-bezier(.34,1.2,.64,1);
-    z-index:2;
+    letter-spacing:0.03em;
 }
 
-.live-pitch-token-ring{
+.live-pitch-icon{
+    position:relative;
+    width:38px;
+    height:38px;
+    flex-shrink:0;
+}
+
+.live-pitch-icon-ring{
     width:100%;
     height:100%;
     border-radius:50%;
     overflow:hidden;
-    border:3px solid #7fa8ff;
+    border:2px solid rgba(255,255,255,0.35);
     background:#111a2e;
-    box-shadow:0 3px 10px rgba(0,0,0,0.5);
+    box-shadow:0 2px 6px rgba(0,0,0,0.5);
 }
-.live-pitch-token.is-rival .live-pitch-token-ring{
-    border-color:#f87171;
-}
-.live-pitch-token img{
+.live-pitch-icon img{
     width:100%;
     height:100%;
     object-fit:cover;
     display:block;
 }
-.live-pitch-token-ball{
+
+.live-pitch-icon-ball{
     position:absolute;
-    bottom:-4px;
-    right:-4px;
-    width:18px;
-    height:18px;
+    bottom:-3px;
+    right:-3px;
+    width:14px;
+    height:14px;
     border-radius:50%;
     background:#fff;
-    display:flex;
+    display:none;
     align-items:center;
     justify-content:center;
-    font-size:11px;
-    box-shadow:0 1px 4px rgba(0,0,0,0.5);
+    font-size:8px;
+    box-shadow:0 1px 3px rgba(0,0,0,0.5);
 }
 
+.live-pitch-icon.is-active{ z-index:2; }
+.live-pitch-icon.is-active .live-pitch-icon-ring{
+    border-color:#7fa8ff;
+    border-width:3px;
+    transform:scale(1.2);
+    box-shadow:0 2px 10px rgba(0,0,0,0.6);
+}
+.live-pitch-icon[data-side="rival"].is-active .live-pitch-icon-ring{
+    border-color:#f87171;
+}
+.live-pitch-icon.is-active .live-pitch-icon-ball{ display:flex; }
+
 @keyframes pitch-pulse-good{
-    0%{ box-shadow:0 3px 10px rgba(0,0,0,0.5), 0 0 0 0 rgba(74,222,128,0.7); }
-    100%{ box-shadow:0 3px 10px rgba(0,0,0,0.5), 0 0 0 16px rgba(74,222,128,0); }
+    0%{ box-shadow:0 2px 10px rgba(0,0,0,0.6), 0 0 0 0 rgba(74,222,128,0.7); }
+    100%{ box-shadow:0 2px 10px rgba(0,0,0,0.6), 0 0 0 14px rgba(74,222,128,0); }
 }
 @keyframes pitch-pulse-warn{
-    0%{ box-shadow:0 3px 10px rgba(0,0,0,0.5), 0 0 0 0 rgba(248,113,113,0.7); }
-    100%{ box-shadow:0 3px 10px rgba(0,0,0,0.5), 0 0 0 16px rgba(248,113,113,0); }
+    0%{ box-shadow:0 2px 10px rgba(0,0,0,0.6), 0 0 0 0 rgba(248,113,113,0.7); }
+    100%{ box-shadow:0 2px 10px rgba(0,0,0,0.6), 0 0 0 14px rgba(248,113,113,0); }
 }
 @keyframes pitch-shake{
-    0%,100%{ transform:translate(-50%,-50%); }
-    25%{ transform:translate(calc(-50% - 6px),-50%); }
-    75%{ transform:translate(calc(-50% + 6px),-50%); }
+    0%,100%{ transform:scale(1.2) translateX(0); }
+    25%{ transform:scale(1.2) translateX(-4px); }
+    75%{ transform:scale(1.2) translateX(4px); }
 }
-.live-pitch-token.fx-good .live-pitch-token-ring{ animation:pitch-pulse-good 0.6s ease-out; }
-.live-pitch-token.fx-warn .live-pitch-token-ring{ animation:pitch-pulse-warn 0.6s ease-out; }
-.live-pitch-token.fx-bad{ animation:pitch-shake 0.4s ease-in-out; }
-.live-pitch-token.fx-bad .live-pitch-token-ring{ animation:pitch-pulse-warn 0.4s ease-out; }
+.live-pitch-icon.fx-good .live-pitch-icon-ring{ animation:pitch-pulse-good 0.6s ease-out; }
+.live-pitch-icon.fx-warn .live-pitch-icon-ring{ animation:pitch-pulse-warn 0.6s ease-out; }
+.live-pitch-icon.fx-bad .live-pitch-icon-ring{ animation:pitch-shake 0.4s ease-in-out, pitch-pulse-warn 0.4s ease-out; }
 
 .live-pitch-flash{
     position:absolute;
@@ -740,12 +738,6 @@ body.prematch-active #match-screen{
     0%{ transform:scale(1); }
     30%{ transform:scale(1.35); }
     100%{ transform:scale(1); }
-}
-
-.match-zone-text{
-    font-size:12px;
-    color:#7fa8ff;
-    font-weight:700;
 }
 
 .match-waiting{
