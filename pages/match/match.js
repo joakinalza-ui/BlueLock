@@ -23,32 +23,39 @@ function updateAutoButton() {
 }
 
 // Programa la siguiente Command Battle automática con una pequeña
-// pausa (0.5-1s) para que se pueda seguir leyendo el registro en vez
-// de resolver todo instantáneamente.
+// pausa extra (0.25-0.65s, ENCIMA del tiempo de animación del campo
+// visual que ya espera playOutcomeFx antes de llamar aquí) para que dé
+// tiempo a leer el registro en vez de resolver todo instantáneamente.
 function scheduleAutoStep() {
     if (!autoMode || isMatchOver(state)) return;
     clearAutoTimer();
-    autoTimer = setTimeout(runAutoStep, 500 + Math.random() * 500);
+    autoTimer = setTimeout(runAutoStep, 250 + Math.random() * 400);
 }
 
 function runAutoStep() {
     autoTimer = null;
     if (!autoMode || isMatchOver(state)) return;
 
+    let outcomeKey;
     if (state.currentOwner === "rival") {
         const useTechnique = decideAutoUseDefenseTechnique(state);
         const outcome = resolveDefenseChoice(state, decideAutoDefenseChoice(), useTechnique);
         addLog(describeDefenseOutcome(outcome));
+        outcomeKey = outcome.outcome;
     } else {
         const action = decideAutoAttackAction(state);
         const useTechnique = decideAutoUseTechnique(state, action);
         const outcome = resolvePlayerChoice(state, action, useTechnique);
         addLog(describeOutcome(action, outcome));
+        outcomeKey = outcome.outcome;
     }
 
     renderHeader();
-    renderActions();
-    scheduleAutoStep();
+    document.getElementById("match-actions").innerHTML = "";
+    playOutcomeFx(outcomeKey, () => {
+        renderActions();
+        scheduleAutoStep();
+    });
 }
 
 // Al activar, la Command Battle actual pasa a resolverse sola (sin
@@ -85,16 +92,99 @@ const FIELD_ZONE_LABELS = {
     5: "Área Rival",
 };
 
-function renderZoneBar() {
-    const bar = document.getElementById("match-zone-bar");
-    if (!bar) return;
-    bar.innerHTML = "";
-    for (let zone = 1; zone <= 5; zone++) {
-        const segment = document.createElement("span");
-        segment.className = "match-zone-segment" + (zone === state.zone ? " is-ball" : "");
-        bar.appendChild(segment);
+// Centro vertical (en px, relativo al propio #live-pitch) de la franja
+// de esa zona -- se mide en vivo con getBoundingClientRect en vez de
+// calcularse a mano, así el token cae bien sea cual sea el tamaño real
+// de pantalla (mismo enfoque que fitPrematchPitchCardSize más abajo).
+function getLiveLaneCenterTop(zone) {
+    const pitch = document.getElementById("live-pitch");
+    const lane = document.querySelector(`.live-pitch-lane[data-zone="${zone}"]`);
+    if (!pitch || !lane) return 0;
+    const pitchRect = pitch.getBoundingClientRect();
+    const laneRect = lane.getBoundingClientRect();
+    return laneRect.top - pitchRect.top + laneRect.height / 2;
+}
+
+// Coloca el token (retrato + balón) en la zona y con el jugador activo
+// de AHORA MISMO en state -- de quién es la posesión decide de qué lado
+// se pinta: mío (state.activePlayer) o rival (state.rivalActivePlayer,
+// el mismo que ya usa el motor para sus propias Habilidades Únicas). El
+// "top" siempre tiene una transición CSS puesta (ver .live-pitch-token
+// en match.css), así que cambiarlo aquí ya desliza el token solo, sin
+// necesidad de animar nada a mano.
+function updateLivePitchToken() {
+    const token = document.getElementById("live-pitch-token");
+    const img = document.getElementById("live-pitch-token-img");
+    if (!token || !img) return;
+
+    token.style.top = getLiveLaneCenterTop(state.zone) + "px";
+
+    const isMine = state.currentOwner === "me";
+    const activeChar = isMine ? state.activePlayer : (state.rivalActivePlayer || state.character);
+    token.classList.toggle("is-rival", !isMine);
+
+    if (activeChar) {
+        const hasRealSprite = !!activeChar.sprite;
+        img.src = resolveAssetPath(hasRealSprite ? getCharacterThumbSprite(activeChar) : PLAYER_DETAIL_PLACEHOLDER);
+        img.setAttribute("data-real-sprite", String(hasRealSprite));
+        img.alt = activeChar.name;
     }
-    document.getElementById("zone-line").textContent = `Zona: ${FIELD_ZONE_LABELS[state.zone]}`;
+}
+
+// Aviso grande a pantalla completa sobre el campo (¡GOL!/GOL RIVAL) más
+// el "bump" del marcador -- se auto-oculta sola pasado el tiempo de la
+// animación (ver PITCH_ANIM_MS).
+function flashPitchGoal(isBad) {
+    const flash = document.getElementById("live-pitch-flash");
+    if (flash) {
+        flash.textContent = isBad ? "GOL RIVAL" : "¡GOL!";
+        flash.classList.toggle("is-bad", isBad);
+        flash.classList.add("is-visible");
+        setTimeout(() => flash.classList.remove("is-visible"), PITCH_ANIM_MS + 250);
+    }
+
+    const scoreEl = document.getElementById("score-line");
+    scoreEl.classList.remove("is-bump");
+    void scoreEl.offsetWidth; // fuerza reflow para poder re-disparar la animación aunque ya estuviera puesta
+    scoreEl.classList.add("is-bump");
+}
+
+// Pulso de color en el propio token -- verde (bien para mí),
+// ámbar/rojo con sacudida (mal para mí) o ámbar neutro (avance rival
+// sin gol). Igual que el marcador, se fuerza un reflow para poder
+// repetir la misma animación en Command Battles consecutivas.
+function pulsePitchToken(kind) {
+    const token = document.getElementById("live-pitch-token");
+    if (!token) return;
+    token.classList.remove("fx-good", "fx-warn", "fx-bad");
+    void token.offsetWidth;
+    token.classList.add("fx-" + kind);
+}
+
+const PITCH_ANIM_MS = 550;
+const OUTCOME_PITCH_FX = {
+    advance: "good",
+    goal: "good",
+    miss: "bad",
+    turnover: "bad",
+    intercepted: "good",
+    blocked: "good",
+    rivalAdvance: "warn",
+    rivalGoal: "bad",
+};
+
+// Efecto visual de UN resultado de Command Battle (ataque o defensa),
+// ya con el token movido a su sitio nuevo (renderHeader ->
+// updateLivePitchToken se llama justo antes, en cada punto de llamada).
+// callback se dispara pasado el tiempo de la animación: ahí es cuando
+// se pintan los botones de la siguiente decisión (o se programa el
+// siguiente paso automático) -- así no se puede interrumpir a mitad
+// tocando otro botón ni se pisan animaciones entre sí.
+function playOutcomeFx(outcomeKey, callback) {
+    pulsePitchToken(OUTCOME_PITCH_FX[outcomeKey] || "warn");
+    if (outcomeKey === "goal") flashPitchGoal(false);
+    if (outcomeKey === "rivalGoal") flashPitchGoal(true);
+    setTimeout(callback, PITCH_ANIM_MS);
 }
 
 function renderHeader() {
@@ -105,7 +195,8 @@ function renderHeader() {
     document.getElementById("active-player-line").textContent = state.activePlayer
         ? `Con el balón: ${state.activePlayer.name}`
         : "";
-    renderZoneBar();
+    document.getElementById("zone-line").textContent = `Zona: ${FIELD_ZONE_LABELS[state.zone]}`;
+    updateLivePitchToken();
 }
 
 function buildActionButton(label, onClick) {
@@ -153,7 +244,11 @@ function handleChoice(action, useTechnique) {
     const outcome = resolvePlayerChoice(state, action, useTechnique);
     addLog(describeOutcome(action, outcome));
     renderHeader();
-    renderActions();
+    // Se vacían los botones ANTES de animar (en vez de esperar a
+    // renderActions) para que no se pueda tocar la siguiente decisión a
+    // mitad de la animación del campo.
+    document.getElementById("match-actions").innerHTML = "";
+    playOutcomeFx(outcome.outcome, renderActions);
 }
 
 function renderMyTurnActions(container) {
@@ -194,7 +289,8 @@ function handleDefenseChoice(defenseChoice, useTechnique) {
     const outcome = resolveDefenseChoice(state, defenseChoice, useTechnique);
     addLog(describeDefenseOutcome(outcome));
     renderHeader();
-    renderActions();
+    document.getElementById("match-actions").innerHTML = "";
+    playOutcomeFx(outcome.outcome, renderActions);
 }
 
 // Posesión rival: el jugador predice, SIN saber qué va a intentar el

@@ -593,27 +593,153 @@ body.prematch-active #match-screen{
     color:#aaa;
 }
 
-/* Barra de zonas de campo (1 = mi portería, 5 = la rival). El segmento
-   con el balón se resalta; el resto queda apagado. */
-.match-zone-bar{
-    display:flex;
-    gap:4px;
+/* Campo visual del partido en vivo: pista vertical con 5 franjas (zona
+   5 = portería rival arriba, zona 1 = mi portería abajo), mismo fondo
+   de césped que ya usan F5/F11/la pantalla previa (campo-5v5.webp). El
+   token (retrato circular del jugador activo + balón) se desplaza solo
+   con una transición CSS de "top" cada vez que cambia la zona -- ver
+   updateLivePitchToken()/playOutcomeFx() en match.js. Las franjas
+   (.live-pitch-lane) solo existen para medir en JS dónde cae el centro
+   de cada zona (getLiveLaneCenterTop), no llevan contenido propio. */
+.live-pitch{
+    position:relative;
     width:100%;
     max-width:340px;
-    margin-top:4px;
+    height:360px;
+    border-radius:16px;
+    overflow:hidden;
+    border:1px solid #2c3a5c;
+    background-color:#0b2e18;
+    background-image:
+        linear-gradient(180deg, rgba(5,8,15,0.5) 0%, rgba(5,8,15,0.05) 15%, rgba(5,8,15,0.05) 85%, rgba(5,8,15,0.5) 100%),
+        url("../../assets/backgrounds/campo-5v5.webp");
+    background-size:cover, cover;
+    background-position:center, center;
+    font-family:sans-serif;
+    flex-shrink:0;
 }
 
-.match-zone-segment{
+.live-pitch-goal{
+    position:absolute;
+    left:0;
+    right:0;
+    height:26px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-size:9px;
+    font-weight:700;
+    letter-spacing:0.04em;
+    text-transform:uppercase;
+    color:rgba(255,255,255,0.7);
+    background:rgba(0,0,0,0.35);
+    z-index:1;
+}
+.live-pitch-goal-rival{ top:0; border-bottom:2px dashed rgba(255,255,255,0.3); }
+.live-pitch-goal-mine{ bottom:0; border-top:2px dashed rgba(255,255,255,0.3); }
+
+.live-pitch-lanes{
+    position:absolute;
+    top:26px;
+    bottom:26px;
+    left:0;
+    right:0;
+    display:flex;
+    flex-direction:column;
+}
+.live-pitch-lane{
     flex:1;
-    height:6px;
-    border-radius:3px;
-    background:#333;
-    border:1px solid #444;
+    border-bottom:1px dashed rgba(255,255,255,0.12);
+}
+.live-pitch-lane:last-child{ border-bottom:none; }
+
+.live-pitch-token{
+    position:absolute;
+    left:50%;
+    top:50%;
+    width:56px;
+    height:56px;
+    transform:translate(-50%, -50%);
+    transition:top 0.55s cubic-bezier(.34,1.2,.64,1);
+    z-index:2;
 }
 
-.match-zone-segment.is-ball{
-    background:#4ade80;
-    border-color:#4ade80;
+.live-pitch-token-ring{
+    width:100%;
+    height:100%;
+    border-radius:50%;
+    overflow:hidden;
+    border:3px solid #7fa8ff;
+    background:#111a2e;
+    box-shadow:0 3px 10px rgba(0,0,0,0.5);
+}
+.live-pitch-token.is-rival .live-pitch-token-ring{
+    border-color:#f87171;
+}
+.live-pitch-token img{
+    width:100%;
+    height:100%;
+    object-fit:cover;
+    display:block;
+}
+.live-pitch-token-ball{
+    position:absolute;
+    bottom:-4px;
+    right:-4px;
+    width:18px;
+    height:18px;
+    border-radius:50%;
+    background:#fff;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-size:11px;
+    box-shadow:0 1px 4px rgba(0,0,0,0.5);
+}
+
+@keyframes pitch-pulse-good{
+    0%{ box-shadow:0 3px 10px rgba(0,0,0,0.5), 0 0 0 0 rgba(74,222,128,0.7); }
+    100%{ box-shadow:0 3px 10px rgba(0,0,0,0.5), 0 0 0 16px rgba(74,222,128,0); }
+}
+@keyframes pitch-pulse-warn{
+    0%{ box-shadow:0 3px 10px rgba(0,0,0,0.5), 0 0 0 0 rgba(248,113,113,0.7); }
+    100%{ box-shadow:0 3px 10px rgba(0,0,0,0.5), 0 0 0 16px rgba(248,113,113,0); }
+}
+@keyframes pitch-shake{
+    0%,100%{ transform:translate(-50%,-50%); }
+    25%{ transform:translate(calc(-50% - 6px),-50%); }
+    75%{ transform:translate(calc(-50% + 6px),-50%); }
+}
+.live-pitch-token.fx-good .live-pitch-token-ring{ animation:pitch-pulse-good 0.6s ease-out; }
+.live-pitch-token.fx-warn .live-pitch-token-ring{ animation:pitch-pulse-warn 0.6s ease-out; }
+.live-pitch-token.fx-bad{ animation:pitch-shake 0.4s ease-in-out; }
+.live-pitch-token.fx-bad .live-pitch-token-ring{ animation:pitch-pulse-warn 0.4s ease-out; }
+
+.live-pitch-flash{
+    position:absolute;
+    inset:0;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-size:26px;
+    font-weight:800;
+    letter-spacing:0.03em;
+    color:#fff;
+    background:rgba(74,222,128,0.25);
+    opacity:0;
+    pointer-events:none;
+    z-index:3;
+    transition:opacity 0.15s ease;
+    text-shadow:0 2px 8px rgba(0,0,0,0.7);
+}
+.live-pitch-flash.is-bad{ background:rgba(248,113,113,0.3); }
+.live-pitch-flash.is-visible{ opacity:1; }
+
+.match-score.is-bump{ animation:score-bump 0.5s ease; }
+@keyframes score-bump{
+    0%{ transform:scale(1); }
+    30%{ transform:scale(1.35); }
+    100%{ transform:scale(1); }
 }
 
 .match-zone-text{
