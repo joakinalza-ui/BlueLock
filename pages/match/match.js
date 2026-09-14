@@ -36,26 +36,41 @@ function runAutoStep() {
     autoTimer = null;
     if (!autoMode || isMatchOver(state)) return;
 
-    let outcomeKey;
-    let myScorer = null;
     if (state.currentOwner === "rival") {
+        const defenseChoice = decideAutoDefenseChoice();
         const useTechnique = decideAutoUseDefenseTechnique(state);
-        const outcome = resolveDefenseChoice(state, decideAutoDefenseChoice(), useTechnique);
-        outcomeKey = outcome.outcome;
+        const facingShot = state.zone === FIELD_ZONE_MINE_GOAL;
+        const myDefendingPosition = facingShot ? "POR" : getDefendingPositionForZone(state.zone, "me");
+        const technique = useTechnique
+            ? getPositionalDefenseTechnique(state.lineup, myDefendingPosition, facingShot ? "parada" : "bloqueo", state.pe)
+            : null;
+        const defender = state.lineup.find((c) => c.position === myDefendingPosition) || null;
+
+        castTechniqueOrProceed(defender, technique, () => {
+            const outcome = resolveDefenseChoice(state, defenseChoice, useTechnique);
+            renderHeader();
+            document.getElementById("match-actions").innerHTML = "";
+            playOutcomeFx(outcome.outcome, () => {
+                renderActions();
+                scheduleAutoStep();
+            });
+        });
     } else {
-        myScorer = state.activePlayer; // capturado ANTES de resolver, ver comentario de playOutcomeFx
+        const myScorer = state.activePlayer; // capturado ANTES de resolver, ver comentario de playOutcomeFx
         const action = decideAutoAttackAction(state);
         const useTechnique = decideAutoUseTechnique(state, action);
-        const outcome = resolvePlayerChoice(state, action, useTechnique);
-        outcomeKey = outcome.outcome;
-    }
+        const technique = useTechnique ? getAvailableTechnique(state, action === "tiro" ? "tiro" : action) : null;
 
-    renderHeader();
-    document.getElementById("match-actions").innerHTML = "";
-    playOutcomeFx(outcomeKey, () => {
-        renderActions();
-        scheduleAutoStep();
-    }, myScorer);
+        castTechniqueOrProceed(myScorer, technique, () => {
+            const outcome = resolvePlayerChoice(state, action, useTechnique);
+            renderHeader();
+            document.getElementById("match-actions").innerHTML = "";
+            playOutcomeFx(outcome.outcome, () => {
+                renderActions();
+                scheduleAutoStep();
+            }, myScorer);
+        });
+    }
 }
 
 // Al activar, la Command Battle actual pasa a resolverse sola (sin
@@ -260,6 +275,68 @@ function updateLivePitchPositions() {
     });
 }
 
+// Tema visual por elemento (mismos iconos que PLAYER_DETAIL_ELEMENT_ICONS
+// en main.js, ver Ficha) para el aura/rayos/placa de la cinemática de
+// Técnica -- color y brillo coherentes con el elemento real de la
+// Técnica que se está usando (technique.element, no el del jugador que
+// la lleva, igual que ya hace doesElementBeat en match-engine.js).
+const TECHNIQUE_ELEMENT_THEME = {
+    Fuego: { icon: "🔥", color: "#fb923c", glow: "rgba(251,146,60,0.55)" },
+    Bosque: { icon: "🌲", color: "#4ade80", glow: "rgba(74,222,128,0.5)" },
+    "Montaña": { icon: "⛰️", color: "#d6d3d1", glow: "rgba(214,211,209,0.5)" },
+    Aire: { icon: "💨", color: "#7dd3fc", glow: "rgba(125,211,252,0.5)" },
+};
+
+const TECHNIQUE_CAST_MS = 1150;
+
+// Cinemática de activación de Técnica (ver .live-pitch-technique en
+// match.css): el personaje que la usa entra a pantalla completa con un
+// aura de su elemento y el nombre de la Técnica, ANTES de resolver la
+// Command Battle -- así se nota que "está pasando algo especial" en vez
+// de que una Técnica se vea exactamente igual que una acción básica.
+// character/technique pueden venir null (por ejemplo si el motor no
+// encontrara Técnica disponible pese a haberla pedido) -- en ese caso
+// se salta directo al callback sin más, igual que un envite sin Técnica.
+function playTechniqueCastCutscene(character, technique, callback) {
+    const cutscene = document.getElementById("live-pitch-technique");
+    if (!cutscene || !character || !technique) {
+        callback();
+        return;
+    }
+
+    const img = document.getElementById("live-pitch-technique-img");
+    const nameEl = document.getElementById("live-pitch-technique-name");
+    const iconEl = document.getElementById("live-pitch-technique-icon");
+    const theme = TECHNIQUE_ELEMENT_THEME[technique.element] || TECHNIQUE_ELEMENT_THEME.Aire;
+
+    const hasRealSprite = !!character.sprite;
+    img.src = resolveAssetPath(hasRealSprite ? character.sprite : PLAYER_DETAIL_PLACEHOLDER);
+    img.alt = character.name;
+    nameEl.textContent = technique.name;
+    iconEl.textContent = theme.icon;
+    cutscene.style.setProperty("--tech-color", theme.color);
+    cutscene.style.setProperty("--tech-glow", theme.glow);
+
+    cutscene.classList.remove("is-visible");
+    void cutscene.offsetWidth; // fuerza reflow para poder repetir la animación en Técnicas consecutivas
+    cutscene.classList.add("is-visible");
+    setTimeout(() => {
+        cutscene.classList.remove("is-visible");
+        callback();
+    }, TECHNIQUE_CAST_MS);
+}
+
+// Si hay Técnica de verdad, primero se ve su cinemática y SOLO al
+// terminar se llama a proceed (que resuelve la Command Battle); sin
+// Técnica, proceed se llama al momento, como hasta ahora.
+function castTechniqueOrProceed(character, technique, proceed) {
+    if (technique) {
+        playTechniqueCastCutscene(character, technique, proceed);
+    } else {
+        proceed();
+    }
+}
+
 const GOAL_CUTSCENE_MS = 1050;
 
 // Escena de gol a pantalla completa sobre el campo (estilo "parada de
@@ -407,13 +484,18 @@ const DEFENSE_LABELS = { entrada: "Entrada", interceptacion: "Interceptación", 
 
 function handleChoice(action, useTechnique) {
     const myScorer = state.activePlayer; // capturado ANTES de resolver, ver comentario de playOutcomeFx
-    const outcome = resolvePlayerChoice(state, action, useTechnique);
-    renderHeader();
     // Se vacían los botones ANTES de animar (en vez de esperar a
     // renderActions) para que no se pueda tocar la siguiente decisión a
-    // mitad de la animación del campo.
+    // mitad de la cinemática de Técnica ni de la animación del campo.
     document.getElementById("match-actions").innerHTML = "";
-    playOutcomeFx(outcome.outcome, renderActions, myScorer);
+    const technique = useTechnique ? getAvailableTechnique(state, action === "tiro" ? "tiro" : action) : null;
+
+    castTechniqueOrProceed(myScorer, technique, () => {
+        const outcome = resolvePlayerChoice(state, action, useTechnique);
+        renderHeader();
+        document.getElementById("match-actions").innerHTML = "";
+        playOutcomeFx(outcome.outcome, renderActions, myScorer);
+    });
 }
 
 function renderMyTurnActions(container) {
@@ -451,10 +533,22 @@ function renderMyTurnActions(container) {
 }
 
 function handleDefenseChoice(defenseChoice, useTechnique) {
-    const outcome = resolveDefenseChoice(state, defenseChoice, useTechnique);
-    renderHeader();
     document.getElementById("match-actions").innerHTML = "";
-    playOutcomeFx(outcome.outcome, renderActions);
+    let technique = null;
+    let defender = null;
+    if (useTechnique) {
+        const facingShot = state.zone === FIELD_ZONE_MINE_GOAL;
+        const myDefendingPosition = facingShot ? "POR" : getDefendingPositionForZone(state.zone, "me");
+        technique = getPositionalDefenseTechnique(state.lineup, myDefendingPosition, facingShot ? "parada" : "bloqueo", state.pe);
+        defender = state.lineup.find((c) => c.position === myDefendingPosition) || null;
+    }
+
+    castTechniqueOrProceed(defender, technique, () => {
+        const outcome = resolveDefenseChoice(state, defenseChoice, useTechnique);
+        renderHeader();
+        document.getElementById("match-actions").innerHTML = "";
+        playOutcomeFx(outcome.outcome, renderActions);
+    });
 }
 
 // Posesión rival: el jugador predice, SIN saber qué va a intentar el

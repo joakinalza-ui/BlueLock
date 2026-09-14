@@ -835,6 +835,162 @@ body.prematch-active #match-screen{
     100%{ opacity:0; }
 }
 
+/* Cinemática de activación de Técnica (ver playTechniqueCastCutscene en
+   match.js): al estilo de los "Special Skill" de Captain Tsubasa Dream
+   Team -- el personaje entra a pantalla completa en un "cut-in" con un
+   aura de energía de SU elemento (Fuego/Bosque/Montaña/Aire, mismo
+   color que --tech-color/--tech-glow puestos desde JS), rayos de
+   velocidad girando detrás, una placa con el nombre de la técnica y un
+   flash de "impacto" al final -- todo con el mismo sprite grande que ya
+   usa el resto de la app (ficha, gacha), sin arte nuevo. Se dispara
+   ANTES de resolver la Command Battle (ver handleChoice/
+   handleDefenseChoice/runAutoStep), y solo entonces sigue el resultado
+   normal (pulso/golpeo/aviso/gol). Todas las fases son animaciones CSS
+   de UNA sola clase (.is-visible) con sus propios % de tiempo, así que
+   entran y salen sincronizadas sin tener que orquestarlas a mano desde
+   JS -- mismo patrón de forzar reflow que el resto de escenas para
+   poder repetirse en técnicas consecutivas. */
+.live-pitch-technique{
+    position:absolute;
+    inset:0;
+    z-index:6;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:center;
+    opacity:0;
+    pointer-events:none;
+    overflow:hidden;
+}
+.live-pitch-technique.is-visible{ animation:tech-container 1.15s ease-out; }
+@keyframes tech-container{
+    0%{ opacity:0; }
+    8%{ opacity:1; }
+    88%{ opacity:1; }
+    100%{ opacity:0; }
+}
+
+.lpt-vignette{
+    position:absolute;
+    inset:0;
+    background:radial-gradient(circle, rgba(3,5,10,0.15) 28%, rgba(3,5,10,0.88) 100%);
+    opacity:0;
+}
+.live-pitch-technique.is-visible .lpt-vignette{ animation:tech-vignette 1.15s ease-out; }
+@keyframes tech-vignette{
+    0%{ opacity:0; }
+    16%{ opacity:1; }
+    100%{ opacity:1; }
+}
+
+.lpt-rays{
+    position:absolute;
+    inset:-30%;
+    background:repeating-conic-gradient(from 0deg, var(--tech-glow, rgba(127,168,255,0.55)) 0deg 3deg, transparent 3deg 16deg);
+    opacity:0;
+    transform:rotate(0deg) scale(0.6);
+}
+.live-pitch-technique.is-visible .lpt-rays{ animation:tech-rays 1.15s ease-out; }
+@keyframes tech-rays{
+    0%{ opacity:0; transform:rotate(0deg) scale(0.6); }
+    22%{ opacity:0.9; transform:rotate(30deg) scale(1); }
+    70%{ opacity:0.45; transform:rotate(75deg) scale(1.1); }
+    100%{ opacity:0; transform:rotate(100deg) scale(1.2); }
+}
+
+.lpt-figure-wrap{
+    position:relative;
+    width:220px;
+    height:230px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    z-index:1;
+}
+
+.lpt-aura{
+    position:absolute;
+    left:50%;
+    top:50%;
+    width:20px;
+    height:20px;
+    transform:translate(-50%, -50%);
+    border-radius:50%;
+    background:var(--tech-glow, rgba(127,168,255,0.6));
+    filter:blur(18px);
+    opacity:0;
+}
+.live-pitch-technique.is-visible .lpt-aura{ animation:tech-aura 1.15s ease-out; }
+@keyframes tech-aura{
+    0%{ opacity:0; width:20px; height:20px; }
+    32%{ opacity:1; width:220px; height:220px; }
+    75%{ opacity:0.85; width:200px; height:200px; }
+    100%{ opacity:0; width:180px; height:180px; }
+}
+
+.lpt-figure{
+    position:relative;
+    width:100%;
+    height:100%;
+    object-fit:contain;
+    filter:drop-shadow(0 0 18px var(--tech-glow, rgba(127,168,255,0.7))) drop-shadow(0 10px 14px rgba(0,0,0,0.7));
+    opacity:0;
+    transform:scale(0.5) translateY(40px) rotate(-4deg);
+}
+.live-pitch-technique.is-visible .lpt-figure{ animation:tech-figure 1.15s cubic-bezier(.2,1.4,.4,1); }
+@keyframes tech-figure{
+    0%{ opacity:0; transform:scale(0.5) translateY(40px) rotate(-4deg); }
+    30%{ opacity:1; transform:scale(1.12) translateY(0) rotate(3deg); }
+    46%{ transform:scale(1) translateY(0) rotate(-1deg); }
+    85%{ opacity:1; transform:scale(1) translateY(0) rotate(0deg); }
+    100%{ opacity:0; transform:scale(1.05) translateY(-6px) rotate(0deg); }
+}
+
+.lpt-banner{
+    position:relative;
+    z-index:1;
+    margin-top:10px;
+    display:flex;
+    align-items:center;
+    gap:6px;
+    background:rgba(4,6,12,0.75);
+    border-left:3px solid var(--tech-color, #7fa8ff);
+    border-radius:6px;
+    padding:6px 14px;
+    opacity:0;
+    transform:translateX(-30px);
+}
+.live-pitch-technique.is-visible .lpt-banner{ animation:tech-banner 1.15s ease-out; }
+@keyframes tech-banner{
+    0%, 34%{ opacity:0; transform:translateX(-30px); }
+    48%{ opacity:1; transform:translateX(0); }
+    85%{ opacity:1; transform:translateX(0); }
+    100%{ opacity:0; transform:translateX(0); }
+}
+.lpt-banner-icon{ font-size:16px; }
+.lpt-banner-name{
+    font-size:15px;
+    font-weight:800;
+    letter-spacing:0.03em;
+    color:#fff;
+    text-transform:uppercase;
+    white-space:nowrap;
+}
+
+.lpt-flash{
+    position:absolute;
+    inset:0;
+    background:#fff;
+    opacity:0;
+}
+.live-pitch-technique.is-visible .lpt-flash{ animation:tech-flash 1.15s ease-out; }
+@keyframes tech-flash{
+    0%, 79%{ opacity:0; }
+    84%{ opacity:0.85; }
+    93%{ opacity:0; }
+    100%{ opacity:0; }
+}
+
 /* Aviso rápido de "gran jugada" (interceptación, bloqueo, robo, fallo)
    al estilo de los textos de impacto de Captain Tsubasa Dream Team --
    más ligero y rápido que la escena de gol (que sí muestra un retrato,
