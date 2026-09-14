@@ -835,6 +835,75 @@ body.prematch-active #match-screen{
     100%{ opacity:0; }
 }
 
+/* Aviso rápido de "gran jugada" (interceptación, bloqueo, robo, fallo)
+   al estilo de los textos de impacto de Captain Tsubasa Dream Team --
+   más ligero y rápido que la escena de gol (que sí muestra un retrato,
+   porque el goleador es un jugador concreto): aquí no hay un único
+   jugador al que atribuírselo con sentido (la defensa se calcula por
+   puesto, no por persona, ver getPositionalDefenseStat en
+   match-engine.js), así que es solo texto + una estela de velocidad
+   cruzando por detrás, sin foto. Vive en su propio elemento (no dentro
+   de la escena de gol) para poder sonar aunque esta no se dispare. */
+.live-pitch-toast{
+    position:absolute;
+    top:40%;
+    left:50%;
+    transform:translate(-50%, -50%);
+    z-index:4;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    pointer-events:none;
+    opacity:0;
+}
+.live-pitch-toast.is-visible{ animation:toast-pop 0.55s ease-out; }
+@keyframes toast-pop{
+    0%{ opacity:0; transform:translate(-50%, -50%) scale(0.6); }
+    22%{ opacity:1; transform:translate(-50%, -50%) scale(1.1); }
+    38%{ transform:translate(-50%, -50%) scale(1); }
+    78%{ opacity:1; }
+    100%{ opacity:0; transform:translate(-50%, -50%) scale(1); }
+}
+
+.live-pitch-toast-streaks{
+    position:absolute;
+    left:50%;
+    top:50%;
+    width:220px;
+    height:3px;
+    background:linear-gradient(90deg, transparent, rgba(127,168,255,0.9), transparent);
+    transform:translate(-50%, -50%) scaleX(0);
+    filter:blur(0.5px);
+}
+.live-pitch-toast.is-visible .live-pitch-toast-streaks{ animation:toast-streak 0.55s ease-out; }
+.live-pitch-toast.is-bad .live-pitch-toast-streaks{
+    background:linear-gradient(90deg, transparent, rgba(248,113,113,0.9), transparent);
+}
+@keyframes toast-streak{
+    0%{ transform:translate(-50%, -50%) scaleX(0); opacity:1; }
+    45%{ transform:translate(-50%, -50%) scaleX(1); opacity:1; }
+    100%{ transform:translate(-50%, -50%) scaleX(1.4); opacity:0; }
+}
+
+.live-pitch-toast-text{
+    position:relative;
+    font-size:16px;
+    font-weight:800;
+    letter-spacing:0.03em;
+    color:#7fa8ff;
+    text-shadow:0 2px 8px rgba(0,0,0,0.85), 0 0 14px rgba(127,168,255,0.6);
+    background:rgba(5,8,15,0.55);
+    padding:5px 14px;
+    border-radius:8px;
+    border:1px solid rgba(127,168,255,0.5);
+    white-space:nowrap;
+}
+.live-pitch-toast.is-bad .live-pitch-toast-text{
+    color:#f87171;
+    text-shadow:0 2px 8px rgba(0,0,0,0.85), 0 0 14px rgba(248,113,113,0.6);
+    border-color:rgba(248,113,113,0.5);
+}
+
 .match-score.is-bump{ animation:score-bump 0.5s ease; }
 @keyframes score-bump{
     0%{ transform:scale(1); }

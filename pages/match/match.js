@@ -319,6 +319,35 @@ function kickActivePitchIcon() {
     el.classList.add("fx-kick");
 }
 
+// Aviso rápido de "gran jugada" sin retrato (ver .live-pitch-toast en
+// match.css) para los resultados que SÍ merecen resaltarse pero no
+// tienen un único jugador al que atribuírselos con sentido (defensa
+// por puesto, no por persona — a diferencia del gol, que sí tiene
+// goleador real). advance/rivalAdvance no llevan texto: son el
+// resultado más frecuente con diferencia y llenarían la pantalla de
+// ruido si sonaran en cada Command Battle.
+const OUTCOME_TOAST_TEXT = {
+    intercepted: { text: "¡INTERCEPTADO!", isBad: false },
+    blocked: { text: "¡BLOQUEADO!", isBad: false },
+    turnover: { text: "¡ROBADO!", isBad: true },
+    miss: { text: "FALLO", isBad: true },
+};
+const TOAST_MS = 550;
+
+function playOutcomeToast(outcomeKey) {
+    const config = OUTCOME_TOAST_TEXT[outcomeKey];
+    const toast = document.getElementById("live-pitch-toast");
+    const textEl = document.getElementById("live-pitch-toast-text");
+    if (!config || !toast || !textEl) return;
+
+    textEl.textContent = config.text;
+    toast.classList.remove("is-visible");
+    void toast.offsetWidth; // fuerza reflow para poder repetir la animación en jugadas consecutivas
+    toast.classList.toggle("is-bad", config.isBad);
+    toast.classList.add("is-visible");
+    setTimeout(() => toast.classList.remove("is-visible"), TOAST_MS);
+}
+
 const PITCH_ANIM_MS = 550;
 const OUTCOME_PITCH_FX = {
     advance: "good",
@@ -350,6 +379,7 @@ function playOutcomeFx(outcomeKey, callback, myScorer) {
     if (KICK_OUTCOMES.has(outcomeKey)) kickActivePitchIcon();
     if (outcomeKey === "goal") playGoalCutscene(myScorer, false);
     if (outcomeKey === "rivalGoal") playGoalCutscene(state.rivalActivePlayer, true);
+    playOutcomeToast(outcomeKey);
     const isGoal = outcomeKey === "goal" || outcomeKey === "rivalGoal";
     setTimeout(callback, isGoal ? GOAL_CUTSCENE_MS : PITCH_ANIM_MS);
 }
